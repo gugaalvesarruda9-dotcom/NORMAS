@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G.A Occupational Safety · Treinamento NR-05 Designado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<style>
+  :root{
+    --green: #16A34A;
+    --green-deep: #0F7F3B;
+    --mint: #8FDCB0;
+    --ink: #0D0F16;
+    --ink-soft: #9CA0AC;
+    --paper: #1B1E2C;
+    --paper-raised: #242736;
+    --text: #ECEDF1;
+    --red: #F0555C;
+    --risk-fisico: #2DBFD1;
+    --risk-quimico: #F2545B;
+    --risk-biologico: #C9A15A;
+    --risk-ergonomico: #E3B341;
+    --risk-acidente: #5B8DEF;
+    --line: rgba(236,237,241,0.12);
+    --shadow: 0 10px 30px rgba(0,0,0,0.45);
+    --grid: rgba(236,237,241,0.045);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  .hazard-bar{
+    height:3px;
+    width:100%;
+    background:linear-gradient(90deg, var(--green) 0%, var(--mint) 100%);
+    position:fixed; top:0; left:0; z-index:50;
+  }
+
+  .app{
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    min-height:100vh;
+    padding-top:8px;
+  }
+
+  /* SIDEBAR */
+  .sidebar{
+    background:var(--ink);
+    color:var(--text);
+    padding:32px 22px 24px;
+    position:sticky;
+    top:8px;
+    height:calc(100vh - 8px);
+    overflow-y:auto;
+    border-right:1px solid rgba(0,0,0,0.3);
+  }
+  .brand{
+    display:flex; flex-direction:column; gap:2px; margin-bottom:6px;
+  }
+  .brand-mark{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  }
+  .brand-mark svg{ flex:0 0 auto; width:34px; height:34px; }
+  .brand .eyebrow{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--mint);
+    font-size:12.5px;
+  }
+  .brand h1{
+    font-family:'Archivo Black', sans-serif;
+    font-size:24px;
+    line-height:1.05;
+    margin:4px 0 0;
+    letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .brand .sub{
+    font-size:12.5px;
+    color:rgba(236,237,241,0.55);
+    margin-top:8px;
+    line-height:1.5;
+  }
+
+  .progress-track{
+    height:4px;
+    width:100%;
+    background:rgba(236,237,241,0.15);
+    border-radius:4px;
+    margin:20px 0 10px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:var(--green);
+    transition:width .4s ease;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:rgba(236,237,241,0.5);
+    margin-bottom:14px;
+  }
+
+  .curriculum-total{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:rgba(236,237,241,0.65);
+    display:flex; align-items:center; gap:6px; margin:2px 0 0;
+  }
+  .curriculum-total b{ color:var(--mint); }
+
+  nav.modlist{
+    display:flex; flex-direction:column; gap:2px;
+    margin-top:16px;
+  }
+  .modbtn{
+    display:flex; align-items:center; gap:12px;
+    background:transparent; border:none; color:inherit;
+    text-align:left; cursor:pointer;
+    padding:11px 10px; border-radius:8px;
+    font-family:'Inter', sans-serif; font-size:13.5px; font-weight:500;
+    color:rgba(236,237,241,0.75);
+    transition:background .15s ease, color .15s ease;
+  }
+  .modbtn:hover{ background:rgba(236,237,241,0.06); color:var(--text); }
+  .modbtn.active{ background:rgba(22,163,74,0.14); color:var(--text); }
+  .modbtn.active .num{ background:var(--green); color:#fff; }
+  .modbtn:focus-visible{ outline:2px solid var(--green); outline-offset:2px; }
+
+  .num{
+    flex:0 0 auto;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:rgba(236,237,241,0.12);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; font-weight:600;
+    color:rgba(236,237,241,0.6);
+  }
+  .modbtn.done .num{ background:var(--green); color:#fff; }
+  .modbtn.done .num::after{ content:"✓"; }
+  .modbtn .label{ flex:1; }
+  .modbtn .dot{
+    width:8px; height:8px; border-radius:50%; flex:0 0 auto;
+  }
+
+  /* MAIN */
+  main{
+    padding:52px 64px 90px;
+    max-width:880px;
+  }
+  .module{ display:none; animation:fade .35s ease; }
+  .module.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .m-eyebrow{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:0.14em;
+    font-weight:600; font-size:13px; color:var(--mint);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:10px;
+  }
+  .m-eyebrow .code{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--ink); color:var(--green);
+    padding:2px 8px; border-radius:4px; letter-spacing:0;
+    font-size:11.5px;
+  }
+  .m-eyebrow .duration{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0; text-transform:none;
+    color:var(--ink-soft); font-size:12px;
+    display:flex; align-items:center; gap:5px;
+  }
+  .m-eyebrow .duration::before{ content:"⏱"; font-size:11px; }
+
+  h2.m-title{
+    font-family:'Archivo Black', sans-serif;
+    font-size:38px; line-height:1.08; margin:0 0 22px;
+    letter-spacing:-0.01em; max-width:640px;
+    color:var(--text);
+  }
+  .lede{
+    font-size:17px; line-height:1.65; color:var(--ink-soft);
+    max-width:640px; margin-bottom:34px;
+  }
+  h3{
+    font-family:'Archivo Black', sans-serif;
+    font-size:18px; margin:36px 0 14px; letter-spacing:-0.005em;
+    color:var(--text);
+  }
+  p, li{ font-size:15px; line-height:1.7; color:var(--text); }
+  ul, ol{ padding-left:20px; margin:0 0 16px; }
+  li{ margin-bottom:8px; }
+  strong{ font-weight:700; }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 24px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .card.alert{ border-left:5px solid var(--red); }
+  .card.note{ border-left:5px solid var(--green); }
+
+  table{ width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+  th, td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); }
+  th{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em; font-size:12px; color:var(--ink-soft); }
+  tr:last-child td{ border-bottom:none; }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 24px; }
+  .chip{
+    display:flex; align-items:center; gap:8px;
+    padding:7px 13px; border-radius:100px;
+    font-size:13px; font-weight:600; color:#fff;
+  }
+  .chip .sw{ width:11px; height:11px; border-radius:50%; background:#fff; opacity:.9; }
+
+  .video-wrap{
+    margin:22px 0 28px;
+    border-radius:12px; overflow:hidden;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .video-wrap .vid-label{
+    background:var(--ink); color:var(--green);
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+    font-size:12px; padding:9px 16px;
+  }
+  .video-frame{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-frame iframe{ position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
+  .video-wrap.video-link{ display:block; text-decoration:none; color:inherit; cursor:pointer; }
+  .video-thumb{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.8; }
+  .play-badge{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    background:var(--green); color:#fff; padding:11px 20px; border-radius:100px;
+    font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em;
+    font-weight:700; font-size:13px; white-space:nowrap;
+    display:flex; align-items:center; gap:8px;
+  }
+  .video-wrap.video-link:hover .play-badge{ background:var(--green-deep); }
+
+  /* MAPA DE RISCO */
+  .riskmap-wrap{
+    display:flex; gap:36px; align-items:flex-start; flex-wrap:wrap;
+    margin:26px 0 10px;
+  }
+  .riskmap-plan{ flex:0 0 340px; position:relative; }
+  .riskmap-legend{ flex:1; min-width:220px; }
+  .riskmap-legend .item{
+    display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:13.5px;
+  }
+  .riskmap-legend .sz{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-left:auto; }
+
+  .nav-buttons{
+    display:flex; justify-content:space-between; margin-top:50px;
+    padding-top:24px; border-top:1px solid var(--line);
+  }
+  .navbtn{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+    font-size:13px; padding:11px 20px; border-radius:8px; cursor:pointer;
+    border:1.5px solid var(--text); background:transparent; color:var(--text);
+    transition:background .15s ease, color .15s ease;
+  }
+  .navbtn:hover{ background:var(--green); color:var(--ink); border-color:var(--green); }
+  .navbtn.primary{ background:var(--ink); color:var(--green); border-color:var(--ink); }
+  .navbtn.primary:hover{ background:var(--green-deep); color:#fff; }
+  .navbtn:disabled{ opacity:.3; cursor:not-allowed; }
+  .navbtn:disabled:hover{ background:transparent; color:var(--text); border-color:var(--text); }
+
+  /* QUIZ */
+  .quiz-q{ background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-bottom:18px; }
+  .quiz-q p.qtext{ font-weight:600; margin:0 0 14px; font-size:15px; color:var(--text); }
+  .opt{
+    display:block; width:100%; text-align:left;
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:8px; padding:11px 14px; margin-bottom:9px;
+    font-size:14px; cursor:pointer; color:var(--text);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt:hover{ border-color:var(--green); }
+  .opt.correct{ background:rgba(22,163,74,0.16); border-color:var(--green); }
+  .opt.wrong{ background:rgba(240,85,92,0.14); border-color:var(--red); }
+  .opt:disabled{ cursor:default; }
+  .quiz-score{
+    font-family:'Archivo Black', sans-serif; font-size:22px; text-align:center;
+    padding:26px; background:var(--ink); color:var(--green); border-radius:12px; margin-top:8px;
+  }
+
+  /* HISTÓRICO */
+  .log-table{ width:100%; border-collapse:collapse; margin:10px 0 20px; font-size:13.5px; }
+  .log-table th, .log-table td{ padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; color:var(--text); }
+  .log-table th{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; font-size:11.5px; letter-spacing:.05em; color:var(--ink-soft); }
+  .log-table td.ts{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap; }
+  .log-empty{ color:var(--ink-soft); font-size:14px; padding:18px 0; }
+  .log-actions{ display:flex; gap:12px; margin-top:6px; flex-wrap:wrap; }
+
+  footer.appfoot{
+    max-width:640px; font-size:12px; color:var(--ink-soft); margin-top:60px;
+    padding-top:18px; border-top:1px solid var(--line);
+  }
+
+  @media (max-width: 880px){
+    .app{ grid-template-columns:1fr; }
+    .sidebar{ position:static; height:auto; }
+    main{ padding:36px 22px 70px; }
+    h2.m-title{ font-size:28px; }
+  }
+
+  /* LOGIN / HOME */
+  .login-screen{
+    position:fixed; inset:0; z-index:100;
+    background:var(--ink);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .login-hazard{
+    position:absolute; top:0; left:0; width:100%; height:3px;
+    background:linear-gradient(90deg, var(--green) 0%, var(--mint) 100%);
+  }
+  .login-card{
+    position:relative;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:44px 40px 36px;
+    width:100%; max-width:400px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.55);
+  }
+  .login-card::before, .login-card::after,
+  .login-corner-tl, .login-corner-br{
+    content:""; position:absolute; width:18px; height:18px;
+    border-color:var(--green); border-style:solid; border-width:0;
+    opacity:.85;
+  }
+  .login-card::before{ top:-9px; left:-9px; border-top-width:2px; border-left-width:2px; border-radius:4px 0 0 0; }
+  .login-card::after{ bottom:-9px; right:-9px; border-bottom-width:2px; border-right-width:2px; border-radius:0 0 4px 0; }
+  .login-company{
+    display:flex; align-items:center; gap:8px; margin-bottom:18px;
+  }
+  .login-company svg{ width:26px; height:26px; flex:0 0 auto; }
+  .login-company span{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.1em; font-weight:700;
+    font-size:13px; color:var(--mint);
+  }
+  .login-card h1{
+    font-family:'Archivo Black', sans-serif; font-size:26px; margin:0 0 6px; letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .login-card .login-sub{
+    font-size:13.5px; color:var(--ink-soft); margin-bottom:28px; line-height:1.55;
+  }
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; font-family:'Barlow Condensed', sans-serif; text-transform:uppercase;
+    letter-spacing:.06em; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;
+  }
+  .field input{
+    width:100%; padding:11px 13px; border-radius:8px;
+    border:1.5px solid var(--line); background:var(--paper);
+    font-family:'Inter', sans-serif; font-size:14.5px; color:var(--text);
+  }
+  .field input:focus{ outline:none; border-color:var(--green); }
+  .login-btn{
+    width:100%; margin-top:10px; padding:13px;
+    background:var(--green); color:#fff; border:none; border-radius:8px;
+    font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.08em;
+    font-weight:700; font-size:14px; cursor:pointer;
+    transition:background .15s ease;
+  }
+  .login-btn:hover{ background:var(--green-deep); color:#fff; }
+  .login-error{
+    color:var(--red); font-size:12.5px; margin-top:-8px; margin-bottom:14px; display:none;
+  }
+  .login-note{
+    font-size:11.5px; color:var(--ink-soft); margin-top:22px; line-height:1.5; opacity:.9;
+  }
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-hazard"></div>
+  <div class="login-card">
+    <div class="login-company">
+      <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>G.A Occupational Safety</span>
+    </div>
+    <h1 id="loginTitle">Entrar no treinamento</h1>
+    <p class="login-sub" id="loginSubtext">Treinamento NR-05 Designado. Use o usuário e a senha que você recebeu do responsável pelo treinamento.</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginUser">Usuário</label>
+        <input type="text" id="loginUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+      </div>
+      <div class="field">
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required>
+      </div>
+      <p class="login-error" id="loginError"></p>
+      <button type="submit" class="login-btn" id="loginSubmitBtn">Entrar →</button>
+    </form>
+
+    <p class="login-note">G.A Occupational Safety · Os acessos de alunos são cadastrados pelo responsável pelo treinamento. Histórico de acesso e resultado da prova ficam salvos nesta plataforma. Não tem usuário e senha? Fale com quem enviou este link.</p>
+  </div>
+</div>
+
+<div class="hazard-bar"></div>
+
+<div class="app" id="appRoot" style="display:none;">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="eyebrow" style="color:rgba(236,237,241,0.5); font-size:11px;">G.A Occupational Safety</span>
+      </div>
+      <span class="eyebrow">Segurança do Trabalho</span>
+      <h1>NR-05<br>Designado</h1>
+      <p class="sub">Representante nomeado para a prevenção de acidentes e de assédio — treinamento completo (Grau de Risco 1)</p>
+      <p class="curriculum-total">Carga horária: <b>8h</b> (480 min) · NR-05, item 5.7.4-a</p>
+      <p class="curriculum-total" id="learnerLabel" style="margin-top:4px;"></p>
+    </div>
+
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 9 aulas vistas</div>
+
+    <nav class="modlist" id="modlist"></nav>
+  </aside>
+
+  <main>
+    <!-- 0 -->
+    <section class="module" data-mod="0">
+      <div class="m-eyebrow"><span class="code">NR-05</span> Introdução <span class="duration">45 min</span></div>
+      <h2 class="m-title">O que é o Designado da CIPA</h2>
+      <p class="lede">Quando uma empresa não se enquadra no dimensionamento do Quadro I da NR-4 e não é atendida por SESMT, ela não precisa constituir uma CIPA formal — mas deve nomear um <strong>representante designado</strong> para cuidar da prevenção de acidentes e doenças do trabalho.</p>
+
+      <a class="video-wrap video-link" href="https://www.youtube.com/watch?v=tz9BV3Cpgx8" target="_blank" rel="noopener">
+        <div class="vid-label">▸ Aula em vídeo — O que é a CIPA e qual o papel do representante</div>
+        <div class="video-thumb">
+          <img src="https://img.youtube.com/vi/tz9BV3Cpgx8/hqdefault.jpg" alt="Miniatura do vídeo" loading="lazy">
+          <span class="play-badge">▶ Assistir no YouTube</span>
+        </div>
+      </a>
+
+      <h3>Base legal</h3>
+      <ul>
+        <li><strong>Item 5.4.13</strong> da NR-05: quando o estabelecimento não se enquadra no Quadro I e não é atendido por SESMT (NR-4), a organização nomeia um representante entre seus empregados.</li>
+        <li><strong>Item 5.7.1</strong>: o treinamento deve ser realizado para o representante nomeado antes do início de suas atividades.</li>
+        <li>Redação consolidada pela <strong>Portaria MTP nº 1.419/2024</strong>, que também incluiu a prevenção à violência e ao assédio entre as responsabilidades do designado.</li>
+      </ul>
+
+      <h3>Designado x CIPA formal</h3>
+      <table>
+        <tr><th></th><th>CIPA formal</th><th>Representante designado</th></tr>
+        <tr><td>Quando se aplica</td><td>Empresa se enquadra no Quadro I</td><td>Empresa não se enquadra no Quadro I</td></tr>
+        <tr><td>Composição</td><td>Vários membros, eleitos e indicados</td><td>Um único representante</td></tr>
+        <tr><td>Escolha</td><td>Eleição por voto secreto</td><td>Nomeação direta pelo empregador</td></tr>
+      </table>
+
+      <div class="card note">
+        <strong>Gratuidade:</strong> nenhum custo relacionado ao treinamento e ao tempo despendido pelo designado pode ser repassado ao empregado.
+      </div>
+    </section>
+
+    <!-- 1 -->
+    <section class="module" data-mod="1">
+      <div class="m-eyebrow"><span class="code">5.4.13</span> Nomeação <span class="duration">45 min</span></div>
+      <h2 class="m-title">Como o designado é escolhido</h2>
+      <p class="lede">Diferente da CIPA formal, o designado não passa por processo eleitoral — ele é indicado diretamente pelo empregador entre os próprios empregados do estabelecimento.</p>
+
+      <ul>
+        <li>A organização nomeia um representante entre seus empregados para auxiliar na execução das ações de prevenção em segurança e saúde no trabalho.</li>
+        <li>Podem ser adotados mecanismos de participação dos empregados na escolha, inclusive por meio de <strong>negociação coletiva</strong>.</li>
+        <li>Não há edital, candidatura ou votação secreta — a formalização se dá por ato de nomeação da empresa.</li>
+        <li>É recomendável adotar <strong>rodízio</strong> entre empregados ao longo do tempo, para que mais pessoas desenvolvam conhecimentos de segurança do trabalho.</li>
+      </ul>
+
+      <div class="card alert">
+        Importante: por não ser eleito, o designado <strong>não possui a estabilidade no emprego</strong> garantida aos membros eleitos de uma CIPA formal. Veja mais detalhes no módulo "Estabilidade" adiante.
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="module" data-mod="2">
+      <div class="m-eyebrow"><span class="code">5.5</span> Atribuições <span class="duration">65 min</span></div>
+      <h2 class="m-title">O que o designado faz na prática</h2>
+      <p class="lede">O designado concentra, sozinho, as responsabilidades que numa CIPA formal seriam divididas entre vários membros.</p>
+
+      <a class="video-wrap video-link" href="https://www.youtube.com/watch?v=mY93A4GZ0bM" target="_blank" rel="noopener">
+        <div class="vid-label">▸ Aula em vídeo — Atribuições da CIPA na prática</div>
+        <div class="video-thumb">
+          <img src="https://img.youtube.com/vi/mY93A4GZ0bM/hqdefault.jpg" alt="Miniatura do vídeo" loading="lazy">
+          <span class="play-badge">▶ Assistir no YouTube</span>
+        </div>
+      </a>
+
+      <ul>
+        <li>Identificar os riscos do processo de trabalho e elaborar o <strong>mapa de riscos</strong> do estabelecimento.</li>
+        <li>Realizar verificações periódicas nos ambientes e condições de trabalho.</li>
+        <li>Auxiliar a organização na adoção de medidas de prevenção de acidentes e doenças relacionadas ao trabalho.</li>
+        <li>Participar da análise de causas de acidentes de trabalho ocorridos no estabelecimento.</li>
+        <li>Colaborar na realização da <strong>SIPAT</strong> (Semana Interna de Prevenção de Acidentes do Trabalho).</li>
+        <li><strong>Desde 2022/2024:</strong> orientar sobre prevenção de assédio e violência no trabalho e divulgar canais de denúncia disponíveis.</li>
+      </ul>
+    </section>
+
+    <!-- 3 -->
+    <section class="module" data-mod="3">
+      <div class="m-eyebrow"><span class="code">5.6</span> Ferramenta <span class="duration">55 min</span></div>
+      <h2 class="m-title">Mapa de risco</h2>
+      <p class="lede">O mapa de risco é a representação gráfica de um conjunto de fatores presentes nos locais de trabalho, capazes de causar danos à saúde. Cada tipo de risco tem uma cor própria, e o tamanho do círculo indica a intensidade percebida do risco naquele ponto.</p>
+
+      <div class="riskmap-wrap">
+        <div class="riskmap-plan">
+          <svg viewBox="0 0 340 260" width="100%" height="auto" role="img" aria-label="Ilustração de um mapa de risco com círculos coloridos sobre uma planta de layout industrial">
+            <rect x="6" y="6" width="328" height="248" rx="6" fill="none" stroke="#ECEDF1" stroke-opacity="0.25" stroke-width="1.5"/>
+            <line x1="6" y1="100" x2="334" y2="100" stroke="#ECEDF1" stroke-opacity="0.12" stroke-width="1"/>
+            <line x1="170" y1="6" x2="170" y2="254" stroke="#ECEDF1" stroke-opacity="0.12" stroke-width="1"/>
+            <circle cx="90" cy="70" r="26" fill="var(--risk-fisico)" opacity="0.85"/>
+            <circle cx="250" cy="60" r="18" fill="var(--risk-quimico)" opacity="0.85"/>
+            <circle cx="130" cy="170" r="34" fill="var(--risk-ergonomico)" opacity="0.85"/>
+            <circle cx="260" cy="190" r="14" fill="var(--risk-biologico)" opacity="0.85"/>
+            <circle cx="50" cy="200" r="20" fill="var(--risk-acidente)" opacity="0.85"/>
+          </svg>
+        </div>
+        <div class="riskmap-legend">
+          <div class="item"><span class="sw" style="background:var(--risk-fisico); width:14px;height:14px;border-radius:50%;display:inline-block;"></span> Risco físico <span class="sz">ruído, calor, vibração</span></div>
+          <div class="item"><span class="sw" style="background:var(--risk-quimico); width:14px;height:14px;border-radius:50%;display:inline-block;"></span> Risco químico <span class="sz">poeiras, gases, vapores</span></div>
+          <div class="item"><span class="sw" style="background:var(--risk-biologico); width:14px;height:14px;border-radius:50%;display:inline-block;"></span> Risco biológico <span class="sz">vírus, bactérias, fungos</span></div>
+          <div class="item"><span class="sw" style="background:var(--risk-ergonomico); width:14px;height:14px;border-radius:50%;display:inline-block;"></span> Risco ergonômico <span class="sz">postura, repetitividade</span></div>
+          <div class="item"><span class="sw" style="background:var(--risk-acidente); width:14px;height:14px;border-radius:50%;display:inline-block;"></span> Risco de acidente <span class="sz">máquinas, arranjo físico</span></div>
+        </div>
+      </div>
+
+      <div class="card note">
+        Quanto <strong>maior o círculo</strong>, maior a intensidade do risco percebido naquele ponto do ambiente de trabalho. O mapa deve ser afixado em local visível e revisado sempre que houver mudança relevante no processo.
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="module" data-mod="4">
+      <div class="m-eyebrow"><span class="code">Prevenção</span> Fundamentos <span class="duration">55 min</span></div>
+      <h2 class="m-title">Prevenção de acidentes e doenças do trabalho</h2>
+      <p class="lede">O designado precisa reconhecer, na rotina do estabelecimento, os principais fatores que levam a acidentes e adoecimento — para poder agir antes que eles se tornem um problema.</p>
+
+      <h3>Principais frentes de atuação</h3>
+      <ul>
+        <li>Verificar o uso correto de <strong>EPIs</strong> (Equipamentos de Proteção Individual) fornecidos pela empresa.</li>
+        <li>Observar a organização do ambiente de trabalho: arranjo físico, sinalização, rotas de fuga.</li>
+        <li>Ficar atento a condições ergonômicas: postura, repetitividade e esforço físico.</li>
+        <li>Auxiliar na emissão da <strong>CAT</strong> (Comunicação de Acidente de Trabalho) quando um acidente ocorrer.</li>
+        <li>Acompanhar a Ordem de Serviço sobre segurança e saúde no trabalho da empresa.</li>
+        <li>Incluir a inclusão de pessoas com deficiência e reabilitados nos processos de trabalho entre os temas observados.</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section class="module" data-mod="5">
+      <div class="m-eyebrow"><span class="code">SIPAT</span> Ações anuais <span class="duration">45 min</span></div>
+      <h2 class="m-title">SIPAT e investigação de acidentes</h2>
+
+      <h3>SIPAT</h3>
+      <p>A <strong>Semana Interna de Prevenção de Acidentes do Trabalho</strong> deve ser promovida anualmente, com atividades educativas voltadas à conscientização sobre segurança e saúde no trabalho. O designado participa da organização e divulgação dessa semana no estabelecimento.</p>
+
+      <h3>Investigação de acidentes</h3>
+      <ul>
+        <li>Sempre que ocorrer um acidente, o designado auxilia a empresa a entender as causas — condição insegura, ato inseguro ou falha de processo.</li>
+        <li>O objetivo não é apurar culpa, mas identificar o que precisa mudar para que o acidente não se repita.</li>
+        <li>Os registros dessa investigação, assim como os do treinamento, devem ficar arquivados por, no mínimo, <strong>5 anos</strong>, à disposição da fiscalização do trabalho.</li>
+      </ul>
+    </section>
+
+    <!-- 6 -->
+    <section class="module" data-mod="6">
+      <div class="m-eyebrow"><span class="code">5.7.4</span> Capacitação <span class="duration">40 min</span></div>
+      <h2 class="m-title">Carga horária do treinamento</h2>
+      <p class="lede">Desde a atualização da NR-05, a carga horária do treinamento deixou de ser "20 horas para todo mundo" e passou a variar conforme o grau de risco (CNAE) do estabelecimento.</p>
+
+      <table>
+        <tr><th>Grau de risco</th><th>Carga horária mínima</th></tr>
+        <tr><td>Grau de risco 1 <em>(este treinamento)</em></td><td><strong>8 horas</strong></td></tr>
+        <tr><td>Grau de risco 2</td><td>12 horas</td></tr>
+        <tr><td>Grau de risco 3</td><td>16 horas</td></tr>
+        <tr><td>Grau de risco 4</td><td>20 horas</td></tr>
+      </table>
+
+      <div class="card note">
+        Para estabelecimentos de <strong>grau de risco 1</strong>, o treinamento do representante designado pode ser realizado <strong>integralmente a distância (EAD)</strong> ou semipresencial, nos termos da NR-1. A carga horária deve ser distribuída em no máximo 8 horas diárias.
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="module" data-mod="7">
+      <div class="m-eyebrow"><span class="code">Garantia</span> Proteção legal <span class="duration">35 min</span></div>
+      <h2 class="m-title">O designado tem estabilidade?</h2>
+      <p class="lede">Este é um dos pontos que mais gera dúvida — e a resposta é diferente da CIPA formal.</p>
+
+      <div class="card alert">
+        <strong>Não.</strong> A estabilidade no emprego prevista em lei se aplica apenas aos membros <strong>eleitos</strong> pelos empregados numa CIPA formal (titulares e suplentes). Como o representante designado é <strong>nomeado</strong> pelo empregador, e não eleito, ele <strong>não possui</strong> essa garantia de estabilidade.
+      </div>
+
+      <p>Isso não significa que o designado fique desprotegido em outras frentes — os direitos comuns da CLT continuam valendo normalmente. A distinção é específica sobre a estabilidade adicional ligada à representação na CIPA, que decorre do processo eleitoral, inexistente na nomeação do designado.</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="module" data-mod="8">
+      <div class="m-eyebrow"><span class="code">2022–2024</span> Atualização <span class="duration">55 min</span></div>
+      <h2 class="m-title">O designado e a prevenção ao assédio</h2>
+      <p class="lede">Uma das mudanças mais relevantes dos últimos anos ampliou o papel do designado para além dos acidentes físicos.</p>
+
+      <a class="video-wrap video-link" href="https://www.youtube.com/watch?v=UFfWficWj-g" target="_blank" rel="noopener">
+        <div class="vid-label">▸ Aula em vídeo — Riscos psicossociais, saúde mental e assédio</div>
+        <div class="video-thumb">
+          <img src="https://img.youtube.com/vi/UFfWficWj-g/hqdefault.jpg" alt="Miniatura do vídeo" loading="lazy">
+          <span class="play-badge">▶ Assistir no YouTube</span>
+        </div>
+      </a>
+
+      <div class="chip-row">
+        <span class="chip" style="background:var(--ink);"><span class="sw"></span>Lei 14.457/2022</span>
+        <span class="chip" style="background:var(--green-deep); color:#fff;"><span class="sw" style="background:var(--ink);"></span>Portaria MTP 1.419/2024</span>
+      </div>
+
+      <ul>
+        <li>A prevenção de <strong>violência e assédio</strong> no trabalho passou a integrar o conteúdo obrigatório do treinamento do representante designado.</li>
+        <li>O designado deve conhecer e ajudar a divulgar os canais de denúncia disponíveis na empresa.</li>
+        <li>A empresa deve manter medidas de enfrentamento à violência e ao assédio, com participação do designado na orientação dos empregados sobre o tema.</li>
+      </ul>
+    </section>
+
+    <!-- 9 quiz -->
+    <section class="module" data-mod="9">
+      <div class="m-eyebrow"><span class="code">Avaliação</span> Fixação <span class="duration">40 min</span></div>
+      <h2 class="m-title">Teste seus conhecimentos</h2>
+      <p class="lede">Responda as questões abaixo para revisar os pontos principais do treinamento.</p>
+      <div id="quizArea"></div>
+      <div id="quizResult"></div>
+    </section>
+
+    <!-- 10 histórico de acesso -->
+    <section class="module" data-mod="10">
+      <div class="m-eyebrow"><span class="code">Registro</span> Acompanhamento</div>
+      <h2 class="m-title">Histórico de acesso e resultado da prova</h2>
+      <p class="lede">Cada vez que uma aula é aberta nesta sessão, o horário fica registrado abaixo. Assim que a prova for concluída, o resultado e a data também aparecem aqui.</p>
+
+      <div id="logTableWrap"><p class="log-empty">Nenhum acesso registrado ainda nesta sessão.</p></div>
+
+      <h3>Resultado da prova</h3>
+      <div id="quizResultSummary"><p class="log-empty">Prova ainda não realizada.</p></div>
+
+      <div class="log-actions">
+        <button class="navbtn primary" id="downloadLogBtn">Baixar histórico + resultado (.xlsx)</button>
+        <button class="navbtn" id="clearLogBtn">Limpar histórico</button>
+      </div>
+
+      <div class="card note">
+        Este histórico é registrado apenas durante a sessão atual do navegador (não fica salvo ao fechar a página). O arquivo Excel baixado reúne, em abas separadas, o <strong>histórico de acesso</strong> e o <strong>resultado da prova</strong>, junto com nome do colaborador e empresa.
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <button class="navbtn" id="prevBtn">← Anterior</button>
+      <button class="navbtn primary" id="nextBtn">Próximo módulo →</button>
+    </div>
+
+    <footer class="appfoot">
+      <strong>G.A Occupational Safety</strong> · Conteúdo baseado na NR-05 (Portaria MTP nº 1.419/2024) e na Lei nº 14.457/2022, aplicado ao representante designado de estabelecimentos de grau de risco 1. Material de apoio para treinamento interno — consulte sempre o texto oficial da norma vigente para fins de conformidade legal.
+    </footer>
+  </main>
+</div>
+
+<div class="app" id="adminRoot" style="display:none;">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="eyebrow" style="color:rgba(236,237,241,0.5); font-size:11px;">G.A Occupational Safety</span>
+      </div>
+      <span class="eyebrow">Área administrativa</span>
+      <h1>NR-05<br>Designado</h1>
+      <p class="sub">Cadastro de alunos e acompanhamento do treinamento do representante designado.</p>
+    </div>
+    <button type="button" class="navbtn" id="adminLogoutBtn" style="width:100%; margin-top:26px; border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
+  </aside>
+
+  <main>
+    <div class="m-eyebrow"><span class="code">Master</span> Gestão do treinamento</div>
+    <h2 class="m-title">Alunos autorizados</h2>
+    <p class="lede">Cadastre aqui quem pode acessar o treinamento. Cada aluno recebe um usuário e senha próprios para entrar pelo mesmo link.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Cadastrar novo aluno</h3>
+      <form id="addStudentForm">
+        <div class="field">
+          <label for="newStudentName">Nome completo</label>
+          <input type="text" id="newStudentName" autocomplete="off" required>
+        </div>
+        <div class="field">
+          <label for="newStudentUser">Usuário</label>
+          <input type="text" id="newStudentUser" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+        </div>
+        <div class="field">
+          <label for="newStudentPass">Senha inicial</label>
+          <input type="text" id="newStudentPass" autocomplete="off" required>
+        </div>
+        <p class="login-error" id="addStudentError"></p>
+        <button type="submit" class="login-btn" id="addStudentBtn" style="width:auto; padding:11px 22px;">Cadastrar aluno</button>
+      </form>
+    </div>
+
+    <h3>Progresso dos alunos</h3>
+    <p class="lede" style="font-size:14px; margin-bottom:14px;" id="studentsSummaryHint">Carregando alunos cadastrados…</p>
+    <div id="studentsTableWrap"></div>
+
+    <div class="log-actions" style="margin-top:6px;">
+      <button class="navbtn primary" id="downloadAllBtn">Baixar relatório de todos os alunos (.xlsx)</button>
+      <button class="navbtn" id="refreshStudentsBtn">Atualizar lista</button>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC5HiR5EZvHHzkM_kdbgDLDZJr7VDj1U5Q",
+  authDomain: "normas-7f1ed.firebaseapp.com",
+  projectId: "normas-7f1ed",
+  storageBucket: "normas-7f1ed.firebasestorage.app",
+  messagingSenderId: "683703418284",
+  appId: "1:683703418284:web:1b9927a1003c117d770e09",
+  measurementId: "G-B5WXY28YWD"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+
+let authReadyResolve;
+const authReady = new Promise((resolve) => { authReadyResolve = resolve; });
+onAuthStateChanged(auth, (user) => { if(user) authReadyResolve(user); });
+signInAnonymously(auth).catch(err => console.error('Falha no login anônimo do Firebase', err));
+
+let learnerName = '';
+let learnerUser = '';
+
+// Credenciais padrão do acesso master — troque a senha no primeiro acesso (veja o botão "Trocar minha senha" no painel).
+const DEFAULT_ADMIN_USER = 'admin';
+const DEFAULT_ADMIN_PASS = 'nr05master';
+
+function showLoginError(msg){
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function showAddStudentError(msg, ok){
+  const el = document.getElementById('addStudentError');
+  el.textContent = msg;
+  el.style.color = ok ? 'var(--risk-fisico)' : 'var(--red)';
+  el.style.display = 'block';
+}
+
+async function hashText(text){
+  if(typeof crypto === 'undefined' || !crypto.subtle){
+    throw new Error('Este navegador não permite login seguro nesta página (crypto.subtle indisponível). Isso costuma acontecer quando o arquivo é aberto fora de uma conexão https:// — abra pelo link original em vez do arquivo baixado.');
+  }
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function getUser(username){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'users', username));
+    return snap.exists() ? snap.data() : null;
+  }catch(e){ console.error('Falha ao consultar usuário', e); throw e; }
+}
+async function setUser(username, data){
+  await authReady;
+  await setDoc(doc(db, 'users', username), data);
+}
+async function getAllUsersMap(){
+  await authReady;
+  const snap = await getDocs(collection(db, 'users'));
+  const map = {};
+  snap.forEach(d => { map[d.id] = d.data(); });
+  return map;
+}
+async function loadUserData(username){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'userdata', username));
+    return snap.exists() ? snap.data() : {accessLog:[], quizResult:null};
+  }catch(e){ console.error('Falha ao carregar progresso', e); return {accessLog:[], quizResult:null}; }
+}
+async function persistUserData(){
+  if(!learnerUser) return;
+  try{
+    await authReady;
+    await setDoc(doc(db, 'userdata', learnerUser), {
+      accessLog: accessLog.map(a => ({modulo:a.modulo, numero:a.numero, quando:a.quando.toISOString()})),
+      quizResult: quizResult ? {...quizResult, quando: quizResult.quando.toISOString()} : null
+    });
+  }catch(e){ console.error('Falha ao salvar progresso', e); }
+}
+
+async function ensureAdminBootstrap(){
+  try{
+    const users = await getAllUsersMap();
+    const hasAdmin = Object.values(users).some(u => u.role === 'admin');
+    if(!hasAdmin){
+      const hash = await hashText(DEFAULT_ADMIN_PASS);
+      await setUser(DEFAULT_ADMIN_USER, {name:'Administrador', hash, role:'admin'});
+    }
+  }catch(err){
+    console.error('Falha ao preparar acesso admin', err);
+  }
+}
+
+const loginForm = document.getElementById('loginForm');
+
+async function startSession(username, name){
+  learnerUser = username;
+  learnerName = name;
+  const data = await loadUserData(username);
+  accessLog.length = 0;
+  (data.accessLog || []).forEach(a => {
+    accessLog.push({modulo:a.modulo, numero:a.numero, quando:new Date(a.quando)});
+    seen.add(a.numero - 1);
+  });
+  quizResult = data.quizResult ? {...data.quizResult, quando:new Date(data.quizResult.quando)} : null;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'grid';
+  document.getElementById('learnerLabel').textContent = 'Colaborador(a): ' + learnerName;
+  renderLog();
+  renderQuizSummary();
+  render();
+  await logAccess(0);
+}
+
+async function startAdminSession(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminRoot').style.display = 'grid';
+  await renderStudentsTable();
+}
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submitBtn = document.getElementById('loginSubmitBtn');
+  document.getElementById('loginError').style.display = 'none';
+  try{
+    const user = document.getElementById('loginUser').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value;
+    if(!user || !pass){ showLoginError('Preencha usuário e senha.'); return; }
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Entrando…';
+    const record = await getUser(user);
+    if(!record){ showLoginError('Usuário não encontrado. Fale com quem enviou este link.'); return; }
+    const hash = await hashText(pass);
+    if(hash !== record.hash){ showLoginError('Senha incorreta.'); return; }
+    if(record.role === 'admin'){
+      await startAdminSession();
+    } else {
+      await startSession(user, record.name);
+    }
+  }catch(err){
+    console.error('Erro no login', err);
+    showLoginError('Erro ao entrar: ' + (err && err.message ? err.message : 'tente novamente.'));
+  }finally{
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Entrar →';
+  }
+});
+
+document.getElementById('adminLogoutBtn').addEventListener('click', () => {
+  document.getElementById('adminRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+});
+
+document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  document.getElementById('addStudentError').style.display = 'none';
+  try{
+    const name = document.getElementById('newStudentName').value.trim();
+    const user = document.getElementById('newStudentUser').value.trim().toLowerCase();
+    const pass = document.getElementById('newStudentPass').value;
+    if(!name || !user || !pass){ showAddStudentError('Preencha todos os campos.'); return; }
+    if(pass.length < 4){ showAddStudentError('Use uma senha com pelo menos 4 caracteres.'); return; }
+    const existing = await getUser(user);
+    if(existing){ showAddStudentError('Esse usuário já existe. Escolha outro nome de usuário.'); return; }
+    const hash = await hashText(pass);
+    await setUser(user, {name, hash, role:'aluno'});
+    document.getElementById('newStudentName').value = '';
+    document.getElementById('newStudentUser').value = '';
+    document.getElementById('newStudentPass').value = '';
+    showAddStudentError(`Aluno "${name}" cadastrado. Usuário: ${user}`, true);
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao cadastrar aluno', err);
+    showAddStudentError('Erro ao cadastrar: ' + (err && err.message ? err.message : 'tente novamente.'));
+  }
+});
+
+document.getElementById('refreshStudentsBtn').addEventListener('click', renderStudentsTable);
+
+async function getAllStudents(){
+  const users = await getAllUsersMap();
+  const studentEntries = Object.entries(users).filter(([, u]) => u.role !== 'admin');
+  const students = await Promise.all(studentEntries.map(async ([username, u]) => {
+    const data = await loadUserData(username);
+    const contentSeen = (data.accessLog || []).filter(a => a.numero <= 10).length;
+    return {
+      username,
+      name: u.name,
+      aulasVistas: contentSeen,
+      quiz: data.quizResult || null
+    };
+  }));
+  return students;
+}
+
+async function renderStudentsTable(){
+  const hint = document.getElementById('studentsSummaryHint');
+  const wrap = document.getElementById('studentsTableWrap');
+  hint.textContent = 'Carregando alunos cadastrados…';
+  const students = await getAllStudents();
+  if(students.length === 0){
+    hint.textContent = 'Nenhum aluno cadastrado ainda. Use o formulário acima para adicionar o primeiro.';
+    wrap.innerHTML = '';
+    return;
+  }
+  hint.textContent = `${students.length} aluno(s) cadastrado(s).`;
+  const rows = students.map(s => {
+    const quizCell = s.quiz ? `${s.quiz.score}/${s.quiz.total} (${s.quiz.percent}%)` : 'Não realizada';
+    return `<tr><td>${s.name}</td><td class="ts">${s.username}</td><td>${s.aulasVistas} / 10</td><td>${quizCell}</td></tr>`;
+  }).join('');
+  wrap.innerHTML = `<table class="log-table">
+    <tr><th>Nome</th><th>Usuário</th><th>Aulas vistas</th><th>Prova</th></tr>
+    ${rows}
+  </table>`;
+}
+
+document.getElementById('downloadAllBtn').addEventListener('click', async () => {
+  const students = await getAllStudents();
+  const wb = XLSX.utils.book_new();
+  const rows = [
+    ['G.A Occupational Safety — Treinamento NR-05 Designado'],
+    ['Relatório de todos os alunos'],
+    ['Exportado em:', formatTs(new Date())],
+    [],
+    ['Nome', 'Usuário', 'Aulas vistas', 'Pontuação', 'Percentual', 'Prova realizada em']
+  ];
+  students.forEach(s => {
+    rows.push([
+      s.name, s.username, `${s.aulasVistas}/10`,
+      s.quiz ? `${s.quiz.score}/${s.quiz.total}` : '-',
+      s.quiz ? `${s.quiz.percent}%` : '-',
+      s.quiz ? formatTs(new Date(s.quiz.quando)) : '-'
+    ]);
+  });
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:26},{wch:18},{wch:14},{wch:12},{wch:12},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Relatorio de alunos');
+  XLSX.writeFile(wb, `nr05-designado-relatorio-alunos-${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
+ensureAdminBootstrap();
+
+const modules = [
+  {title:"Introdução", dot:"var(--mint)"},
+  {title:"Nomeação do designado", dot:"var(--risk-acidente)"},
+  {title:"Atribuições", dot:"var(--risk-fisico)"},
+  {title:"Mapa de risco", dot:"var(--risk-ergonomico)"},
+  {title:"Prevenção de acidentes", dot:"var(--risk-fisico)"},
+  {title:"SIPAT e investigação", dot:"var(--risk-acidente)"},
+  {title:"Carga horária", dot:"var(--mint)"},
+  {title:"Estabilidade", dot:"var(--risk-quimico)"},
+  {title:"Assédio e violência", dot:"var(--risk-quimico)"},
+  {title:"Avaliação final", dot:"var(--mint)"},
+  {title:"Histórico de acesso", dot:"rgba(236,237,241,0.4)"}
+];
+
+let current = 0;
+const seen = new Set([0]);
+const accessLog = [];
+
+function logAccess(i){
+  accessLog.push({
+    modulo: modules[i].title,
+    numero: i + 1,
+    quando: new Date()
+  });
+  renderLog();
+}
+
+function formatTs(d){
+  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}
+
+function renderLog(){
+  const wrap = document.getElementById('logTableWrap');
+  if(!wrap) return;
+  if(accessLog.length === 0){
+    wrap.innerHTML = '<p class="log-empty">Nenhum acesso registrado ainda nesta sessão.</p>';
+    return;
+  }
+  let rows = accessLog.map(a => `<tr><td>${a.numero}. ${a.modulo}</td><td class="ts">${formatTs(a.quando)}</td></tr>`).join('');
+  wrap.innerHTML = `<table class="log-table"><tr><th>Aula</th><th>Visualizada em</th></tr>${rows}</table>`;
+}
+
+const modlist = document.getElementById('modlist');
+modules.forEach((m, i) => {
+  if(i === 10){
+    const sep = document.createElement('div');
+    sep.style.cssText = 'height:1px;background:rgba(236,237,241,0.14);margin:14px 4px 12px;';
+    modlist.appendChild(sep);
+  }
+  const btn = document.createElement('button');
+  btn.className = 'modbtn';
+  const numHtml = i === 10 ? '<span class="num">⏱</span>' : `<span class="num">${i+1}</span>`;
+  btn.innerHTML = `${numHtml}<span class="label">${m.title}</span><span class="dot" style="background:${m.dot}"></span>`;
+  btn.addEventListener('click', () => goTo(i));
+  modlist.appendChild(btn);
+});
+
+function render(){
+  document.querySelectorAll('.module').forEach(el => {
+    el.classList.toggle('active', Number(el.dataset.mod) === current);
+  });
+  document.querySelectorAll('.modbtn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === current);
+    btn.classList.toggle('done', seen.has(i));
+  });
+  document.getElementById('prevBtn').disabled = current === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  if(current === modules.length - 1){
+    nextBtn.textContent = 'Concluído ✓';
+    nextBtn.disabled = true;
+  } else {
+    nextBtn.textContent = 'Próximo módulo →';
+    nextBtn.disabled = false;
+  }
+  const contentSeen = [...seen].filter(i => i <= 9).length;
+  const fillPct = (contentSeen / 10) * 100;
+  document.getElementById('progressFill').style.width = fillPct + '%';
+  document.getElementById('progressLabel').textContent = `${contentSeen} / 10 aulas vistas`;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function goTo(i){
+  const isNewVisit = !seen.has(i);
+  current = i;
+  seen.add(i);
+  if(i <= 9 && isNewVisit){
+    logAccess(i);
+  }
+  render();
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => { if(current>0) goTo(current-1); });
+document.getElementById('nextBtn').addEventListener('click', () => { if(current<modules.length-1) goTo(current+1); });
+
+render();
+
+document.getElementById('downloadLogBtn').addEventListener('click', () => {
+  const wb = XLSX.utils.book_new();
+
+  const logRows = [
+    ['G.A Occupational Safety — Treinamento NR-05 Designado'],
+    ['Colaborador(a):', learnerName || '-'],
+    ['Usuário:', learnerUser || '-'],
+    ['Exportado em:', formatTs(new Date())],
+    [],
+    ['Aula', 'Número', 'Visualizada em']
+  ];
+  accessLog.forEach(a => logRows.push([a.modulo, a.numero, formatTs(a.quando)]));
+  const wsLog = XLSX.utils.aoa_to_sheet(logRows);
+  wsLog['!cols'] = [{wch:32},{wch:10},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsLog, 'Historico de acesso');
+
+  const quizRows = [
+    ['G.A Occupational Safety — Treinamento NR-05 Designado'],
+    ['Colaborador(a):', learnerName || '-'],
+    ['Usuário:', learnerUser || '-'],
+    [],
+    ['Pontuação', 'Percentual', 'Realizada em']
+  ];
+  if(quizResult){
+    quizRows.push([`${quizResult.score} de ${quizResult.total}`, quizResult.percent + '%', formatTs(quizResult.quando)]);
+  } else {
+    quizRows.push(['Prova ainda não realizada', '-', '-']);
+  }
+  const wsQuiz = XLSX.utils.aoa_to_sheet(quizRows);
+  wsQuiz['!cols'] = [{wch:26},{wch:14},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsQuiz, 'Resultado da prova');
+
+  const fileSlug = (learnerName || 'colaborador').trim().replace(/\s+/g,'-').toLowerCase();
+  XLSX.writeFile(wb, `nr05-designado-${fileSlug}-${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
+document.getElementById('clearLogBtn').addEventListener('click', () => {
+  accessLog.length = 0;
+  renderLog();
+});
+
+// QUIZ
+const questions = [
+  {
+    q: "Quando uma empresa deve nomear um representante designado em vez de constituir uma CIPA formal?",
+    opts: ["Quando ela quiser reduzir custos", "Quando não se enquadra no Quadro I da NR-4 e não é atendida por SESMT", "Sempre, independentemente do porte"],
+    correct: 1
+  },
+  {
+    q: "Como o representante designado é escolhido?",
+    opts: ["Por eleição secreta entre os empregados", "Nomeado diretamente pelo empregador entre seus empregados", "Indicado pelo sindicato da categoria"],
+    correct: 1
+  },
+  {
+    q: "Qual a carga horária mínima do treinamento do designado em estabelecimento de grau de risco 1?",
+    opts: ["20 horas", "8 horas", "40 horas"],
+    correct: 1
+  },
+  {
+    q: "O representante designado possui estabilidade no emprego como um membro eleito da CIPA?",
+    opts: ["Sim, a mesma estabilidade", "Não, pois ele é nomeado e não eleito", "Apenas durante a SIPAT"],
+    correct: 1
+  },
+  {
+    q: "No mapa de risco, o que indica o tamanho do círculo?",
+    opts: ["O tipo de risco", "A intensidade do risco percebido", "O número de acidentes já ocorridos"],
+    correct: 1
+  },
+  {
+    q: "O que a atualização de 2022/2024 acrescentou às atribuições do designado?",
+    opts: ["Prevenção de violência e assédio no trabalho", "Gestão financeira da empresa", "Contratação de novos funcionários"],
+    correct: 0
+  }
+];
+
+let score = 0;
+let answered = 0;
+const quizArea = document.getElementById('quizArea');
+
+questions.forEach((item, qi) => {
+  const box = document.createElement('div');
+  box.className = 'quiz-q';
+  const p = document.createElement('p');
+  p.className = 'qtext';
+  p.textContent = `${qi+1}. ${item.q}`;
+  box.appendChild(p);
+
+  item.opts.forEach((opt, oi) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = opt;
+    b.addEventListener('click', () => {
+      const allOpts = box.querySelectorAll('.opt');
+      allOpts.forEach(o => o.disabled = true);
+      if(oi === item.correct){
+        b.classList.add('correct');
+        score++;
+      } else {
+        b.classList.add('wrong');
+        allOpts[item.correct].classList.add('correct');
+      }
+      answered++;
+      if(answered === questions.length){
+        showResult();
+      }
+    });
+    box.appendChild(b);
+  });
+  quizArea.appendChild(box);
+});
+
+let quizResult = null;
+
+function showResult(){
+  quizResult = {
+    score: score,
+    total: questions.length,
+    percent: Math.round((score / questions.length) * 100),
+    quando: new Date()
+  };
+  const result = document.getElementById('quizResult');
+  result.innerHTML = `<div class="quiz-score">Você acertou ${score} de ${questions.length} questões</div>`;
+  renderQuizSummary();
+}
+
+function renderQuizSummary(){
+  const el = document.getElementById('quizResultSummary');
+  if(!el) return;
+  if(!quizResult){
+    el.innerHTML = '<p class="log-empty">Prova ainda não realizada.</p>';
+    return;
+  }
+  el.innerHTML = `<table class="log-table">
+    <tr><th>Pontuação</th><th>Percentual</th><th>Realizada em</th></tr>
+    <tr><td>${quizResult.score} de ${quizResult.total}</td><td>${quizResult.percent}%</td><td class="ts">${formatTs(quizResult.quando)}</td></tr>
+  </table>`;
+}
+</script>
+
+</body>
+</html>
