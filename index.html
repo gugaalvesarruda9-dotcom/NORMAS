@@ -485,6 +485,7 @@
     <div class="progress-label" id="progressLabel">0 / 9 aulas vistas</div>
 
     <nav class="modlist" id="modlist"></nav>
+    <button type="button" class="navbtn" id="studentLogoutBtn" style="width:100%; margin-top:20px; border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
   </aside>
 
   <main>
@@ -678,8 +679,8 @@
       <p class="lede">Uma das mudanças mais relevantes dos últimos anos ampliou o papel do designado para além dos acidentes físicos.</p>
 
       <div class="video-wrap">
-        <div class="vid-label">▸ Aula em vídeo — Riscos psicossociais, saúde mental e assédio</div>
-        <div class="video-frame"><iframe id="ytf-8" src="https://www.youtube.com/embed/UFfWficWj-g?enablejsapi=1" title="Prevenção de assédio e violência no trabalho" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-label">▸ Aula em vídeo — Campanha "Pare e Repare" (TST/CSJT)</div>
+        <div class="video-frame"><iframe id="ytf-8" src="https://www.youtube.com/embed/PCKp1Xv0kw0?enablejsapi=1" title="Assédio moral horizontal - Pare e Repare - TST/CSJT" allowfullscreen loading="lazy"></iframe></div>
       </div>
 
       <div class="chip-row">
@@ -692,6 +693,19 @@
         <li>O designado deve conhecer e ajudar a divulgar os canais de denúncia disponíveis na empresa.</li>
         <li>A empresa deve manter medidas de enfrentamento à violência e ao assédio, com participação do designado na orientação dos empregados sobre o tema.</li>
       </ul>
+
+      <h3>Os 4 tipos de assédio moral</h3>
+      <p class="lede" style="margin-bottom:16px;">Segundo a campanha "Pare e Repare" do TST e do CSJT, o assédio moral pode acontecer em quatro direções diferentes dentro da empresa.</p>
+
+      <div class="match-exercise" data-pairs='[["Assédio vertical descendente","Praticado por um superior hierárquico contra um subordinado"],["Assédio vertical ascendente","Praticado por um subordinado, ou grupo deles, contra um superior"],["Assédio horizontal","Ocorre entre colegas do mesmo nível hierárquico"],["Assédio institucional","Praticado pela própria organização, de forma sistêmica"]]'>
+        <h4>Pratique: ligue cada tipo de assédio à sua definição</h4>
+        <p class="match-hint">Clique em um tipo à esquerda e depois na definição correspondente à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
     </section>
 
     <!-- 9 documentação -->
@@ -756,16 +770,6 @@
 
       <h3>Tentativas da prova</h3>
       <div id="quizResultSummary"><p class="log-empty">Prova ainda não realizada.</p></div>
-
-      <div class="log-actions">
-        <button class="navbtn primary" id="downloadLogBtn">Baixar resultado da prova (.xlsx)</button>
-      </div>
-
-      <div class="card note">
-        O arquivo Excel baixado reúne, em abas separadas, o <strong>histórico de acesso</strong> (entrada e saída de cada aula) e o <strong>resultado das tentativas da prova</strong>, junto com seu nome e usuário.
-      </div>
-
-      <button type="button" class="navbtn" id="studentLogoutBtn" style="margin-top:18px;">Sair</button>
     </section>
 
     <div class="nav-buttons">
@@ -1736,30 +1740,6 @@ function initMatchExercises(){
 initMatchExercises();
 
 render();
-
-document.getElementById('downloadLogBtn').addEventListener('click', () => {
-  const wb = XLSX.utils.book_new();
-
-  const quizRows = [
-    ['G.A Occupational Safety — Treinamento NR-05 Designado'],
-    ['Colaborador(a):', learnerName || '-'],
-    ['Usuário:', learnerUser || '-'],
-    ['Exportado em:', formatTs(new Date())],
-    [],
-    ['Tentativa', 'Pontuação', 'Percentual', 'Resultado', 'Realizada em']
-  ];
-  if(quizAttempts.length){
-    quizAttempts.forEach((a, i) => quizRows.push([i+1, `${a.score} de ${a.total}`, a.percent + '%', a.aprovado ? 'Aprovado' : 'Reprovado', formatTs(a.quando)]));
-  } else {
-    quizRows.push(['-', 'Prova ainda não realizada', '-', '-', '-']);
-  }
-  const wsQuiz = XLSX.utils.aoa_to_sheet(quizRows);
-  wsQuiz['!cols'] = [{wch:10},{wch:14},{wch:12},{wch:12},{wch:22}];
-  XLSX.utils.book_append_sheet(wb, wsQuiz, 'Resultado da prova');
-
-  const fileSlug = (learnerName || 'colaborador').trim().replace(/\s+/g,'-').toLowerCase();
-  XLSX.writeFile(wb, `nr05-designado-resultado-${fileSlug}-${new Date().toISOString().slice(0,10)}.xlsx`);
-});
 
 // QUIZ
 const questions = [
