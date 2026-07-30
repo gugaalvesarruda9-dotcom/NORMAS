@@ -1889,10 +1889,11 @@ function renderQuizGate(){
 
   if(passed){
     const phrase = MOTIVATIONAL_PHRASES[Math.floor(Math.random() * MOTIVATIONAL_PHRASES.length)];
+    const bestPassed = quizAttempts.find(a => a.aprovado);
     gate.innerHTML = `
       <div class="card note">
         <strong>Parabéns, você foi aprovado! 🎉</strong>
-        <p style="margin:10px 0 0;">Você atingiu a nota mínima exigida (${PASS_PERCENT}%). Entre em contato com o instrutor responsável pelo treinamento para retirar seu certificado.</p>
+        <p style="margin:10px 0 0;">Você acertou ${bestPassed.score} de ${bestPassed.total} questões (${bestPassed.percent}%) — acima do mínimo exigido de ${PASS_PERCENT}%. Entre em contato com o instrutor responsável pelo treinamento para retirar seu certificado.</p>
         <p style="margin:14px 0 0; font-style:italic; color:var(--mint);">"${phrase}"</p>
       </div>
       <div class="card" style="margin-top:16px;">
