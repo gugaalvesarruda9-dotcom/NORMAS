@@ -545,7 +545,7 @@
 
       <div class="video-wrap">
         <div class="vid-label">▸ Aula em vídeo — Atribuições da CIPA na prática</div>
-        <div class="video-frame"><iframe id="ytf-2" src="https://www.youtube.com/embed/mY93A4GZ0bM?enablejsapi=1" title="Atribuições da CIPA" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-frame"><iframe id="ytf-2" src="https://www.youtube.com/embed/HWYLV6aVVbs?enablejsapi=1" title="Atribuições do designado" allowfullscreen loading="lazy"></iframe></div>
       </div>
 
       <ul>
@@ -769,6 +769,8 @@
       <div class="card note">
         O arquivo Excel baixado reúne, em abas separadas, o <strong>histórico de acesso</strong> (entrada e saída de cada aula) e o <strong>resultado das tentativas da prova</strong>, junto com seu nome e usuário.
       </div>
+
+      <button type="button" class="navbtn" id="studentLogoutBtn" style="margin-top:18px;">Sair</button>
     </section>
 
     <div class="nav-buttons">
@@ -840,6 +842,10 @@
           <div class="field">
             <label for="newStudentName">Nome completo</label>
             <input type="text" id="newStudentName" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label for="newStudentCompany">Em nome de (empresa)</label>
+            <input type="text" id="newStudentCompany" autocomplete="off">
           </div>
           <div class="field">
             <label for="newStudentUser">Usuário</label>
@@ -1117,6 +1123,17 @@ document.getElementById('adminLogoutBtn').addEventListener('click', () => {
   document.getElementById('loginPass').value = '';
 });
 
+document.getElementById('studentLogoutBtn').addEventListener('click', async () => {
+  closeOpenEntry();
+  await persistUserData();
+  learnerUser = '';
+  learnerName = '';
+  document.getElementById('appRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+});
+
 document.getElementById('changeAdminPassForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const el = document.getElementById('changeAdminPassError');
@@ -1174,6 +1191,7 @@ document.getElementById('addStudentForm').addEventListener('submit', async (e) =
   document.getElementById('addStudentError').style.display = 'none';
   try{
     const name = document.getElementById('newStudentName').value.trim();
+    const company = document.getElementById('newStudentCompany').value.trim();
     const user = document.getElementById('newStudentUser').value.trim().toLowerCase();
     const pass = document.getElementById('newStudentPass').value;
     if(!name || !user || !pass){ showAddStudentError('Preencha todos os campos.'); return; }
@@ -1181,8 +1199,9 @@ document.getElementById('addStudentForm').addEventListener('submit', async (e) =
     const existing = await getUser(user);
     if(existing){ showAddStudentError('Esse usuário já existe. Escolha outro nome de usuário.'); return; }
     const hash = await hashText(pass);
-    await setUser(user, {name, hash, role:'aluno'});
+    await setUser(user, {name, company, hash, role:'aluno'});
     document.getElementById('newStudentName').value = '';
+    document.getElementById('newStudentCompany').value = '';
     document.getElementById('newStudentUser').value = '';
     document.getElementById('newStudentPass').value = '';
     showAddStudentError(`Aluno "${name}" cadastrado. Usuário: ${user}`, true);
@@ -1241,6 +1260,7 @@ async function getAllStudents(){
     return {
       username,
       name: u.name,
+      company: u.company || '',
       aulasVistas: contentSeen,
       accessLog: data.accessLog || [],
       quizAttempts: data.quizAttempts || [],
@@ -1267,11 +1287,21 @@ async function renderStudentsTable(){
     return;
   }
   hint.textContent = `${students.length} aluno(s) cadastrado(s).`;
-  const rows = students.map(s => {
+  renderStudentsFilter(students);
+  renderCharts(students);
+}
+
+function renderStudentsFilter(students){
+  const wrap = document.getElementById('studentsTableWrap');
+  const filterVal = (document.getElementById('companyFilter')?.value || '').toLowerCase();
+  const filtered = filterVal ? students.filter(s => (s.company || '').toLowerCase().includes(filterVal)) : students;
+
+  const rows = filtered.map(s => {
     const quizCell = s.attemptsCount === 0 ? 'Não realizada' : `${s.best.percent}% (${s.attemptsCount}/${MAX_ATTEMPTS} tent.) — ${s.aprovado ? 'Aprovado' : 'Reprovado'}`;
     return `<tr>
       <td><input type="checkbox" class="student-select" data-user="${s.username}"></td>
       <td>${s.name}</td>
+      <td>${s.company || '—'}</td>
       <td class="ts">${s.username}</td>
       <td>${s.aulasVistas} / 12</td>
       <td>${quizCell}</td>
@@ -1282,10 +1312,20 @@ async function renderStudentsTable(){
       </td>
     </tr>`;
   }).join('');
-  wrap.innerHTML = `<table class="log-table">
-    <tr><th><input type="checkbox" id="selectAllStudents"></th><th>Nome</th><th>Usuário</th><th>Aulas vistas</th><th>Prova</th><th>Ações</th></tr>
-    ${rows}
-  </table>`;
+
+  wrap.innerHTML = `
+    <div class="field" style="max-width:280px;">
+      <label for="companyFilter">Filtrar por empresa</label>
+      <input type="text" id="companyFilter" placeholder="Digite o nome da empresa…" value="${filterVal}">
+    </div>
+    <table class="log-table">
+      <tr><th><input type="checkbox" id="selectAllStudents"></th><th>Nome</th><th>Empresa</th><th>Usuário</th><th>Aulas vistas</th><th>Prova</th><th>Ações</th></tr>
+      ${rows || '<tr><td colspan="7" class="log-empty">Nenhum aluno encontrado para esse filtro.</td></tr>'}
+    </table>`;
+
+  document.getElementById('companyFilter').addEventListener('input', () => renderStudentsFilter(studentsCache));
+  document.getElementById('companyFilter').focus();
+  document.getElementById('companyFilter').selectionStart = document.getElementById('companyFilter').value.length;
 
   document.getElementById('selectAllStudents').addEventListener('change', (e) => {
     wrap.querySelectorAll('.student-select').forEach(cb => { cb.checked = e.target.checked; });
@@ -1294,8 +1334,6 @@ async function renderStudentsTable(){
   wrap.querySelectorAll('button[data-action]').forEach(btn => {
     btn.addEventListener('click', () => handleStudentAction(btn.dataset.action, btn.dataset.user));
   });
-
-  renderCharts(students);
 }
 
 function kpiCard(label, value, color){
@@ -1400,9 +1438,11 @@ document.getElementById('closeStudentDetailBtn').addEventListener('click', () =>
 async function editStudent(student){
   const newName = prompt('Nome completo:', student.name);
   if(newName === null) return;
+  const newCompany = prompt('Em nome de (empresa):', student.company || '');
+  if(newCompany === null) return;
   const newPass = prompt('Nova senha (deixe em branco para não alterar a senha):', '');
   try{
-    const patch = { name: newName.trim() || student.name, role: 'aluno' };
+    const patch = { name: newName.trim() || student.name, company: newCompany.trim(), role: 'aluno' };
     if(newPass && newPass.trim()){
       if(newPass.trim().length < 4){ alert('A senha precisa ter pelo menos 4 caracteres. Nada foi salvo.'); return; }
       patch.hash = await hashText(newPass.trim());
@@ -1601,7 +1641,7 @@ function render(){
   document.querySelectorAll('.module').forEach(el => {
     el.classList.toggle('active', Number(el.dataset.mod) === current);
   });
-  document.querySelectorAll('.modbtn').forEach((btn, i) => {
+  document.querySelectorAll('#modlist .modbtn').forEach((btn, i) => {
     btn.classList.toggle('active', i === current);
     btn.classList.toggle('done', seen.has(i));
     btn.disabled = i > maxUnlocked;
