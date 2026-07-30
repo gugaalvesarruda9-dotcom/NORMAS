@@ -309,6 +309,27 @@
   .opt.correct{ background:rgba(22,163,74,0.16); border-color:var(--green); }
   .opt.wrong{ background:rgba(240,85,92,0.14); border-color:var(--red); }
   .opt:disabled{ cursor:default; }
+  .match-exercise{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; margin:22px 0;
+  }
+  .match-exercise h4{ margin:0 0 4px; font-size:15px; }
+  .match-hint{ font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
+  .match-cols{ display:flex; gap:22px; flex-wrap:wrap; }
+  .match-col{ flex:1; min-width:220px; display:flex; flex-direction:column; gap:8px; }
+  .match-item{
+    text-align:left; padding:10px 14px; border-radius:8px;
+    border:1.5px solid var(--line); background:var(--paper);
+    color:var(--text); font-size:13.5px; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .match-item:hover{ border-color:var(--green); }
+  .match-item.selected{ border-color:var(--green); background:rgba(22,163,74,0.12); }
+  .match-item.correct{ border-color:var(--green); background:rgba(22,163,74,0.2); cursor:default; }
+  .match-item.wrong{ border-color:var(--red); background:rgba(240,85,92,0.14); }
+  .match-item:disabled{ cursor:default; opacity:.85; }
+  .match-feedback{ margin:14px 0 0; font-size:13px; color:var(--ink-soft); }
+
   .quiz-score{
     font-family:'Archivo Black', sans-serif; font-size:22px; text-align:center;
     padding:26px; background:var(--ink); color:var(--green); border-radius:12px; margin-top:8px;
@@ -535,6 +556,16 @@
         <li>Colaborar na realização da <strong>SIPAT</strong> (Semana Interna de Prevenção de Acidentes do Trabalho).</li>
         <li><strong>Desde 2022/2024:</strong> orientar sobre prevenção de assédio e violência no trabalho e divulgar canais de denúncia disponíveis.</li>
       </ul>
+
+      <div class="match-exercise" data-pairs='[["CAT","Documento que comunica um acidente de trabalho"],["EPI","Equipamento de uso individual que reduz o risco de acidente"],["SIPAT","Semana anual de conscientização sobre prevenção de acidentes"],["Mapa de risco","Representação visual dos riscos por setor da empresa"]]'>
+        <h4>Pratique: ligue cada termo à ação ou definição correta</h4>
+        <p class="match-hint">Clique em um termo à esquerda e depois na definição correspondente à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
     </section>
 
     <!-- 3 -->
@@ -567,6 +598,16 @@
 
       <div class="card note">
         Quanto <strong>maior o círculo</strong>, maior a intensidade do risco percebido naquele ponto do ambiente de trabalho. O mapa deve ser afixado em local visível e revisado sempre que houver mudança relevante no processo.
+      </div>
+
+      <div class="match-exercise" data-pairs='[["Risco físico","Ruído, calor, vibração"],["Risco químico","Poeiras, gases, vapores"],["Risco biológico","Vírus, bactérias, fungos"],["Risco ergonômico","Postura inadequada, repetitividade"],["Risco de acidente","Máquinas sem proteção, arranjo físico ruim"]]'>
+        <h4>Pratique: ligue cada tipo de risco ao seu exemplo</h4>
+        <p class="match-hint">Clique em um tipo de risco à esquerda e depois no exemplo correspondente à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
       </div>
     </section>
 
@@ -755,78 +796,121 @@
       <h1>NR-05<br>Designado</h1>
       <p class="sub">Cadastro de alunos e acompanhamento do treinamento do representante designado.</p>
     </div>
+    <nav class="modlist" style="margin-top:24px;">
+      <button class="modbtn admin-tab-btn active" data-tab="dashboard"><span class="num">◆</span><span class="label">Dashboard</span></button>
+      <button class="modbtn admin-tab-btn" data-tab="alunos"><span class="num">◆</span><span class="label">Alunos</span></button>
+      <button class="modbtn admin-tab-btn" data-tab="config"><span class="num">◆</span><span class="label">Configurações</span></button>
+    </nav>
     <button type="button" class="navbtn" id="adminLogoutBtn" style="width:100%; margin-top:26px; border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
   </aside>
 
   <main>
-    <div class="m-eyebrow"><span class="code">Master</span> Gestão do treinamento</div>
-    <h2 class="m-title">Alunos autorizados</h2>
-    <p class="lede">Cadastre aqui quem pode acessar o treinamento. Cada aluno recebe um usuário e senha próprios para entrar pelo mesmo link.</p>
+    <!-- DASHBOARD -->
+    <div class="admin-panel" id="panel-dashboard">
+      <div class="m-eyebrow"><span class="code">Master</span> Visão geral</div>
+      <h2 class="m-title">Dashboard</h2>
+      <p class="lede">Acompanhamento consolidado do treinamento de todos os alunos.</p>
 
-    <div class="card alert">
-      <h3 style="margin-top:0;">Trocar minha senha</h3>
-      <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:16px;">A senha inicial do acesso master fica visível no código do site. Troque assim que possível.</p>
-      <form id="changeAdminPassForm">
-        <div class="field">
-          <label for="newAdminPass">Nova senha</label>
-          <input type="text" id="newAdminPass" autocomplete="off" required>
-        </div>
-        <p class="login-error" id="changeAdminPassError"></p>
-        <button type="submit" class="login-btn" id="changeAdminPassBtn" style="width:auto; padding:11px 22px;">Salvar nova senha</button>
-      </form>
-    </div>
+      <div id="adminKpis" class="riskmap-wrap" style="margin-top:6px; gap:16px;"></div>
 
-    <div class="card">
-      <h3 style="margin-top:0;">Cadastrar novo aluno</h3>
-      <form id="addStudentForm">
-        <div class="field">
-          <label for="newStudentName">Nome completo</label>
-          <input type="text" id="newStudentName" autocomplete="off" required>
+      <div class="riskmap-wrap" style="margin-top:20px;">
+        <div class="card" style="flex:1; min-width:320px;">
+          <h3 style="margin-top:0; font-size:16px;">Conclusão da prova</h3>
+          <div style="position:relative; height:280px;"><canvas id="completionChart"></canvas></div>
         </div>
-        <div class="field">
-          <label for="newStudentUser">Usuário</label>
-          <input type="text" id="newStudentUser" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+        <div class="card" style="flex:1; min-width:320px;">
+          <h3 style="margin-top:0; font-size:16px;">Ranking — melhores notas</h3>
+          <div style="position:relative; height:280px;"><canvas id="rankingChart"></canvas></div>
         </div>
-        <div class="field">
-          <label for="newStudentPass">Senha inicial</label>
-          <input type="text" id="newStudentPass" autocomplete="off" required>
-        </div>
-        <p class="login-error" id="addStudentError"></p>
-        <button type="submit" class="login-btn" id="addStudentBtn" style="width:auto; padding:11px 22px;">Cadastrar aluno</button>
-      </form>
-    </div>
-
-    <h3>Visão geral</h3>
-    <div class="riskmap-wrap" style="margin-top:10px;">
-      <div class="card" style="flex:1; min-width:280px;">
-        <h3 style="margin-top:0; font-size:15px;">Conclusão da prova</h3>
-        <canvas id="completionChart" height="220"></canvas>
       </div>
-      <div class="card" style="flex:1; min-width:280px;">
-        <h3 style="margin-top:0; font-size:15px;">Ranking — melhores notas</h3>
-        <canvas id="rankingChart" height="220"></canvas>
+
+      <h3>Feedbacks recebidos</h3>
+      <div id="feedbackListWrap"><p class="log-empty">Carregando feedbacks…</p></div>
+    </div>
+
+    <!-- ALUNOS -->
+    <div class="admin-panel" id="panel-alunos" style="display:none;">
+      <div class="m-eyebrow"><span class="code">Master</span> Gestão do treinamento</div>
+      <h2 class="m-title">Alunos autorizados</h2>
+      <p class="lede">Cadastre aqui quem pode acessar o treinamento. Cada aluno recebe um usuário e senha próprios para entrar pelo mesmo link.</p>
+
+      <div class="card">
+        <h3 style="margin-top:0;">Cadastrar novo aluno</h3>
+        <form id="addStudentForm">
+          <div class="field">
+            <label for="newStudentName">Nome completo</label>
+            <input type="text" id="newStudentName" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label for="newStudentUser">Usuário</label>
+            <input type="text" id="newStudentUser" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+          </div>
+          <div class="field">
+            <label for="newStudentPass">Senha inicial</label>
+            <input type="text" id="newStudentPass" autocomplete="off" required>
+          </div>
+          <p class="login-error" id="addStudentError"></p>
+          <button type="submit" class="login-btn" id="addStudentBtn" style="width:auto; padding:11px 22px;">Cadastrar aluno</button>
+        </form>
+      </div>
+
+      <h3>Progresso dos alunos</h3>
+      <p class="lede" style="font-size:14px; margin-bottom:14px;" id="studentsSummaryHint">Carregando alunos cadastrados…</p>
+      <div id="studentsTableWrap"></div>
+
+      <div class="log-actions" style="margin-top:6px;">
+        <button class="navbtn primary" id="downloadAllBtn">Baixar relatório de todos os alunos (.xlsx)</button>
+        <button class="navbtn" id="downloadSelectedBtn">Baixar histórico dos selecionados (.xlsx)</button>
+        <button class="navbtn" id="refreshStudentsBtn">Atualizar lista</button>
+      </div>
+
+      <div id="studentDetailWrap" style="display:none; margin-top:34px;">
+        <div class="nav-buttons" style="margin-top:0; border-top:none; padding-top:0;">
+          <h3 style="margin:0;" id="studentDetailTitle">Detalhes do aluno</h3>
+          <button class="navbtn" id="closeStudentDetailBtn">Fechar ✕</button>
+        </div>
+        <h4 style="margin:20px 0 8px; font-size:14px; color:var(--ink-soft);">Histórico de acesso (entrada e saída)</h4>
+        <div id="studentDetailLog"></div>
+        <h4 style="margin:24px 0 8px; font-size:14px; color:var(--ink-soft);">Tentativas da prova</h4>
+        <div id="studentDetailQuiz"></div>
       </div>
     </div>
 
-    <h3>Progresso dos alunos</h3>
-    <p class="lede" style="font-size:14px; margin-bottom:14px;" id="studentsSummaryHint">Carregando alunos cadastrados…</p>
-    <div id="studentsTableWrap"></div>
+    <!-- CONFIGURAÇÕES -->
+    <div class="admin-panel" id="panel-config" style="display:none;">
+      <div class="m-eyebrow"><span class="code">Master</span> Ajustes</div>
+      <h2 class="m-title">Configurações</h2>
+      <p class="lede">Ajustes que afetam como o treinamento funciona para todos os alunos.</p>
 
-    <div class="log-actions" style="margin-top:6px;">
-      <button class="navbtn primary" id="downloadAllBtn">Baixar relatório de todos os alunos (.xlsx)</button>
-      <button class="navbtn" id="downloadSelectedBtn">Baixar histórico dos selecionados (.xlsx)</button>
-      <button class="navbtn" id="refreshStudentsBtn">Atualizar lista</button>
-    </div>
-
-    <div id="studentDetailWrap" style="display:none; margin-top:34px;">
-      <div class="nav-buttons" style="margin-top:0; border-top:none; padding-top:0;">
-        <h3 style="margin:0;" id="studentDetailTitle">Detalhes do aluno</h3>
-        <button class="navbtn" id="closeStudentDetailBtn">Fechar ✕</button>
+      <div class="card alert">
+        <h3 style="margin-top:0;">Trocar minha senha</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:16px;">A senha inicial do acesso master fica visível no código do site. Troque assim que possível.</p>
+        <form id="changeAdminPassForm">
+          <div class="field">
+            <label for="newAdminPass">Nova senha</label>
+            <input type="text" id="newAdminPass" autocomplete="off" required>
+          </div>
+          <p class="login-error" id="changeAdminPassError"></p>
+          <button type="submit" class="login-btn" id="changeAdminPassBtn" style="width:auto; padding:11px 22px;">Salvar nova senha</button>
+        </form>
       </div>
-      <h4 style="margin:20px 0 8px; font-size:14px; color:var(--ink-soft);">Histórico de acesso (entrada e saída)</h4>
-      <div id="studentDetailLog"></div>
-      <h4 style="margin:24px 0 8px; font-size:14px; color:var(--ink-soft);">Tentativas da prova</h4>
-      <div id="studentDetailQuiz"></div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">Regras da prova</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:16px;">Vale para todos os alunos, inclusive quem já estiver com a prova em andamento.</p>
+        <form id="quizSettingsForm">
+          <div class="field">
+            <label for="settingPassPercent">Nota mínima para aprovação (%)</label>
+            <input type="number" id="settingPassPercent" min="1" max="100" required>
+          </div>
+          <div class="field">
+            <label for="settingMaxAttempts">Número máximo de tentativas</label>
+            <input type="number" id="settingMaxAttempts" min="1" max="10" required>
+          </div>
+          <p class="login-error" id="quizSettingsError"></p>
+          <button type="submit" class="login-btn" id="quizSettingsBtn" style="width:auto; padding:11px 22px;">Salvar configurações</button>
+        </form>
+      </div>
     </div>
   </main>
 </div>
@@ -945,6 +1029,7 @@ const loginForm = document.getElementById('loginForm');
 async function startSession(username, name){
   learnerUser = username;
   learnerName = name;
+  await loadQuizSettings();
   const data = await loadUserData(username);
   accessLog = [];
   (data.accessLog || []).forEach(a => {
@@ -974,11 +1059,26 @@ async function startSession(username, name){
 
 let currentAdminUser = '';
 
+function switchAdminTab(tab){
+  document.querySelectorAll('.admin-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('panel-' + tab).style.display = 'block';
+  document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchAdminTab(btn.dataset.tab));
+});
+
 async function startAdminSession(username){
   currentAdminUser = username;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminRoot').style.display = 'grid';
+  switchAdminTab('dashboard');
+  await loadQuizSettings();
+  document.getElementById('settingPassPercent').value = PASS_PERCENT;
+  document.getElementById('settingMaxAttempts').value = MAX_ATTEMPTS;
   await renderStudentsTable();
+  await renderFeedbackList();
 }
 
 loginForm.addEventListener('submit', async (e) => {
@@ -1044,6 +1144,31 @@ document.getElementById('changeAdminPassForm').addEventListener('submit', async 
   }
 });
 
+document.getElementById('quizSettingsForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const el = document.getElementById('quizSettingsError');
+  el.style.display = 'none';
+  try{
+    const passPercent = Number(document.getElementById('settingPassPercent').value);
+    const maxAttempts = Number(document.getElementById('settingMaxAttempts').value);
+    if(passPercent < 1 || passPercent > 100 || maxAttempts < 1 || maxAttempts > 10){
+      el.textContent = 'Valores fora do intervalo permitido.';
+      el.style.color = 'var(--red)';
+      el.style.display = 'block';
+      return;
+    }
+    await saveQuizSettings(passPercent, maxAttempts);
+    el.textContent = 'Configurações salvas com sucesso.';
+    el.style.color = 'var(--green)';
+    el.style.display = 'block';
+  }catch(err){
+    console.error('Erro ao salvar configurações', err);
+    el.textContent = 'Erro ao salvar: ' + (err && err.message ? err.message : 'tente novamente.');
+    el.style.color = 'var(--red)';
+    el.style.display = 'block';
+  }
+});
+
 document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   document.getElementById('addStudentError').style.display = 'none';
@@ -1068,13 +1193,42 @@ document.getElementById('addStudentForm').addEventListener('submit', async (e) =
   }
 });
 
-document.getElementById('refreshStudentsBtn').addEventListener('click', renderStudentsTable);
+document.getElementById('refreshStudentsBtn').addEventListener('click', () => { renderStudentsTable(); renderFeedbackList(); });
 
 function summarizeQuiz(quizAttempts){
   const attempts = quizAttempts || [];
   const aprovado = attempts.some(a => a.aprovado);
   const best = attempts.reduce((max, a) => (!max || a.percent > max.percent) ? a : max, null);
   return { attemptsCount: attempts.length, aprovado, best };
+}
+
+async function getAllFeedback(){
+  try{
+    await authReady;
+    const snap = await getDocs(collection(db, 'feedback'));
+    const list = [];
+    snap.forEach(d => list.push(d.data()));
+    return list.sort((a,b) => new Date(b.quando) - new Date(a.quando));
+  }catch(e){ console.error('Falha ao carregar feedbacks', e); return []; }
+}
+
+async function renderFeedbackList(){
+  const wrap = document.getElementById('feedbackListWrap');
+  if(!wrap) return;
+  const list = await getAllFeedback();
+  if(list.length === 0){
+    wrap.innerHTML = '<p class="log-empty">Nenhum feedback recebido ainda.</p>';
+    return;
+  }
+  wrap.innerHTML = list.map(f => `
+    <div class="card" style="margin:10px 0;">
+      <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <strong>${f.name || f.username}</strong>
+        <span class="ts" style="font-size:12px; color:var(--ink-soft);">${formatTs(new Date(f.quando))}</span>
+      </div>
+      <p style="margin:8px 0 0; font-size:14px;">${f.comentario ? f.comentario : '<span style="color:var(--ink-soft);">(sem comentário escrito)</span>'}</p>
+    </div>
+  `).join('');
 }
 
 async function getAllStudents(){
@@ -1114,7 +1268,7 @@ async function renderStudentsTable(){
   }
   hint.textContent = `${students.length} aluno(s) cadastrado(s).`;
   const rows = students.map(s => {
-    const quizCell = s.attemptsCount === 0 ? 'Não realizada' : `${s.best.percent}% (${s.attemptsCount}/3 tent.) — ${s.aprovado ? 'Aprovado' : 'Reprovado'}`;
+    const quizCell = s.attemptsCount === 0 ? 'Não realizada' : `${s.best.percent}% (${s.attemptsCount}/${MAX_ATTEMPTS} tent.) — ${s.aprovado ? 'Aprovado' : 'Reprovado'}`;
     return `<tr>
       <td><input type="checkbox" class="student-select" data-user="${s.username}"></td>
       <td>${s.name}</td>
@@ -1144,7 +1298,29 @@ async function renderStudentsTable(){
   renderCharts(students);
 }
 
+function kpiCard(label, value, color){
+  return `<div class="card" style="flex:1; min-width:150px; text-align:center; padding:20px 14px;">
+    <div style="font-family:'Archivo Black',sans-serif; font-size:30px; color:${color || 'var(--text)'};">${value}</div>
+    <div style="font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin-top:6px;">${label}</div>
+  </div>`;
+}
+
+function renderKpis(students){
+  const wrap = document.getElementById('adminKpis');
+  if(!wrap) return;
+  const withAttempt = students.filter(s => s.attemptsCount > 0);
+  const aprovados = withAttempt.filter(s => s.aprovado).length;
+  const mediaAulas = students.length ? (students.reduce((sum,s) => sum + s.aulasVistas, 0) / students.length).toFixed(1) : '0';
+  wrap.innerHTML = [
+    kpiCard('Alunos cadastrados', students.length),
+    kpiCard('Aprovados', aprovados, 'var(--green)'),
+    kpiCard('Reprovados', withAttempt.length - aprovados, 'var(--red)'),
+    kpiCard('Aulas vistas (média)', mediaAulas + ' / 12')
+  ].join('');
+}
+
 function renderCharts(students){
+  renderKpis(students);
   if(typeof Chart === 'undefined') return;
   const withAttempt = students.filter(s => s.attemptsCount > 0);
   const aprovados = withAttempt.filter(s => s.aprovado).length;
@@ -1159,7 +1335,7 @@ function renderCharts(students){
       labels: ['Aprovados', 'Reprovados', 'Ainda não fez a prova'],
       datasets: [{ data: [aprovados, reprovados, semTentativa], backgroundColor: ['#16A34A', '#F0555C', 'rgba(236,237,241,0.25)'] }]
     },
-    options: { plugins: { legend: { labels: { color: '#ECEDF1' } } } }
+    options: { responsive:true, maintainAspectRatio:false, plugins: { legend: { position:'bottom', labels: { color: '#ECEDF1', font:{size:13} } } } }
   });
 
   const ranking = students
@@ -1176,6 +1352,8 @@ function renderCharts(students){
     },
     options: {
       indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
         x: { beginAtZero:true, max:100, ticks:{ color:'#9CA0AC' }, grid:{ color:'rgba(236,237,241,0.1)' } },
@@ -1318,6 +1496,7 @@ document.getElementById('downloadSelectedBtn').addEventListener('click', async (
 });
 
 ensureAdminBootstrap();
+loadQuizSettings();
 
 const modules = [
   {title:"Introdução", dot:"var(--mint)"},
@@ -1465,6 +1644,62 @@ async function goTo(i){
 document.getElementById('prevBtn').addEventListener('click', () => { if(current>0) goTo(current-1); });
 document.getElementById('nextBtn').addEventListener('click', () => { if(current<modules.length-1) goTo(current+1); });
 
+function initMatchExercises(){
+  document.querySelectorAll('.match-exercise').forEach(box => {
+    const pairs = JSON.parse(box.dataset.pairs);
+    const termsCol = box.querySelector('.match-terms');
+    const defsCol = box.querySelector('.match-defs');
+    const feedback = box.querySelector('.match-feedback');
+    const shuffledDefs = [...pairs].sort(() => Math.random() - 0.5);
+    let selectedTerm = null;
+    let solved = 0;
+
+    pairs.forEach(([term]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'match-item';
+      btn.textContent = term;
+      btn.dataset.term = term;
+      btn.addEventListener('click', () => {
+        termsCol.querySelectorAll('.match-item').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedTerm = term;
+      });
+      termsCol.appendChild(btn);
+    });
+
+    shuffledDefs.forEach(([term, def]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'match-item';
+      btn.textContent = def;
+      btn.addEventListener('click', () => {
+        if(!selectedTerm) { feedback.textContent = 'Escolha primeiro um termo à esquerda.'; return; }
+        const correctPair = pairs.find(p => p[0] === selectedTerm);
+        const termBtn = [...termsCol.querySelectorAll('.match-item')].find(b => b.dataset.term === selectedTerm);
+        if(correctPair[1] === def){
+          btn.classList.add('correct');
+          btn.disabled = true;
+          termBtn.classList.remove('selected');
+          termBtn.classList.add('correct');
+          termBtn.disabled = true;
+          solved++;
+          feedback.textContent = solved === pairs.length ? 'Muito bem! Você ligou todos os pares corretamente.' : 'Certo! Continue.';
+          feedback.style.color = 'var(--green)';
+        } else {
+          btn.classList.add('wrong');
+          feedback.textContent = 'Não é essa — tente de novo.';
+          feedback.style.color = 'var(--red)';
+          setTimeout(() => btn.classList.remove('wrong'), 700);
+        }
+        selectedTerm = null;
+      });
+      defsCol.appendChild(btn);
+    });
+  });
+}
+initMatchExercises();
+
 render();
 
 document.getElementById('downloadLogBtn').addEventListener('click', () => {
@@ -1545,8 +1780,26 @@ const questions = [
   }
 ];
 
-const MAX_ATTEMPTS = 3;
-const PASS_PERCENT = 70;
+let MAX_ATTEMPTS = 3;
+let PASS_PERCENT = 70;
+
+async function loadQuizSettings(){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'config', 'settings'));
+    if(snap.exists()){
+      const d = snap.data();
+      if(d.passPercent) PASS_PERCENT = d.passPercent;
+      if(d.maxAttempts) MAX_ATTEMPTS = d.maxAttempts;
+    }
+  }catch(e){ console.error('Falha ao carregar configurações', e); }
+}
+async function saveQuizSettings(passPercent, maxAttempts){
+  await authReady;
+  await setDoc(doc(db, 'config', 'settings'), { passPercent, maxAttempts });
+  PASS_PERCENT = passPercent;
+  MAX_ATTEMPTS = maxAttempts;
+}
 let quizAttempts = [];
 let quizInProgress = false;
 let score = 0;
