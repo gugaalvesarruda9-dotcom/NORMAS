@@ -7,7 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 <style>
   :root{
     --green: #16A34A;
@@ -474,7 +475,7 @@
 
       <div class="video-wrap">
         <div class="vid-label">▸ Aula em vídeo — O que é a CIPA e qual o papel do representante</div>
-        <div class="video-frame"><iframe src="https://www.youtube.com/embed/tz9BV3Cpgx8" title="NR-05 - o que é e como funciona" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-frame"><iframe id="ytf-0" src="https://www.youtube.com/embed/tz9BV3Cpgx8?enablejsapi=1" title="NR-05 - o que é e como funciona" allowfullscreen loading="lazy"></iframe></div>
       </div>
 
       <h3>Base legal</h3>
@@ -523,7 +524,7 @@
 
       <div class="video-wrap">
         <div class="vid-label">▸ Aula em vídeo — Atribuições da CIPA na prática</div>
-        <div class="video-frame"><iframe src="https://www.youtube.com/embed/mY93A4GZ0bM" title="Atribuições da CIPA" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-frame"><iframe id="ytf-2" src="https://www.youtube.com/embed/mY93A4GZ0bM?enablejsapi=1" title="Atribuições da CIPA" allowfullscreen loading="lazy"></iframe></div>
       </div>
 
       <ul>
@@ -642,7 +643,7 @@
 
       <div class="video-wrap">
         <div class="vid-label">▸ Aula em vídeo — Riscos psicossociais, saúde mental e assédio</div>
-        <div class="video-frame"><iframe src="https://www.youtube.com/embed/UFfWficWj-g" title="Prevenção de assédio e violência no trabalho" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-frame"><iframe id="ytf-8" src="https://www.youtube.com/embed/UFfWficWj-g?enablejsapi=1" title="Prevenção de assédio e violência no trabalho" allowfullscreen loading="lazy"></iframe></div>
       </div>
 
       <div class="chip-row">
@@ -657,8 +658,50 @@
       </ul>
     </section>
 
-    <!-- 9 quiz -->
+    <!-- 9 documentação -->
     <section class="module" data-mod="9">
+      <div class="m-eyebrow"><span class="code">Registros</span> Documentação <span class="duration">30 min</span></div>
+      <h2 class="m-title">Documentos e registros obrigatórios</h2>
+      <p class="lede">O designado ajuda a manter em ordem os registros que comprovam que a prevenção está sendo feita de verdade — e que podem ser cobrados pela fiscalização do trabalho.</p>
+
+      <ul>
+        <li>O certificado e o conteúdo do <strong>treinamento do designado</strong> devem ficar arquivados, com data, carga horária e assinatura.</li>
+        <li>Os registros de <strong>investigação de acidentes</strong> devem ficar arquivados por, no mínimo, <strong>5 anos</strong>, à disposição da fiscalização.</li>
+        <li>O <strong>mapa de risco</strong> deve ficar afixado em local visível e ser atualizado sempre que houver mudança relevante no processo de trabalho.</li>
+        <li>A <strong>Ordem de Serviço</strong> sobre segurança e saúde no trabalho da empresa deve ser conhecida pelo designado.</li>
+        <li>Atas ou registros de participação na <strong>SIPAT</strong> ajudam a comprovar que as atividades anuais de conscientização realmente aconteceram.</li>
+      </ul>
+
+      <div class="card note">
+        Manter esses registros organizados é uma das formas mais simples de proteger a empresa (e o próprio designado) em caso de fiscalização ou de um acidente de trabalho.
+      </div>
+    </section>
+
+    <!-- 10 glossário -->
+    <section class="module" data-mod="10">
+      <div class="m-eyebrow"><span class="code">Referência</span> Glossário <span class="duration">25 min</span></div>
+      <h2 class="m-title">Glossário e perguntas frequentes</h2>
+      <p class="lede">Um resumo rápido das siglas e termos usados ao longo deste treinamento.</p>
+
+      <table>
+        <tr><th>Sigla</th><th>Significado</th></tr>
+        <tr><td><strong>CIPA</strong></td><td>Comissão Interna de Prevenção de Acidentes e de Assédio</td></tr>
+        <tr><td><strong>SESMT</strong></td><td>Serviço Especializado em Engenharia de Segurança e em Medicina do Trabalho</td></tr>
+        <tr><td><strong>CAT</strong></td><td>Comunicação de Acidente de Trabalho</td></tr>
+        <tr><td><strong>EPI</strong></td><td>Equipamento de Proteção Individual</td></tr>
+        <tr><td><strong>SIPAT</strong></td><td>Semana Interna de Prevenção de Acidentes do Trabalho</td></tr>
+      </table>
+
+      <h3>Perguntas frequentes</h3>
+      <ul>
+        <li><strong>O designado precisa ser eleito?</strong> Não — ele é nomeado diretamente pelo empregador, ao contrário dos membros de uma CIPA formal.</li>
+        <li><strong>O designado tem estabilidade?</strong> Não, essa garantia vale apenas para quem é eleito numa CIPA formal.</li>
+        <li><strong>O treinamento pode ser EAD?</strong> Sim, para estabelecimentos de grau de risco 1, pode ser feito integralmente a distância.</li>
+      </ul>
+    </section>
+
+    <!-- 11 quiz -->
+    <section class="module" data-mod="11">
       <div class="m-eyebrow"><span class="code">Avaliação</span> Fixação <span class="duration">40 min</span></div>
       <h2 class="m-title">Teste seus conhecimentos</h2>
       <p class="lede">Responda as questões abaixo para revisar os pontos principais do treinamento. São permitidas até 3 tentativas, com aprovação a partir de 70% de acerto.</p>
@@ -667,8 +710,8 @@
       <div id="quizResult"></div>
     </section>
 
-    <!-- 10 histórico de acesso -->
-    <section class="module" data-mod="10">
+    <!-- 12 histórico de acesso -->
+    <section class="module" data-mod="12">
       <div class="m-eyebrow"><span class="code">Registro</span> Acompanhamento</div>
       <h2 class="m-title">Histórico de acesso e resultado da prova</h2>
       <p class="lede">Cada vez que uma aula é aberta, o horário de entrada e saída fica registrado abaixo. Todas as tentativas da prova também aparecem aqui.</p>
@@ -679,7 +722,7 @@
       <div id="quizResultSummary"><p class="log-empty">Prova ainda não realizada.</p></div>
 
       <div class="log-actions">
-        <button class="navbtn primary" id="downloadLogBtn">Baixar meu histórico + resultado (.xlsx)</button>
+        <button class="navbtn primary" id="downloadLogBtn">Baixar resultado da prova (.xlsx)</button>
       </div>
 
       <div class="card note">
@@ -771,6 +814,7 @@
 
     <div class="log-actions" style="margin-top:6px;">
       <button class="navbtn primary" id="downloadAllBtn">Baixar relatório de todos os alunos (.xlsx)</button>
+      <button class="navbtn" id="downloadSelectedBtn">Baixar histórico dos selecionados (.xlsx)</button>
       <button class="navbtn" id="refreshStudentsBtn">Atualizar lista</button>
     </div>
 
@@ -918,6 +962,8 @@ async function startSession(username, name){
   document.getElementById('learnerLabel').textContent = 'Colaborador(a): ' + learnerName;
   current = 0;
   seen.add(0);
+  maxUnlocked = Math.max(0, ...seen);
+  VIDEO_MODULES.forEach(v => { if(seen.has(v)) videosWatched.add(v); });
   renderLog();
   renderQuizSummary();
   renderQuizGate();
@@ -1036,7 +1082,7 @@ async function getAllStudents(){
   const studentEntries = Object.entries(users).filter(([, u]) => u.role !== 'admin');
   const students = await Promise.all(studentEntries.map(async ([username, u]) => {
     const data = await loadUserData(username);
-    const contentSeen = new Set((data.accessLog || []).filter(a => a.numero <= 10).map(a => a.numero)).size;
+    const contentSeen = new Set((data.accessLog || []).filter(a => a.numero <= 12).map(a => a.numero)).size;
     const quizSummary = summarizeQuiz(data.quizAttempts);
     return {
       username,
@@ -1070,9 +1116,10 @@ async function renderStudentsTable(){
   const rows = students.map(s => {
     const quizCell = s.attemptsCount === 0 ? 'Não realizada' : `${s.best.percent}% (${s.attemptsCount}/3 tent.) — ${s.aprovado ? 'Aprovado' : 'Reprovado'}`;
     return `<tr>
+      <td><input type="checkbox" class="student-select" data-user="${s.username}"></td>
       <td>${s.name}</td>
       <td class="ts">${s.username}</td>
-      <td>${s.aulasVistas} / 10</td>
+      <td>${s.aulasVistas} / 12</td>
       <td>${quizCell}</td>
       <td>
         <button class="navbtn" data-action="ver" data-user="${s.username}" style="padding:6px 10px; font-size:11px;">Ver</button>
@@ -1082,9 +1129,13 @@ async function renderStudentsTable(){
     </tr>`;
   }).join('');
   wrap.innerHTML = `<table class="log-table">
-    <tr><th>Nome</th><th>Usuário</th><th>Aulas vistas</th><th>Prova</th><th>Ações</th></tr>
+    <tr><th><input type="checkbox" id="selectAllStudents"></th><th>Nome</th><th>Usuário</th><th>Aulas vistas</th><th>Prova</th><th>Ações</th></tr>
     ${rows}
   </table>`;
+
+  document.getElementById('selectAllStudents').addEventListener('change', (e) => {
+    wrap.querySelectorAll('.student-select').forEach(cb => { cb.checked = e.target.checked; });
+  });
 
   wrap.querySelectorAll('button[data-action]').forEach(btn => {
     btn.addEventListener('click', () => handleStudentAction(btn.dataset.action, btn.dataset.user));
@@ -1213,7 +1264,7 @@ document.getElementById('downloadAllBtn').addEventListener('click', async () => 
   ];
   students.forEach(s => {
     summaryRows.push([
-      s.name, s.username, `${s.aulasVistas}/10`,
+      s.name, s.username, `${s.aulasVistas}/12`,
       s.attemptsCount, s.attemptsCount ? `${s.best.percent}%` : '-',
       s.attemptsCount ? (s.aprovado ? 'Aprovado' : 'Reprovado') : 'Não realizada'
     ]);
@@ -1241,6 +1292,31 @@ document.getElementById('downloadAllBtn').addEventListener('click', async () => 
   XLSX.writeFile(wb, `nr05-designado-relatorio-alunos-${new Date().toISOString().slice(0,10)}.xlsx`);
 });
 
+document.getElementById('downloadSelectedBtn').addEventListener('click', async () => {
+  const selectedUsers = [...document.querySelectorAll('.student-select:checked')].map(cb => cb.dataset.user);
+  if(selectedUsers.length === 0){ alert('Selecione ao menos um aluno na tabela (caixinha à esquerda do nome).'); return; }
+  const students = studentsCache.filter(s => selectedUsers.includes(s.username));
+
+  const wb = XLSX.utils.book_new();
+  const logRows = [['Nome', 'Usuário', 'Aula', 'Entrada', 'Saída']];
+  students.forEach(s => {
+    s.accessLog.forEach(a => logRows.push([s.name, s.username, `${a.numero}. ${a.modulo}`, formatTs(new Date(a.entrada)), a.saida ? formatTs(new Date(a.saida)) : 'Em andamento']));
+  });
+  const wsLog = XLSX.utils.aoa_to_sheet(logRows);
+  wsLog['!cols'] = [{wch:22},{wch:16},{wch:30},{wch:22},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsLog, 'Historico de acesso');
+
+  const quizRows = [['Nome', 'Usuário', 'Tentativa', 'Pontuação', 'Percentual', 'Resultado', 'Realizada em']];
+  students.forEach(s => {
+    s.quizAttempts.forEach((a, i) => quizRows.push([s.name, s.username, i+1, `${a.score}/${a.total}`, `${a.percent}%`, a.aprovado ? 'Aprovado' : 'Reprovado', formatTs(new Date(a.quando))]));
+  });
+  const wsQuiz = XLSX.utils.aoa_to_sheet(quizRows);
+  wsQuiz['!cols'] = [{wch:22},{wch:16},{wch:10},{wch:12},{wch:12},{wch:12},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsQuiz, 'Tentativas de prova');
+
+  XLSX.writeFile(wb, `nr05-designado-selecionados-${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
 ensureAdminBootstrap();
 
 const modules = [
@@ -1253,6 +1329,8 @@ const modules = [
   {title:"Carga horária", dot:"var(--mint)"},
   {title:"Estabilidade", dot:"var(--risk-quimico)"},
   {title:"Assédio e violência", dot:"var(--risk-quimico)"},
+  {title:"Documentação e registros", dot:"var(--risk-biologico)"},
+  {title:"Glossário e FAQ", dot:"var(--mint)"},
   {title:"Avaliação final", dot:"var(--mint)"},
   {title:"Histórico de acesso", dot:"rgba(236,237,241,0.4)"}
 ];
@@ -1263,7 +1341,7 @@ let accessLog = [];
 let openEntryIndex = null;
 
 function openEntry(i){
-  if(i > 9) return;
+  if(i > 11) return;
   accessLog.push({
     modulo: modules[i].title,
     numero: i + 1,
@@ -1305,18 +1383,40 @@ window.addEventListener('beforeunload', () => {
 
 const modlist = document.getElementById('modlist');
 modules.forEach((m, i) => {
-  if(i === 10){
+  if(i === 12){
     const sep = document.createElement('div');
     sep.style.cssText = 'height:1px;background:rgba(236,237,241,0.14);margin:14px 4px 12px;';
     modlist.appendChild(sep);
   }
   const btn = document.createElement('button');
   btn.className = 'modbtn';
-  const numHtml = i === 10 ? '<span class="num">⏱</span>' : `<span class="num">${i+1}</span>`;
+  const numHtml = i === 12 ? '<span class="num">⏱</span>' : `<span class="num">${i+1}</span>`;
   btn.innerHTML = `${numHtml}<span class="label">${m.title}</span><span class="dot" style="background:${m.dot}"></span>`;
   btn.addEventListener('click', () => goTo(i));
   modlist.appendChild(btn);
 });
+
+const VIDEO_MODULES = [0, 2, 8];
+const videosWatched = new Set();
+let maxUnlocked = 0;
+
+window.onYouTubeIframeAPIReady = function(){
+  VIDEO_MODULES.forEach(i => {
+    const el = document.getElementById('ytf-' + i);
+    if(!el) return;
+    new YT.Player('ytf-' + i, {
+      events: {
+        onStateChange: (e) => {
+          if(e.data === YT.PlayerState.ENDED){
+            videosWatched.add(i);
+            if(maxUnlocked <= i) maxUnlocked = i + 1;
+            render();
+          }
+        }
+      }
+    });
+  });
+};
 
 function render(){
   document.querySelectorAll('.module').forEach(el => {
@@ -1325,28 +1425,37 @@ function render(){
   document.querySelectorAll('.modbtn').forEach((btn, i) => {
     btn.classList.toggle('active', i === current);
     btn.classList.toggle('done', seen.has(i));
+    btn.disabled = i > maxUnlocked;
   });
   document.getElementById('prevBtn').disabled = current === 0;
   const nextBtn = document.getElementById('nextBtn');
+  const videoPending = VIDEO_MODULES.includes(current) && !videosWatched.has(current);
   if(current === modules.length - 1){
     nextBtn.textContent = 'Concluído ✓';
+    nextBtn.disabled = true;
+  } else if(videoPending){
+    nextBtn.textContent = 'Assista o vídeo até o fim para continuar';
     nextBtn.disabled = true;
   } else {
     nextBtn.textContent = 'Próximo módulo →';
     nextBtn.disabled = false;
   }
-  const contentSeen = [...seen].filter(i => i <= 9).length;
-  const fillPct = (contentSeen / 10) * 100;
+  const contentSeen = [...seen].filter(i => i <= 11).length;
+  const fillPct = (contentSeen / 12) * 100;
   document.getElementById('progressFill').style.width = fillPct + '%';
-  document.getElementById('progressLabel').textContent = `${contentSeen} / 10 aulas vistas`;
+  document.getElementById('progressLabel').textContent = `${contentSeen} / 12 aulas vistas`;
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
 async function goTo(i){
+  if(i > maxUnlocked) return;
   closeOpenEntry();
   current = i;
   seen.add(i);
-  if(i <= 9){
+  if(!VIDEO_MODULES.includes(i) && maxUnlocked <= i){
+    maxUnlocked = i + 1;
+  }
+  if(i <= 11){
     openEntry(i);
   }
   render();
@@ -1361,23 +1470,11 @@ render();
 document.getElementById('downloadLogBtn').addEventListener('click', () => {
   const wb = XLSX.utils.book_new();
 
-  const logRows = [
-    ['G.A Occupational Safety — Treinamento NR-05 Designado'],
-    ['Colaborador(a):', learnerName || '-'],
-    ['Usuário:', learnerUser || '-'],
-    ['Exportado em:', formatTs(new Date())],
-    [],
-    ['Aula', 'Número', 'Entrada', 'Saída']
-  ];
-  accessLog.forEach(a => logRows.push([a.modulo, a.numero, formatTs(a.entrada), a.saida ? formatTs(a.saida) : 'Em andamento']));
-  const wsLog = XLSX.utils.aoa_to_sheet(logRows);
-  wsLog['!cols'] = [{wch:32},{wch:10},{wch:22},{wch:22}];
-  XLSX.utils.book_append_sheet(wb, wsLog, 'Historico de acesso');
-
   const quizRows = [
     ['G.A Occupational Safety — Treinamento NR-05 Designado'],
     ['Colaborador(a):', learnerName || '-'],
     ['Usuário:', learnerUser || '-'],
+    ['Exportado em:', formatTs(new Date())],
     [],
     ['Tentativa', 'Pontuação', 'Percentual', 'Resultado', 'Realizada em']
   ];
@@ -1391,7 +1488,7 @@ document.getElementById('downloadLogBtn').addEventListener('click', () => {
   XLSX.utils.book_append_sheet(wb, wsQuiz, 'Resultado da prova');
 
   const fileSlug = (learnerName || 'colaborador').trim().replace(/\s+/g,'-').toLowerCase();
-  XLSX.writeFile(wb, `nr05-designado-${fileSlug}-${new Date().toISOString().slice(0,10)}.xlsx`);
+  XLSX.writeFile(wb, `nr05-designado-resultado-${fileSlug}-${new Date().toISOString().slice(0,10)}.xlsx`);
 });
 
 // QUIZ
@@ -1424,6 +1521,26 @@ const questions = [
   {
     q: "O que a atualização de 2022/2024 acrescentou às atribuições do designado?",
     opts: ["Prevenção de violência e assédio no trabalho", "Gestão financeira da empresa", "Contratação de novos funcionários"],
+    correct: 0
+  },
+  {
+    q: "Por quanto tempo os registros de investigação de acidentes devem ficar arquivados, no mínimo?",
+    opts: ["1 ano", "5 anos", "Não há prazo definido"],
+    correct: 1
+  },
+  {
+    q: "O que significa a sigla EPI?",
+    opts: ["Equipamento de Proteção Individual", "Empresa Prestadora de Inspeção", "Escala de Prevenção Interna"],
+    correct: 0
+  },
+  {
+    q: "O que significa a sigla CAT?",
+    opts: ["Central de Atendimento ao Trabalhador", "Comunicação de Acidente de Trabalho", "Cadastro de Ambiente de Trabalho"],
+    correct: 1
+  },
+  {
+    q: "O que é o SESMT?",
+    opts: ["Serviço Especializado em Engenharia de Segurança e em Medicina do Trabalho", "Sindicato dos Empregados do Setor de Manutenção e Transporte", "Sistema de Emergência para Situações de Máximo Trabalho"],
     correct: 0
   }
 ];
@@ -1486,6 +1603,14 @@ async function finishQuizAttempt(){
   renderQuizSummary();
 }
 
+const MOTIVATIONAL_PHRASES = [
+  "Segurança não é sorte — é escolha repetida todos os dias.",
+  "Cada procedimento seguido é uma vida protegida, a começar pela sua.",
+  "O acidente mais fácil de evitar é aquele que a gente previne antes.",
+  "Prevenir custa um minuto. Remediar pode custar uma vida inteira.",
+  "Quem cuida da segurança no trabalho, cuida de quem volta pra casa."
+];
+
 function renderQuizGate(){
   const gate = document.getElementById('quizGate');
   if(!gate) return;
@@ -1495,7 +1620,43 @@ function renderQuizGate(){
   const attemptsUsed = quizAttempts.length;
 
   if(passed){
-    gate.innerHTML = `<div class="card note"><strong>Aprovado!</strong> Você atingiu a nota mínima exigida (${PASS_PERCENT}%). Entre em contato com o instrutor responsável pelo treinamento para retirar seu certificado.</div>`;
+    const phrase = MOTIVATIONAL_PHRASES[Math.floor(Math.random() * MOTIVATIONAL_PHRASES.length)];
+    gate.innerHTML = `
+      <div class="card note">
+        <strong>Parabéns, você foi aprovado! 🎉</strong>
+        <p style="margin:10px 0 0;">Você atingiu a nota mínima exigida (${PASS_PERCENT}%). Entre em contato com o instrutor responsável pelo treinamento para retirar seu certificado.</p>
+        <p style="margin:14px 0 0; font-style:italic; color:var(--mint);">"${phrase}"</p>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3 style="margin-top:0;">Que tal avaliar o curso?</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:14px;">Não é obrigatório, mas sua opinião ajuda a melhorar o treinamento.</p>
+        <form id="feedbackForm">
+          <div class="field">
+            <label for="feedbackText">Seu comentário (opcional)</label>
+            <textarea id="feedbackText" rows="4" style="width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper); color:var(--text); font-family:'Inter',sans-serif; font-size:14.5px; resize:vertical;"></textarea>
+          </div>
+          <p class="login-error" id="feedbackMsg"></p>
+          <button type="submit" class="login-btn" id="feedbackSubmitBtn" style="width:auto; padding:11px 22px;">Enviar avaliação</button>
+        </form>
+      </div>
+    `;
+    document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msgEl = document.getElementById('feedbackMsg');
+      const text = document.getElementById('feedbackText').value.trim();
+      try{
+        await authReady;
+        await setDoc(doc(db, 'feedback', learnerUser), { name: learnerName, username: learnerUser, comentario: text, quando: new Date().toISOString() });
+        msgEl.textContent = 'Obrigado pelo feedback!';
+        msgEl.style.color = 'var(--green)';
+        msgEl.style.display = 'block';
+      }catch(err){
+        console.error('Erro ao salvar feedback', err);
+        msgEl.textContent = 'Não foi possível enviar agora. Tente novamente mais tarde.';
+        msgEl.style.color = 'var(--red)';
+        msgEl.style.display = 'block';
+      }
+    });
     return;
   }
   if(attemptsUsed >= MAX_ATTEMPTS){
