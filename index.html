@@ -1614,7 +1614,7 @@ modules.forEach((m, i) => {
   modlist.appendChild(btn);
 });
 
-const VIDEO_MODULES = [0, 8];
+const VIDEO_MODULES = [];
 const videosWatched = new Set();
 let maxUnlocked = 0;
 
@@ -1640,14 +1640,14 @@ function render(){
   document.querySelectorAll('.module').forEach(el => {
     el.classList.toggle('active', Number(el.dataset.mod) === current);
   });
+  const videoPending = VIDEO_MODULES.includes(current) && !videosWatched.has(current);
   document.querySelectorAll('#modlist .modbtn').forEach((btn, i) => {
     btn.classList.toggle('active', i === current);
     btn.classList.toggle('done', seen.has(i));
-    btn.disabled = i > maxUnlocked;
+    btn.disabled = videoPending && i > current;
   });
   document.getElementById('prevBtn').disabled = current === 0;
   const nextBtn = document.getElementById('nextBtn');
-  const videoPending = VIDEO_MODULES.includes(current) && !videosWatched.has(current);
   if(current === modules.length - 1){
     nextBtn.textContent = 'Concluído ✓';
     nextBtn.disabled = true;
@@ -1666,13 +1666,13 @@ function render(){
 }
 
 async function goTo(i){
-  if(i > maxUnlocked) return;
+  if(i > current && VIDEO_MODULES.includes(current) && !videosWatched.has(current)){
+    return;
+  }
   closeOpenEntry();
   current = i;
   seen.add(i);
-  if(!VIDEO_MODULES.includes(i) && maxUnlocked <= i){
-    maxUnlocked = i + 1;
-  }
+  if(maxUnlocked < i) maxUnlocked = i;
   if(i <= 11){
     openEntry(i);
   }
