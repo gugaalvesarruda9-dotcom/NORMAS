@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
-<script src="https://www.youtube.com/iframe_api"></script>
+<script src="https://www.youtube.com/iframe_api" defer></script>
 <style>
   :root{
     --green: #16A34A;
@@ -1666,18 +1666,23 @@ function render(){
 }
 
 async function goTo(i){
-  if(i > current && VIDEO_MODULES.includes(current) && !videosWatched.has(current)){
-    return;
+  try{
+    if(i > current && VIDEO_MODULES.includes(current) && !videosWatched.has(current)){
+      return;
+    }
+    closeOpenEntry();
+    current = i;
+    seen.add(i);
+    if(maxUnlocked < i) maxUnlocked = i;
+    if(i <= 11){
+      openEntry(i);
+    }
+    render();
+    await persistUserData();
+  }catch(err){
+    console.error('Erro ao navegar entre módulos', err);
+    alert('Ocorreu um erro ao trocar de módulo:\n\n' + (err && err.message ? err.message : err) + '\n\nTire um print desta mensagem e envie para quem administra o treinamento.');
   }
-  closeOpenEntry();
-  current = i;
-  seen.add(i);
-  if(maxUnlocked < i) maxUnlocked = i;
-  if(i <= 11){
-    openEntry(i);
-  }
-  render();
-  await persistUserData();
 }
 
 document.getElementById('prevBtn').addEventListener('click', () => { if(current>0) goTo(current-1); });
