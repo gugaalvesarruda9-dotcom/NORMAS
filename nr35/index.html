@@ -1,0 +1,2964 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G.A Occupational Safety · Treinamento NR-35 Trabalho em Altura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+<script src="https://www.youtube.com/iframe_api" defer></script>
+<style>
+  :root{
+    --green: #16A34A;
+    --green-deep: #0F7F3B;
+    --mint: #8FDCB0;
+    --ink: #0D0F16;
+    --ink-soft: #9CA0AC;
+    --paper: #1B1E2C;
+    --paper-raised: #242736;
+    --text: #ECEDF1;
+    --red: #F0555C;
+    --risk-fisico: #2DBFD1;
+    --risk-quimico: #F2545B;
+    --risk-biologico: #C9A15A;
+    --risk-ergonomico: #E3B341;
+    --risk-acidente: #5B8DEF;
+    --line: rgba(236,237,241,0.12);
+    --shadow: 0 10px 30px rgba(0,0,0,0.45);
+    --grid: rgba(236,237,241,0.045);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  .hazard-bar{
+    height:3px;
+    width:100%;
+    background:linear-gradient(90deg, var(--green) 0%, var(--mint) 100%);
+    position:fixed; top:0; left:0; z-index:50;
+  }
+
+  .app{
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    min-height:100vh;
+    padding-top:8px;
+  }
+
+  /* SIDEBAR */
+  .sidebar{
+    background:var(--ink);
+    color:var(--text);
+    padding:32px 22px 24px;
+    position:sticky;
+    top:8px;
+    height:calc(100vh - 8px);
+    overflow-y:auto;
+    border-right:1px solid rgba(0,0,0,0.3);
+  }
+  .brand{
+    display:flex; flex-direction:column; gap:2px; margin-bottom:6px;
+  }
+  .brand-mark{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  }
+  .brand-mark svg{ flex:0 0 auto; width:34px; height:34px; }
+  .brand .eyebrow{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--mint);
+    font-size:12.5px;
+  }
+  .brand h1{
+    font-family:'Archivo Black', sans-serif;
+    font-size:24px;
+    line-height:1.05;
+    margin:4px 0 0;
+    letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .brand .sub{
+    font-size:12.5px;
+    color:rgba(236,237,241,0.55);
+    margin-top:8px;
+    line-height:1.5;
+  }
+
+  .progress-track{
+    height:4px;
+    width:100%;
+    background:rgba(236,237,241,0.15);
+    border-radius:4px;
+    margin:20px 0 10px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:var(--green);
+    transition:width .4s ease;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:rgba(236,237,241,0.5);
+    margin-bottom:14px;
+  }
+
+  .curriculum-total{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:rgba(236,237,241,0.65);
+    display:flex; align-items:center; gap:6px; margin:2px 0 0;
+  }
+  .curriculum-total b{ color:var(--mint); }
+
+  nav.modlist{
+    display:flex; flex-direction:column; gap:2px;
+    margin-top:16px;
+  }
+  .modbtn{
+    display:flex; align-items:center; gap:12px;
+    background:transparent; border:none; color:inherit;
+    text-align:left; cursor:pointer;
+    padding:11px 10px; border-radius:8px;
+    font-family:'Inter', sans-serif; font-size:13.5px; font-weight:500;
+    color:rgba(236,237,241,0.75);
+    transition:background .15s ease, color .15s ease;
+  }
+  .modbtn:hover{ background:rgba(236,237,241,0.06); color:var(--text); }
+  .modbtn.active{ background:rgba(22,163,74,0.14); color:var(--text); }
+  .modbtn.active .num{ background:var(--green); color:#fff; }
+  .modbtn:focus-visible{ outline:2px solid var(--green); outline-offset:2px; }
+
+  .num{
+    flex:0 0 auto;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:rgba(236,237,241,0.12);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; font-weight:600;
+    color:rgba(236,237,241,0.6);
+  }
+  .modbtn.done .num{ background:var(--green); color:#fff; }
+  .modbtn.done .num::after{ content:"✓"; }
+  .modbtn .label{ flex:1; }
+  .modbtn .dot{
+    width:8px; height:8px; border-radius:50%; flex:0 0 auto;
+  }
+
+  /* MAIN */
+  main{
+    padding:52px 64px 90px;
+    max-width:880px;
+  }
+  .module{ display:none; animation:fade .35s ease; }
+  .module.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .m-eyebrow{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:0.14em;
+    font-weight:600; font-size:13px; color:var(--mint);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:10px;
+  }
+  .m-eyebrow .code{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--ink); color:var(--green);
+    padding:2px 8px; border-radius:4px; letter-spacing:0;
+    font-size:11.5px;
+  }
+  .m-eyebrow .duration{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0; text-transform:none;
+    color:var(--ink-soft); font-size:12px;
+    display:flex; align-items:center; gap:5px;
+  }
+  .m-eyebrow .duration::before{ content:"⏱"; font-size:11px; }
+
+  h2.m-title{
+    font-family:'Archivo Black', sans-serif;
+    font-size:38px; line-height:1.08; margin:0 0 22px;
+    letter-spacing:-0.01em; max-width:640px;
+    color:var(--text);
+  }
+  .lede{
+    font-size:17px; line-height:1.65; color:var(--ink-soft);
+    max-width:640px; margin-bottom:34px;
+  }
+  h3{
+    font-family:'Archivo Black', sans-serif;
+    font-size:18px; margin:36px 0 14px; letter-spacing:-0.005em;
+    color:var(--text);
+  }
+  p, li{ font-size:15px; line-height:1.7; color:var(--text); }
+  ul, ol{ padding-left:20px; margin:0 0 16px; }
+  li{ margin-bottom:8px; }
+  strong{ font-weight:700; }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 24px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .card.alert{ border-left:5px solid var(--red); }
+  .card.note{ border-left:5px solid var(--green); }
+
+  table{ width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+  th, td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); }
+  th{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em; font-size:12px; color:var(--ink-soft); }
+  tr:last-child td{ border-bottom:none; }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 24px; }
+  .chip{
+    display:flex; align-items:center; gap:8px;
+    padding:7px 13px; border-radius:100px;
+    font-size:13px; font-weight:600; color:#fff;
+  }
+  .chip .sw{ width:11px; height:11px; border-radius:50%; background:#fff; opacity:.9; }
+
+  .video-wrap{
+    margin:22px 0 28px;
+    border-radius:12px; overflow:hidden;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .video-wrap .vid-label{
+    background:var(--ink); color:var(--green);
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+    font-size:12px; padding:9px 16px;
+  }
+  .video-frame{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-frame iframe{ position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
+  .video-wrap.video-link{ display:block; text-decoration:none; color:inherit; cursor:pointer; }
+  .video-thumb{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.8; }
+  .play-badge{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    background:var(--green); color:#fff; padding:11px 20px; border-radius:100px;
+    font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em;
+    font-weight:700; font-size:13px; white-space:nowrap;
+    display:flex; align-items:center; gap:8px;
+  }
+  .video-wrap.video-link:hover .play-badge{ background:var(--green-deep); }
+
+  /* MAPA DE RISCO */
+  .riskmap-wrap{
+    display:flex; gap:36px; align-items:flex-start; flex-wrap:wrap;
+    margin:26px 0 10px;
+  }
+  .riskmap-plan{ flex:0 0 340px; position:relative; }
+  .riskmap-legend{ flex:1; min-width:220px; }
+  .riskmap-legend .item{
+    display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:13.5px;
+  }
+  .riskmap-legend .sz{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-left:auto; }
+
+  .nav-buttons{
+    display:flex; justify-content:space-between; margin-top:50px;
+    padding-top:24px; border-top:1px solid var(--line);
+  }
+  .navbtn{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+    font-size:13px; padding:11px 20px; border-radius:8px; cursor:pointer;
+    border:1.5px solid var(--text); background:transparent; color:var(--text);
+    transition:background .15s ease, color .15s ease;
+  }
+  .navbtn:hover{ background:var(--green); color:var(--ink); border-color:var(--green); }
+  .navbtn.primary{ background:var(--ink); color:var(--green); border-color:var(--ink); }
+  .navbtn.primary:hover{ background:var(--green-deep); color:#fff; }
+  .navbtn:disabled{ opacity:.3; cursor:not-allowed; }
+  .navbtn:disabled:hover{ background:transparent; color:var(--text); border-color:var(--text); }
+
+  /* QUIZ */
+  .quiz-q{ background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-bottom:18px; }
+  .quiz-q p.qtext{ font-weight:600; margin:0 0 14px; font-size:15px; color:var(--text); }
+  .opt{
+    display:block; width:100%; text-align:left;
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:8px; padding:11px 14px; margin-bottom:9px;
+    font-size:14px; cursor:pointer; color:var(--text);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt:hover{ border-color:var(--green); }
+  .opt.correct{ background:rgba(22,163,74,0.16); border-color:var(--green); }
+  .opt.wrong{ background:rgba(240,85,92,0.14); border-color:var(--red); }
+  .opt:disabled{ cursor:default; }
+  .match-exercise{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; margin:22px 0;
+  }
+  .match-exercise h4{ margin:0 0 4px; font-size:15px; }
+  .match-hint{ font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
+  .match-cols{ display:flex; gap:22px; flex-wrap:wrap; }
+  .match-col{ flex:1; min-width:220px; display:flex; flex-direction:column; gap:8px; }
+  .match-item{
+    text-align:left; padding:10px 14px; border-radius:8px;
+    border:1.5px solid var(--line); background:var(--paper);
+    color:var(--text); font-size:13.5px; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .match-item:hover{ border-color:var(--green); }
+  .match-item.selected{ border-color:var(--green); background:rgba(22,163,74,0.12); }
+  .match-item.correct{ border-color:var(--green); background:rgba(22,163,74,0.2); cursor:default; }
+  .match-item.wrong{ border-color:var(--red); background:rgba(240,85,92,0.14); }
+  .match-item:disabled{ cursor:default; opacity:.85; }
+  .match-feedback{ margin:14px 0 0; font-size:13px; color:var(--ink-soft); }
+
+  .quiz-score{
+    font-family:'Archivo Black', sans-serif; font-size:22px; text-align:center;
+    padding:26px; background:var(--ink); color:var(--green); border-radius:12px; margin-top:8px;
+  }
+
+  /* HISTÓRICO */
+  .log-table{ width:100%; border-collapse:collapse; margin:10px 0 20px; font-size:13.5px; }
+  .log-table th, .log-table td{ padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; color:var(--text); }
+  .log-table th{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; font-size:11.5px; letter-spacing:.05em; color:var(--ink-soft); }
+  .log-table td.ts{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap; }
+  .log-empty{ color:var(--ink-soft); font-size:14px; padding:18px 0; }
+  .log-actions{ display:flex; gap:12px; margin-top:6px; flex-wrap:wrap; }
+
+  footer.appfoot{
+    max-width:640px; font-size:12px; color:var(--ink-soft); margin-top:60px;
+    padding-top:18px; border-top:1px solid var(--line);
+  }
+
+  @media (max-width: 880px){
+    .app{ grid-template-columns:1fr; }
+    .sidebar{ position:static; height:auto; order:2; max-height:70vh; }
+    main{ padding:28px 20px 60px; order:1; }
+    h2.m-title{ font-size:28px; }
+  }
+
+  /* LOGIN / HOME */
+  .login-screen{
+    position:fixed; inset:0; z-index:100;
+    background:var(--ink);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .login-hazard{
+    position:absolute; top:0; left:0; width:100%; height:3px;
+    background:linear-gradient(90deg, var(--green) 0%, var(--mint) 100%);
+  }
+  .login-card{
+    position:relative;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:44px 40px 36px;
+    width:100%; max-width:400px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.55);
+  }
+  .login-card::before, .login-card::after,
+  .login-corner-tl, .login-corner-br{
+    content:""; position:absolute; width:18px; height:18px;
+    border-color:var(--green); border-style:solid; border-width:0;
+    opacity:.85;
+  }
+  .login-card::before{ top:-9px; left:-9px; border-top-width:2px; border-left-width:2px; border-radius:4px 0 0 0; }
+  .login-card::after{ bottom:-9px; right:-9px; border-bottom-width:2px; border-right-width:2px; border-radius:0 0 4px 0; }
+  .login-company{
+    display:flex; align-items:center; gap:8px; margin-bottom:18px;
+  }
+  .login-company svg{ width:26px; height:26px; flex:0 0 auto; }
+  .login-company span{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.1em; font-weight:700;
+    font-size:13px; color:var(--mint);
+  }
+  .login-card h1{
+    font-family:'Archivo Black', sans-serif; font-size:26px; margin:0 0 6px; letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .login-card .login-sub{
+    font-size:13.5px; color:var(--ink-soft); margin-bottom:28px; line-height:1.55;
+  }
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; font-family:'Barlow Condensed', sans-serif; text-transform:uppercase;
+    letter-spacing:.06em; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;
+  }
+  .field input{
+    width:100%; padding:11px 13px; border-radius:8px;
+    border:1.5px solid var(--line); background:var(--paper);
+    font-family:'Inter', sans-serif; font-size:14.5px; color:var(--text);
+  }
+  .field input:focus{ outline:none; border-color:var(--green); }
+  .login-btn{
+    width:100%; margin-top:10px; padding:13px;
+    background:var(--green); color:#fff; border:none; border-radius:8px;
+    font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.08em;
+    font-weight:700; font-size:14px; cursor:pointer;
+    transition:background .15s ease;
+  }
+  .login-btn:hover{ background:var(--green-deep); color:#fff; }
+  .login-error{
+    color:var(--red); font-size:12.5px; margin-top:-8px; margin-bottom:14px; display:none;
+  }
+  .login-note{
+    font-size:11.5px; color:var(--ink-soft); margin-top:22px; line-height:1.5; opacity:.9;
+  }
+
+  /* CONTEUDO APROFUNDADO */
+  .check{ margin:20px 0; border:1px solid var(--line); border-radius:10px; background:var(--paper); padding:0 18px; }
+  .check summary{ cursor:pointer; padding:15px 0; font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em; font-size:13px; color:var(--mint); font-weight:600; list-style:none; }
+  .check summary::-webkit-details-marker{ display:none; }
+  .check summary::before{ content:'+ '; font-family:'IBM Plex Mono', monospace; }
+  .check[open] summary::before{ content:'- '; }
+  .check .ans{ border-top:1px solid var(--line); padding:14px 0 18px; font-size:14px; line-height:1.7; }
+  .check .ans p{ margin:0 0 14px; }
+  .check .ans p:last-child{ margin-bottom:0; }
+  .calc{ background:var(--ink); border-left:3px solid var(--green); padding:16px 18px; margin:20px 0; border-radius:0 8px 8px 0; font-family:'IBM Plex Mono', monospace; font-size:12.5px; line-height:1.85; color:var(--mint); overflow-x:auto; white-space:pre; }
+  ol.steps{ counter-reset:st; list-style:none; padding-left:0; margin:18px 0; }
+  ol.steps li{ counter-increment:st; position:relative; padding-left:44px; margin-bottom:14px; line-height:1.65; }
+  ol.steps li::before{ content:counter(st); position:absolute; left:0; top:-1px; width:28px; height:28px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-size:12px; font-weight:600; }
+  .vid-src{ background:var(--ink); color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-size:11px; padding:9px 16px; line-height:1.5; }
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-hazard"></div>
+  <div class="login-card">
+    <div class="login-company">
+      <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>G.A Occupational Safety</span>
+    </div>
+    <h1 id="loginTitle">Entrar no treinamento</h1>
+    <p class="login-sub" id="loginSubtext">Treinamento NR-35 Trabalho em Altura. Acesse com o usuário e a senha fornecidos pelo responsável pelo treinamento.</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginUser">Usuário</label>
+        <input type="text" id="loginUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+      </div>
+      <div class="field">
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required>
+      </div>
+      <p class="login-error" id="loginError"></p>
+      <button type="submit" class="login-btn" id="loginSubmitBtn">Entrar →</button>
+    </form>
+
+    <p class="login-note">G.A Occupational Safety · Os acessos são cadastrados pelo responsável pelo treinamento. O histórico de acesso e o resultado da avaliação ficam registrados nesta plataforma. Ainda não possui credenciais? Solicite ao responsável pelo treinamento.</p>
+  </div>
+</div>
+
+<div class="hazard-bar"></div>
+
+<div class="app" id="appRoot" style="display:none;">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="eyebrow" style="color:rgba(236,237,241,0.5); font-size:11px;">G.A Occupational Safety</span>
+      </div>
+      <span class="eyebrow">Segurança do Trabalho</span>
+      <h1>NR-35<br>Trabalho em Altura</h1>
+      <p class="sub">Requisitos e medidas de prevenção para atividades acima de 2,00 m com risco de queda — treinamento completo</p>
+      <p class="curriculum-total">Carga horária: <b>8h</b> (480 min) · NR-35, item 35.4.2.1<br><span style="color:var(--mint);">Cada aula tem tempo mínimo de permanência.</span></p>
+      <p class="curriculum-total" id="learnerLabel" style="margin-top:4px;"></p>
+    </div>
+
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 13 aulas vistas</div>
+
+    <nav class="modlist" id="modlist"></nav>
+    <a href="../index.html" class="navbtn" style="display:block; width:100%; margin-top:20px; text-align:center; text-decoration:none; border-color:rgba(236,237,241,0.3); color:var(--text);">← Meus treinamentos</a>
+    <button type="button" class="navbtn" id="studentLogoutBtn" style="width:100%; margin-top:10px; border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
+  </aside>
+
+  <main>
+    <!-- 0 -->
+    <section class="module" data-mod="0">
+      <div class="m-eyebrow"><span class="code">NR-35</span> Introdução <span class="duration">30 min</span></div>
+      <h2 class="m-title">O que é trabalho em altura</h2>
+      <p class="lede">A NR-35 considera trabalho em altura <strong>toda atividade executada acima de 2,00 m do nível inferior, onde haja risco de queda</strong>. Os dois critérios são cumulativos: a diferença de nível <em>e</em> a existência do risco de queda.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Visão geral da NR-35</div>
+        <div class="video-frame"><iframe id="ytf-0" src="https://www.youtube.com/embed/ovpm1KMTAOs?enablejsapi=1" title="Treinamento NR-35 completo e atualizado" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Segurança dá Trabalho" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>Base normativa</h3>
+      <ul>
+        <li><strong>35.1.1</strong> — a norma estabelece os requisitos e as medidas de prevenção para o trabalho em altura, envolvendo o <strong>planejamento, a organização e a execução</strong>, de forma a garantir a segurança e a saúde dos trabalhadores envolvidos direta ou indiretamente com a atividade.</li>
+        <li><strong>35.2.1</strong> — campo de aplicação: atividades com diferença de nível superior a 2,00 m e risco de queda.</li>
+        <li>Texto reorganizado em 2022/2023, com o glossário migrado para o corpo da norma, e alterado pelas Portarias MTE nº <strong>1.680/2025</strong> (Anexo III e talabarte de retenção) e nº <strong>1.259/2026</strong> (treinamento presencial e análise de risco para escadas).</li>
+      </ul>
+
+      <h3>Por que justamente 2,00 m</h3>
+      <p>O limite não é arbitrário. A queda é um movimento acelerado: o corpo ganha velocidade rápido demais para qualquer reação voluntária. Os números abaixo saem da física da queda livre (v = √2gh), desprezando a resistência do ar.</p>
+      <table>
+        <tr><th>Altura da queda</th><th>Tempo até o impacto</th><th>Velocidade no impacto</th><th>Equivale a</th></tr>
+        <tr><td>2,00 m</td><td>0,64 s</td><td>6,3 m/s</td><td>≈ 23 km/h</td></tr>
+        <tr><td>3,00 m</td><td>0,78 s</td><td>7,7 m/s</td><td>≈ 28 km/h</td></tr>
+        <tr><td>5,00 m</td><td>1,01 s</td><td>9,9 m/s</td><td>≈ 36 km/h</td></tr>
+        <tr><td>10,00 m</td><td>1,43 s</td><td>14,0 m/s</td><td>≈ 50 km/h</td></tr>
+        <tr><td>15,00 m</td><td>1,75 s</td><td>17,1 m/s</td><td>≈ 62 km/h</td></tr>
+      </table>
+      <div class="card note">
+        Repare no tempo da primeira linha: <strong>menos de sete décimos de segundo</strong>. O tempo médio de reação humana a um estímulo inesperado fica em torno de 0,2 a 0,3 s — e ainda seria preciso agarrar alguma coisa com força suficiente. É por isso que a prevenção precisa estar montada <em>antes</em> da queda: durante a queda não existe reação possível.
+      </div>
+
+      <h3>O tamanho do problema no Brasil</h3>
+      <p>Segundo o Observatório de Segurança e Saúde no Trabalho (SmartLab), mantido pelo Ministério Público do Trabalho em cooperação com a OIT, entre 2012 e 2024 foram registrados mais de <strong>8,8 milhões de acidentes</strong> e aproximadamente <strong>32 mil mortes</strong> de trabalhadores no país — uma morte a cada 3 horas e 38 minutos. Na construção civil, dados do INSS em parceria com o mesmo observatório apontam a <strong>queda de altura como a forma de acidente que mais provoca óbitos</strong>, respondendo por cerca de 30% dessas mortes.</p>
+
+      <h3>Os dois critérios, na prática</h3>
+      <table>
+        <tr><th>Situação</th><th>Acima de 2,00 m?</th><th>Risco de queda?</th><th>É trabalho em altura?</th></tr>
+        <tr><td>Troca de lâmpada em escada de 2,5 m</td><td>Sim</td><td>Sim</td><td>Sim</td></tr>
+        <tr><td>Caminhar em mezanino fechado, com guarda-corpo íntegro</td><td>Sim</td><td>Não</td><td>Não</td></tr>
+        <tr><td>Serviço em plataforma a 1,5 m sobre máquina em operação</td><td>Não</td><td>Sim</td><td>Não pela NR-35, mas exige medidas por outras normas</td></tr>
+        <tr><td>Limpeza de telhado de fibrocimento</td><td>Sim</td><td>Sim</td><td>Sim, e com risco de colapso somado</td></tr>
+        <tr><td>Descida em caixa d'água enterrada de 3 m</td><td>Sim (nível inferior)</td><td>Sim</td><td>Sim, somada à NR-33 se for espaço confinado</td></tr>
+        <tr><td>Subida em caminhão para amarrar carga (2,2 m)</td><td>Sim</td><td>Sim</td><td>Sim — cenário muito subestimado</td></tr>
+      </table>
+
+      <div class="card alert">
+        <strong>O equívoco mais comum do campo:</strong> tratar a altura como único critério e, pior, medir "no olho". Um ponto acima de 2,00 m totalmente protegido por proteção coletiva íntegra pode não configurar risco de queda — mas quem conclui isso é a análise de risco, documentada, e não o encarregado na hora do serviço.
+      </div>
+
+      <h3>A NR-35 não trabalha sozinha</h3>
+      <table>
+        <tr><th>Norma</th><th>Onde encosta na NR-35</th></tr>
+        <tr><td>NR-01</td><td>Gerenciamento de riscos ocupacionais (GRO/PGR), inventário de riscos e plano de ação que amparam a AR</td></tr>
+        <tr><td>NR-06</td><td>Certificado de Aprovação (CA) dos EPI, obrigações de fornecimento, higienização e substituição</td></tr>
+        <tr><td>NR-07</td><td>Avaliação de saúde e emissão do ASO com a aptidão para altura (item 7.5.3)</td></tr>
+        <tr><td>NR-10</td><td>Trabalho em altura próximo a instalações elétricas energizadas</td></tr>
+        <tr><td>NR-12</td><td>Acesso a partes elevadas de máquinas, plataformas e passarelas</td></tr>
+        <tr><td>NR-18</td><td>Construção civil: guarda-corpos, andaimes, plataformas e proteção de periferia</td></tr>
+        <tr><td>NR-33</td><td>Quando a altura ocorre dentro de espaço confinado — as duas normas se somam, nenhuma substitui a outra</td></tr>
+        <tr><td>NR-34</td><td>Indústria naval, com requisitos próprios de altura</td></tr>
+      </table>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. Um trabalhador vai subir 1,80 m para trocar um filtro sobre um tanque aberto. A NR-35 se aplica?</strong><br>
+          Não, porque não atinge os 2,00 m do campo de aplicação. Mas o risco de queda existe e é grave — a medida de proteção continua obrigatória, só que fundamentada no gerenciamento de riscos da NR-01 e nas normas específicas da atividade. Dizer "não é NR-35, então pode subir sem nada" é erro de interpretação.</p>
+          <p><strong>2. Qual é a diferença entre "diferença de nível" e "altura do piso"?</strong><br>
+          A norma fala do nível inferior, e não do piso onde o trabalhador está. Numa passarela de 1,5 m sobre uma vala de 2 m, o nível inferior é o fundo da vala: a diferença de nível é de 3,5 m.</p>
+          <p><strong>3. Por que a prevenção precisa estar pronta antes de subir?</strong><br>
+          Porque a queda de 2,00 m termina em 0,64 segundo, tempo menor do que o necessário para reagir. Toda barreira que depende de reação humana durante a queda é inútil.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 1 -->
+    <section class="module" data-mod="1">
+      <div class="m-eyebrow"><span class="code">35.3</span> Responsabilidades <span class="duration">30 min</span></div>
+      <h2 class="m-title">Quem responde pelo quê</h2>
+      <p class="lede">A NR-35 divide as responsabilidades entre a organização e o trabalhador. Não é divisão simbólica: ela define quem é autuado, quem responde civil e criminalmente, e quem tem o poder de parar o serviço.</p>
+
+      <h3>Cabe à organização (35.3.1)</h3>
+      <ul>
+        <li>Garantir a implementação das medidas de proteção previstas na norma.</li>
+        <li>Assegurar a realização da análise de risco e, quando aplicável, a emissão da Permissão de Trabalho.</li>
+        <li>Garantir que todo trabalho em altura seja realizado sob supervisão.</li>
+        <li>Assegurar a interrupção das atividades sempre que houver situação ou condição de risco não prevista.</li>
+        <li>Garantir a capacitação dos trabalhadores e assegurar que a informação sobre os riscos chegue a quem executa.</li>
+        <li>Fornecer os equipamentos adequados e garantir sua manutenção e inspeção.</li>
+        <li><strong>Alínea i)</strong> — estabelecer uma <strong>sistemática de autorização</strong> dos trabalhadores para trabalho em altura.</li>
+        <li><strong>Alínea j)</strong> — assegurar a organização e o arquivamento da documentação prevista na norma por período mínimo de <strong>5 anos</strong>, exceto se houver disposição específica em outra NR.</li>
+      </ul>
+
+      <h3>Cabe ao trabalhador (35.3.2)</h3>
+      <ul>
+        <li>Cumprir os procedimentos e as orientações recebidas, zelando pela própria segurança e pela de terceiros.</li>
+        <li>Colaborar com a organização no cumprimento da norma.</li>
+        <li><strong>Interromper suas atividades</strong> sempre que constatar evidências de riscos graves e iminentes, comunicando imediatamente o superior hierárquico.</li>
+        <li>Comunicar condições inseguras e usar corretamente os sistemas de proteção fornecidos.</li>
+      </ul>
+
+      <div class="card alert">
+        <strong>Direito e dever de recusa:</strong> interromper a atividade diante de risco grave e iminente não é insubordinação — é obrigação escrita na norma. O trabalhador comunica o superior e a atividade só retorna depois que a condição for corrigida. Empresa que pune quem exerce esse dever se expõe muito mais do que se tivesse parado o serviço.
+      </div>
+
+      <h3>Os quatro papéis que não podem se confundir</h3>
+      <table>
+        <tr><th>Papel</th><th>O que faz</th><th>Erro comum</th></tr>
+        <tr><td><strong>Trabalhador autorizado</strong></td><td>Executa a atividade; é capacitado e apto</td><td>Achar que o certificado sozinho autoriza qualquer tipo de trabalho em altura</td></tr>
+        <tr><td><strong>Supervisor</strong></td><td>Acompanha a execução na forma definida pela AR</td><td>Supervisor "no papel", que nunca esteve na frente de serviço</td></tr>
+        <tr><td><strong>Responsável pela autorização da atividade</strong></td><td>Aprova a PT e responde pelas condições liberadas</td><td>Assinar PT sem ter ido ao local verificar</td></tr>
+        <tr><td><strong>Profissional qualificado ou legalmente habilitado</strong></td><td>Seleciona o SPQ a partir da AR; projeta proteção coletiva e ancoragem</td><td>Deixar a escolha do sistema para o almoxarifado ou para o próprio executante</td></tr>
+      </table>
+
+      <h3>Contratante e contratada: a cadeia de responsabilidade</h3>
+      <p>Em serviços terceirizados — manutenção predial, facilities, obras — a responsabilidade não é transferida pelo contrato. Na prática da fiscalização e da Justiça do Trabalho:</p>
+      <ul>
+        <li>A <strong>contratada</strong> responde pela capacitação, autorização, aptidão, fornecimento e inspeção dos equipamentos da sua equipe.</li>
+        <li>A <strong>contratante</strong> responde por informar os riscos do local, disponibilizar ou validar os pontos de ancoragem da sua estrutura, compatibilizar trabalhos simultâneos e exigir o cumprimento da norma dentro do seu estabelecimento.</li>
+        <li>As duas respondem quando o acidente decorre de falha nesse encaixe: ancoragem inexistente, risco do local não informado, serviço autorizado em condição impeditiva.</li>
+      </ul>
+
+      <div class="card note">
+        <strong>Caso de campo.</strong> Prestadora executa manutenção de ar-condicionado na cobertura de um prédio corporativo. A equipe está treinada e com cinto em dia, mas a cobertura não tem ponto de ancoragem nenhum e o contrato não previu instalação de linha de vida. O técnico improvisa a ancoragem numa tubulação de dreno. Não há queda, mas há autuação.<br><br>
+        <strong>Quem falhou?</strong> A contratada, por autorizar a execução sem ancoragem adequada e aceitar o improviso — a AR deveria ter classificado isso como condição impeditiva. E a contratante, por não dispor de sistema de ancoragem na própria estrutura e liberar um serviço recorrente de altura sem essa condição. Nenhuma das duas se salva alegando que a outra deveria ter providenciado.
+      </div>
+
+      <div class="match-exercise" data-pairs='[["Arquivar a documentacao por 5 anos","Organizacao"],["Interromper o servico diante de risco grave e iminente","Trabalhador"],["Estabelecer a sistematica de autorizacao","Organizacao"],["Usar corretamente o sistema de protecao fornecido","Trabalhador"]]'>
+        <h4>Exercício — de quem é a responsabilidade</h4>
+        <p class="match-hint">Clique em uma obrigação à esquerda e depois em quem responde por ela à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 2 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. O encarregado mandou subir, mas o trabalhador viu que a linha de vida está com o cabo desfiado. O que a norma determina?</strong><br>
+          Que ele interrompa a atividade e comunique imediatamente o superior hierárquico. A ordem recebida não revoga o item 35.3.2 — e o equipamento com defeito é condição impeditiva.</p>
+          <p><strong>2. Por quanto tempo a empresa guarda AR, PT, certificados e fichas de inspeção?</strong><br>
+          No mínimo 5 anos, pela alínea j do item 35.3.1, salvo prazo específico em outra norma. Na prática da auditoria, é esse acervo que prova que a gestão existia antes do acidente.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 2 -->
+    <section class="module" data-mod="2">
+      <div class="m-eyebrow"><span class="code">35.4</span> Autorização e capacitação <span class="duration">40 min</span></div>
+      <h2 class="m-title">Trabalhador autorizado: capacitado + apto</h2>
+      <p class="lede">Todo trabalho em altura deve ser realizado por <strong>trabalhador autorizado</strong> (35.4.1). E autorizado tem definição fechada: é o trabalhador <strong>capacitado</strong> e cujo estado de saúde foi avaliado e considerado <strong>apto</strong> (35.4.1.1). Falta um dos dois, não há autorização.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — A norma, o alcance e a autorização</div>
+        <div class="video-frame"><iframe id="ytf-2" src="https://www.youtube.com/embed/m5TPO_eJ3ro?enablejsapi=1" title="NR-35: entenda a norma e quando ela se aplica" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Marcelo Boana" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>A autorização e sua abrangência</h3>
+      <ul>
+        <li><strong>35.4.1.2</strong> — a autorização deve considerar: as atividades a serem desempenhadas, a capacitação recebida e a aptidão clínica.</li>
+        <li><strong>35.4.1.3</strong> — a autorização deve constar nos <strong>documentos funcionais</strong> do empregado.</li>
+        <li><strong>35.4.1.3.1</strong> — a organização deve manter sistema de identificação que permita conhecer, <strong>a qualquer tempo</strong>, a abrangência da autorização de cada trabalhador.</li>
+      </ul>
+
+      <div class="card note">
+        Na prática: não basta o certificado de 8h arquivado. O trabalhador autorizado para montagem de andaime não está automaticamente autorizado para acesso por cordas ou para telhado frágil. A autorização tem <strong>abrangência</strong>, e ela precisa ser consultável — crachá, lista, sistema, o que a empresa adotar, desde que responda na hora: "este trabalhador pode fazer esta atividade?".
+      </div>
+
+      <h3>A capacitação (35.4.2)</h3>
+      <p>O programa é estruturado em treinamentos <strong>inicial, periódico e eventual</strong>, sempre com parte <strong>teórica e prática</strong>.</p>
+      <table>
+        <tr><th>Treinamento</th><th>Carga horária mínima</th><th>Quando acontece</th></tr>
+        <tr><td><strong>Inicial</strong> (35.4.2.1)</td><td>8 horas</td><td>Antes do início da atividade em altura</td></tr>
+        <tr><td><strong>Periódico</strong> (35.4.2.2)</td><td>8 horas</td><td>A cada 2 anos (bienal), com conteúdo definido pelo empregador</td></tr>
+        <tr><td><strong>Eventual</strong></td><td>Definida pela organização</td><td>Mudança de procedimentos, condições ou operações de trabalho e situações equivalentes</td></tr>
+      </table>
+
+      <h3>Conteúdo programático do treinamento inicial (35.4.2.1)</h3>
+      <ul>
+        <li><strong>a)</strong> normas e regulamentos aplicáveis ao trabalho em altura;</li>
+        <li><strong>b)</strong> análise de risco e condições impeditivas;</li>
+        <li><strong>c)</strong> riscos potenciais inerentes ao trabalho em altura e medidas de prevenção e controle;</li>
+        <li><strong>d)</strong> sistemas, equipamentos e procedimentos de proteção coletiva;</li>
+        <li><strong>e)</strong> EPI para trabalho em altura: seleção, inspeção, conservação e limitação de uso;</li>
+        <li><strong>f)</strong> acidentes típicos em trabalhos em altura;</li>
+        <li><strong>g)</strong> condutas em situações de emergência, incluindo noções de técnicas de resgate e de primeiros socorros.</li>
+      </ul>
+
+      <div class="card alert">
+        <strong>Mudança de 2026 — item 35.4.5.</strong> Os treinamentos previstos na NR-35 devem ser realizados <strong>exclusivamente na modalidade presencial</strong>. A regra foi incluída pela <strong>Portaria MTE nº 1.259, de 15/07/2026</strong>, publicada em 16/07/2026. Treinamento de altura em EAD ou semipresencial deixou de atender à norma, e o prazo divulgado para regularizar quem foi capacitado a distância é <strong>16/07/2027</strong>.<br><br>
+        Este ambiente é, por isso, <strong>material teórico de apoio e registro do treinamento presencial</strong> — não substitui a aula nem a prática.
+      </div>
+
+      <h3>Quem pode ministrar (35.4.3)</h3>
+      <p>Instrutores com <strong>proficiência comprovada</strong> no assunto, sob responsabilidade de <strong>profissional qualificado ou legalmente habilitado</strong> em segurança do trabalho. Proficiência se demonstra com formação, certificações e experiência documentada — não com autodeclaração.</p>
+
+      <h3>A aptidão (35.4.4)</h3>
+      <ul>
+        <li>A organização deve avaliar o estado de saúde dos trabalhadores conforme a <strong>NR-07, item 7.5.3</strong>, considerando as patologias que possam gerar <strong>mal súbito</strong> ou queda, além dos <strong>fatores psicossociais</strong>.</li>
+        <li><strong>35.4.4.1</strong> — a aptidão para trabalho em altura deve constar no <strong>ASO</strong>.</li>
+      </ul>
+      <div class="card note">
+        ASO genérico de admissão não resolve. O documento precisa dizer expressamente que o trabalhador está <strong>apto para trabalho em altura</strong>. É esse registro que sustenta a autorização — e é a primeira coisa que o auditor pede quando investiga uma queda.
+      </div>
+
+      <h3>O que precisa existir no registro do treinamento</h3>
+      <ol class="steps">
+        <li>Conteúdo programático efetivamente ministrado, item a item.</li>
+        <li>Carga horária, com datas e horários de início e término.</li>
+        <li>Lista de presença assinada pelos participantes.</li>
+        <li>Identificação do instrutor e a comprovação da sua proficiência.</li>
+        <li>Identificação do profissional qualificado ou habilitado responsável.</li>
+        <li>Avaliação de aprendizagem com resultado por participante.</li>
+        <li>Certificado individual contendo nome, conteúdo, carga horária, data e assinaturas.</li>
+        <li>Registro da parte prática, com a descrição dos exercícios realizados.</li>
+      </ol>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 4 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. O treinamento de altura do trabalhador venceu há 40 dias e ele precisa subir hoje. Pode?</strong><br>
+          Não. A reciclagem bienal é condição da capacitação, e sem capacitação vigente não há trabalhador autorizado. Programar a turma para a semana seguinte não autoriza o serviço de hoje.</p>
+          <p><strong>2. A empresa pode aproveitar o certificado de altura emitido pelo empregador anterior?</strong><br>
+          A capacitação anterior pode ser considerada, mas a <em>autorização</em> é da organização atual: ela precisa avaliar as atividades que o trabalhador vai desempenhar, verificar a aptidão com ASO próprio e registrar a autorização nos documentos funcionais. Na prática, quase sempre há treinamento eventual para alinhar procedimentos locais.</p>
+          <p><strong>3. Qual a diferença entre profissional qualificado e legalmente habilitado?</strong><br>
+          Qualificado é quem comprova conclusão de curso específico na área; legalmente habilitado é quem tem formação com registro no conselho de classe competente, podendo assumir responsabilidade técnica por projeto. Proteção coletiva e sistema de ancoragem exigem o <em>habilitado</em>.</p>
+          <p><strong>4. Um curso de 8h gravado em vídeo, com prova online, atende o treinamento inicial?</strong><br>
+          Não, desde a Portaria MTE nº 1.259/2026. O item 35.4.5 exige modalidade presencial para os treinamentos da NR-35.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 3 -->
+    <section class="module" data-mod="3">
+      <div class="m-eyebrow"><span class="code">35.5</span> Planejamento <span class="duration">35 min</span></div>
+      <h2 class="m-title">Hierarquia das medidas e supervisão</h2>
+      <p class="lede">Antes de pensar em cinto e talabarte, a norma manda pensar em <strong>não subir</strong>. O item 35.5.2 estabelece uma hierarquia de três níveis, que deve ser percorrida nessa ordem — e documentada.</p>
+
+      <h3>A hierarquia (35.5.2)</h3>
+      <table>
+        <tr><th>Ordem</th><th>Medida</th><th>Exemplo prático</th></tr>
+        <tr><td>1º</td><td><strong>Evitar</strong> o trabalho em altura</td><td>Baixar o equipamento ao solo para manutenção; ferramenta com extensão telescópica; luminária com sistema de descida mecanizada; limpeza de fachada por equipamento no nível do piso</td></tr>
+        <tr><td>2º</td><td><strong>Eliminar</strong> o risco de queda</td><td>Guarda-corpo definitivo, fechamento de aberturas no piso, plataforma com proteção perimetral, PTA com cesto fechado</td></tr>
+        <tr><td>3º</td><td><strong>Minimizar</strong> as consequências da queda</td><td>Sistema de retenção (SPIQ), redes de segurança, linha de vida com absorvedor</td></tr>
+      </table>
+
+      <div class="card note">
+        A lógica é a mesma da hierarquia de controle da NR-01: o EPI é a <strong>última</strong> barreira, não a primeira. Projeto que já nasce exigindo cinto para toda manutenção é projeto que falhou nos dois primeiros níveis — e vai custar caro para sempre, porque transfere para o operador, todos os dias, um risco que poderia ter sido eliminado uma única vez.
+      </div>
+
+      <h3>Supervisão (35.5.3)</h3>
+      <p>Todo trabalho em altura deve ser <strong>supervisionado</strong>, e a forma de supervisão é definida pela <strong>análise de risco</strong>, de acordo com as peculiaridades da atividade. Isso significa que a AR precisa dizer, por escrito, qual é a forma adotada:</p>
+      <ul>
+        <li><strong>Permanente e presencial</strong> — o supervisor fica na frente de serviço o tempo todo. Padrão para atividades não rotineiras, acesso por cordas e cenários com risco adicional.</li>
+        <li><strong>Intermitente</strong> — visitas programadas durante a execução. Aceitável em atividade rotineira, de baixa complexidade, com procedimento consolidado.</li>
+        <li><strong>À distância, com comunicação permanente</strong> — exige meio de comunicação testado e alguém capaz de acionar o resgate.</li>
+      </ul>
+
+      <h3>O que mais entra no planejamento</h3>
+      <ul>
+        <li><strong>Isolamento e sinalização</strong> da área, inclusive da projeção vertical — a área de baixo é parte da frente de serviço.</li>
+        <li><strong>Organização do material</strong>: ferramentas amarradas ou em bolsa fechada, nada solto na borda, içamento por corda de serviço e nunca lançamento.</li>
+        <li><strong>Compatibilização de trabalhos simultâneos</strong>, próprios e de terceiros, verticais e horizontais.</li>
+        <li><strong>Meios de comunicação</strong> entre a equipe, a supervisão e quem aciona a emergência.</li>
+        <li><strong>Planejamento do resgate</strong> antes do início — se não há como resgatar, não há como autorizar.</li>
+        <li><strong>Condições meteorológicas</strong> e os limites a partir dos quais o serviço para.</li>
+      </ul>
+
+      <div class="card alert">
+        <strong>Projeção vertical esquecida é acidente contratado.</strong> Em manutenção predial, a maior parte dos acidentes com terceiros não acontece com quem está em cima: acontece com quem passa embaixo. Isolamento na projeção vertical, com fita e sinalização de piso, não é excesso de zelo — é item da análise de risco.
+      </div>
+
+      <div class="match-exercise" data-pairs='[["Levar o motor ao solo para a manutencao","Evitar o trabalho em altura"],["Instalar guarda-corpo no perimetro da laje","Eliminar o risco de queda"],["Usar cinto paraquedista com talabarte absorvedor","Minimizar as consequencias da queda"],["Fechar a abertura de piso com tampa resistente","Eliminar o risco de queda"]]'>
+        <h4>Exercício — classifique a medida</h4>
+        <p class="match-hint">Clique em uma medida à esquerda e depois no nível da hierarquia correspondente à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 2 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A empresa comprou cintos novos para todo mundo. Isso sobe o nível da hierarquia?</strong><br>
+          Não. Cinto é medida de terceiro nível: minimiza a consequência da queda, não evita o trabalho em altura nem elimina o risco. Comprar EPI melhor é bom, mas não substitui a análise dos dois níveis anteriores.</p>
+          <p><strong>2. Quem define se a supervisão será permanente ou intermitente?</strong><br>
+          A análise de risco, considerando as peculiaridades da atividade — e não a disponibilidade de pessoal no dia.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 4 -->
+    <section class="module" data-mod="4">
+      <div class="m-eyebrow"><span class="code">35.5.5</span> Análise de Risco <span class="duration">50 min</span></div>
+      <h2 class="m-title">AR e condições impeditivas</h2>
+      <p class="lede">Todo trabalho em altura deve ser precedido de <strong>análise de risco</strong> (35.5.5). Não existe trabalho em altura sem AR — a atividade rotineira apenas pode ter a AR contida no procedimento operacional.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Riscos potenciais e medidas de prevenção</div>
+        <div class="video-frame"><iframe id="ytf-4" src="https://www.youtube.com/embed/zp9wApA8kG4?enablejsapi=1" title="NR-35: riscos potenciais e medidas de prevenção" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Actire Technologies" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>O que a AR deve considerar (35.5.5.1)</h3>
+      <table>
+        <tr><th>Item a analisar</th><th>O que olhar na prática</th></tr>
+        <tr><td>Local de trabalho e <strong>entorno</strong></td><td>Resistência da superfície, telhas frágeis, bordas, vãos, iluminação, circulação de pessoas e veículos</td></tr>
+        <tr><td><strong>Isolamento e sinalização</strong></td><td>Perímetro no nível do serviço e na projeção vertical; quem controla o acesso</td></tr>
+        <tr><td><strong>Pontos de ancoragem</strong></td><td>Existem? São adequados? Têm marcação e inspeção vigente? Onde ficam em relação ao posto de trabalho?</td></tr>
+        <tr><td><strong>Condições meteorológicas</strong></td><td>Vento, chuva, descargas atmosféricas, temperatura, superfície molhada — com limites numéricos definidos</td></tr>
+        <tr><td>Sistemas e <strong>equipamentos</strong> de proteção</td><td>Qual SPQ, selecionado por quem, compatível entre componentes, inspecionado</td></tr>
+        <tr><td><strong>Queda de materiais</strong> e ferramentas</td><td>Amarração, bolsa, içamento, proteção de quem está abaixo</td></tr>
+        <tr><td><strong>Trabalhos simultâneos</strong></td><td>Outras frentes no mesmo prumo, terceiros, operação normal da planta</td></tr>
+        <tr><td><strong>Riscos adicionais</strong></td><td>Elétrico, espaço confinado, químico, térmico, ruído, partes móveis</td></tr>
+        <tr><td><strong>Condições impeditivas</strong></td><td>Escritas, objetivas e verificáveis antes e durante o serviço</td></tr>
+        <tr><td><strong>Planejamento do resgate</strong></td><td>Quem resgata, com qual técnica, em quanto tempo, com quais recursos</td></tr>
+        <tr><td><strong>Comunicação</strong></td><td>Meio, alcance, teste antes do início, o que fazer se cair a comunicação</td></tr>
+        <tr><td><strong>Forma de supervisão</strong></td><td>Permanente, intermitente ou à distância — definida aqui, não no campo</td></tr>
+      </table>
+
+      <h3>Como escrever uma AR que serve para alguma coisa</h3>
+      <ol class="steps">
+        <li><strong>Descreva a tarefa real</strong>, passo a passo, do deslocamento até a desmobilização — e não o título do serviço.</li>
+        <li><strong>Vá ao local</strong> antes de escrever. AR feita na mesa descreve um lugar que não existe.</li>
+        <li><strong>Liste o perigo por etapa</strong>, não um bloco genérico de "risco de queda".</li>
+        <li><strong>Defina a medida de controle</strong> na ordem da hierarquia, dizendo quem providencia e até quando.</li>
+        <li><strong>Escreva as condições impeditivas</strong> com número e critério objetivo.</li>
+        <li><strong>Feche o resgate</strong>: cenário, equipe, técnica e tempo estimado.</li>
+        <li><strong>Divulgue à equipe</strong> e registre a ciência de quem vai executar.</li>
+        <li><strong>Revise</strong> quando mudar local, equipe, método ou condição.</li>
+      </ol>
+
+      <h3>Atividades rotineiras (35.5.6)</h3>
+      <p>Em atividades rotineiras, a AR <strong>pode estar contida no procedimento operacional</strong>. Esse procedimento, segundo o item 35.5.6.1, deve conter:</p>
+      <ul>
+        <li>o detalhamento da tarefa;</li>
+        <li>as medidas de prevenção;</li>
+        <li>as condições impeditivas;</li>
+        <li>os sistemas de proteção a serem utilizados;</li>
+        <li>as competências e responsabilidades de cada envolvido.</li>
+      </ul>
+
+      <h3>Condições impeditivas</h3>
+      <p>São situações que <strong>impedem o início</strong> ou determinam a <strong>interrupção imediata</strong> da atividade. Precisam estar escritas e precisam ser verificáveis.</p>
+      <table>
+        <tr><th>Tipo</th><th>Exemplos</th><th>Como escrever direito</th></tr>
+        <tr><td>Ambientais</td><td>Vento, chuva, descargas atmosféricas, iluminação, piso escorregadio</td><td>"Vento acima de 40 km/h medido no local" em vez de "vento forte"</td></tr>
+        <tr><td>Técnicas</td><td>Ancoragem ausente ou duvidosa, EPI reprovado, estrutura sem integridade, isolamento inexistente</td><td>"Ausência de ponto de ancoragem com marcação e inspeção vigente"</td></tr>
+        <tr><td>Humanas</td><td>Sem autorização, sem aptidão vigente, indisposição, uso de medicamento que cause sonolência</td><td>"Trabalhador sem autorização vigente para a atividade X"</td></tr>
+        <tr><td>Organizacionais</td><td>Supervisão não definida, equipe de resgate indisponível, PT ausente, comunicação inoperante</td><td>"Equipe de resgate não disponível no turno"</td></tr>
+      </table>
+
+      <div class="card alert">
+        <strong>Regra de ouro:</strong> constatada a condição impeditiva, a atividade <strong>não começa</strong>. Se já começou, <strong>para</strong>. A retomada depende da eliminação da condição — e não de autorização verbal para "terminar logo, que falta pouco". A frase "falta pouco" aparece em boa parte dos relatórios de acidente fatal.
+      </div>
+
+      <div class="card note">
+        <strong>Caso de campo.</strong> Equipe de manutenção vai trocar uma calha na cobertura. A AR do contrato diz: "risco de queda — usar cinto de segurança". Durante o serviço começa a garoar, o telhado fica escorregadio, e a equipe continua porque "o cinto está posto".<br><br>
+        <strong>O que estava errado desde o início?</strong> A AR era genérica: não avaliou a resistência das telhas, não definiu ponto de ancoragem, não estabeleceu limite meteorológico, não previu resgate e não disse quem supervisiona. "Usar cinto de segurança" não é análise de risco — é um lembrete. Uma AR correta teria chuva como condição impeditiva escrita, e o serviço teria parado sozinho.
+      </div>
+
+      <div class="match-exercise" data-pairs='[["Vento acima do limite definido na AR","Impeditiva ambiental"],["Cinto reprovado na inspecao rotineira","Impeditiva tecnica"],["Trabalhador sem aptidao vigente no ASO","Impeditiva humana"],["Equipe de resgate indisponivel no turno","Impeditiva organizacional"]]'>
+        <h4>Exercício — classifique a condição impeditiva</h4>
+        <p class="match-hint">Clique em uma situação à esquerda e depois na classificação correspondente à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A AR pode ser a mesma para todos os contratos de manutenção predial da empresa?</strong><br>
+          Não como documento único e genérico. Atividades rotineiras podem ter a AR dentro do procedimento operacional, mas as condições de cada local — ancoragem, acesso, entorno, resgate — mudam e precisam estar contempladas. Procedimento padrão não dispensa a avaliação do local.</p>
+          <p><strong>2. Quem assina a AR?</strong><br>
+          A norma não impõe um modelo de assinatura, mas a AR é responsabilidade da organização e a seleção do SPQ cabe a profissional qualificado ou legalmente habilitado. Na prática de auditoria, espera-se a identificação de quem elaborou, de quem aprovou e a ciência da equipe executante.</p>
+          <p><strong>3. "Chuva forte" serve como condição impeditiva?</strong><br>
+          Serve mal. O critério precisa ser verificável por qualquer pessoa da equipe, sem depender de interpretação: presença de chuva, superfície molhada, vento acima de um valor medido, previsão de descargas atmosféricas na região.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 5 -->
+    <section class="module" data-mod="5">
+      <div class="m-eyebrow"><span class="code">35.5.7</span> Permissão de Trabalho <span class="duration">35 min</span></div>
+      <h2 class="m-title">Quando a PT é obrigatória</h2>
+      <p class="lede">As atividades <strong>não rotineiras</strong> de trabalho em altura devem ser previamente autorizadas mediante <strong>Permissão de Trabalho</strong> (35.5.7). Rotineiro trabalha com procedimento operacional; não rotineiro exige AR específica e PT.</p>
+
+      <h3>Rotineiro x não rotineiro</h3>
+      <table>
+        <tr><th></th><th>Atividade rotineira</th><th>Atividade não rotineira</th></tr>
+        <tr><td>Documento base</td><td>Procedimento operacional com a AR embutida (35.5.6)</td><td>Análise de risco específica + <strong>PT</strong> (35.5.7)</td></tr>
+        <tr><td>Característica</td><td>Repetitiva, previsível, com método consolidado e local conhecido</td><td>Nova, esporádica, com variável desconhecida ou condição alterada</td></tr>
+        <tr><td>Exemplos</td><td>Inspeção mensal de caixa d'água por equipe própria; troca de lâmpada em rota padronizada; leitura de medidor em plataforma fixa</td><td>Manutenção em telhado após infiltração; içamento atípico; serviço de terceiro em fachada; primeira intervenção num local</td></tr>
+        <tr><td>Validade</td><td>Enquanto o procedimento estiver vigente e as condições se mantiverem</td><td>Limitada à duração da atividade, restrita ao turno ou jornada</td></tr>
+      </table>
+
+      <div class="card note">
+        <strong>Cuidado com a armadilha do "rotineiro".</strong> Rotineiro não é o que acontece com frequência — é o que acontece com frequência <em>nas mesmas condições e com método consolidado</em>. Trocar lâmpada toda semana é rotina; trocar lâmpada numa área nova, com pé-direito diferente e sem ancoragem conhecida, não é.
+      </div>
+
+      <h3>O ciclo da PT (35.5.8)</h3>
+      <ol class="steps">
+        <li><strong>Emissão</strong> em meio físico ou digital, com base na AR da atividade.</li>
+        <li><strong>Aprovação</strong> pelo responsável pela autorização, que responde pelas condições liberadas.</li>
+        <li><strong>Disponibilidade no local</strong> de execução, acessível a quem executa e à fiscalização.</li>
+        <li><strong>Execução</strong> dentro das condições autorizadas, com interrupção se algo mudar.</li>
+        <li><strong>Encerramento</strong> ao final da atividade, com devolução da área em condição segura.</li>
+        <li><strong>Arquivamento</strong>, permitindo a <strong>rastreabilidade</strong> por no mínimo 5 anos.</li>
+      </ol>
+
+      <h3>Conteúdo mínimo (35.5.8.1)</h3>
+      <ul>
+        <li>os <strong>requisitos mínimos</strong> a serem atendidos para a execução;</li>
+        <li>as <strong>disposições e medidas</strong> estabelecidas na análise de risco;</li>
+        <li>a <strong>relação de todos</strong> os trabalhadores envolvidos e suas autorizações.</li>
+      </ul>
+
+      <h3>Validade e revalidação (35.5.8.2)</h3>
+      <p>A validade é <strong>limitada à duração da atividade</strong>, restrita ao turno de trabalho ou à jornada. Pode ser <strong>revalidada</strong> pelo responsável quando não houver alteração das condições estabelecidas nem da equipe de trabalho.</p>
+
+      <div class="card alert">
+        PT assinada em bloco na segunda-feira para a semana inteira é PT inválida. Mudou a equipe, mudou a condição, virou o turno: revalida ou reemite.
+      </div>
+
+      <h3>Quando a PT de altura encontra outras PTs</h3>
+      <p>É comum a mesma tarefa exigir mais de uma permissão — altura somada a espaço confinado, serviço a quente ou intervenção elétrica. Nesse caso:</p>
+      <ul>
+        <li>as permissões <strong>não se substituem</strong>: cada uma trata do seu risco;</li>
+        <li>a AR precisa tratar a <strong>interação</strong> entre eles, que quase sempre é pior que a soma;</li>
+        <li>o resgate precisa considerar o cenário combinado — resgatar alguém suspenso dentro de um silo não é o mesmo que resgatar em fachada.</li>
+      </ul>
+
+      <h3>O que invalida uma PT na auditoria</h3>
+      <ul>
+        <li>Emitida por quem não tem delegação formal para autorizar.</li>
+        <li>Sem vínculo com uma AR, ou vinculada a uma AR genérica que não descreve aquele serviço.</li>
+        <li>Sem a relação nominal dos envolvidos, ou com trabalhador sem autorização vigente na lista.</li>
+        <li>Com campos de verificação preenchidos antecipadamente, antes de a condição ser checada.</li>
+        <li>Sem encerramento, deixando em aberto se a área foi devolvida em segurança.</li>
+      </ul>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A equipe terminou o serviço às 16h, mas a PT vale até as 18h. Outro time pode usar a mesma PT para um reparo parecido?</strong><br>
+          Não. A PT relaciona nominalmente os trabalhadores envolvidos e se refere àquela atividade. Equipe diferente ou serviço diferente exige nova permissão.</p>
+          <p><strong>2. Atividade rotineira dispensa análise de risco?</strong><br>
+          Não dispensa a análise, dispensa o documento separado: a AR pode estar contida no procedimento operacional, com todos os elementos do item 35.5.6.1.</p>
+          <p><strong>3. Durante o serviço, a equipe decide mudar o ponto de ancoragem. E a PT?</strong><br>
+          Mudança de condição estabelecida. Interrompe, reavalia o risco e revalida ou reemite a permissão. Ancoragem é um dos itens que a AR obrigatoriamente analisa, então mudá-la por conta própria descaracteriza o que foi autorizado.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 6 -->
+    <section class="module" data-mod="6">
+      <div class="m-eyebrow"><span class="code">35.6</span> Proteção contra quedas <span class="duration">45 min</span></div>
+      <h2 class="m-title">SPQ: coletiva antes de individual</h2>
+      <p class="lede">O Sistema de Proteção Contra Quedas (SPQ) deve ser utilizado sempre que <strong>não for possível evitar</strong> o trabalho em altura (35.6.1). E a norma define a ordem: <strong>coletiva primeiro</strong>.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Linha de vida tensionada e uso do trava-quedas</div>
+        <div class="video-frame"><iframe id="ytf-6" src="https://www.youtube.com/embed/KjBat6Thzec?enablejsapi=1" title="NR-35: linha de vida tensionada e uso do trava-quedas" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "J&amp;L Istruzioni Segurança do Trabalho" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>Requisitos de seleção (35.6.2)</h3>
+      <ul>
+        <li>ser <strong>adequado à tarefa</strong> a ser executada;</li>
+        <li>ser selecionado a partir da <strong>análise de risco</strong>, por profissional qualificado ou legalmente habilitado em segurança do trabalho;</li>
+        <li>suportar a <strong>máxima força</strong> aplicável;</li>
+        <li>atender às <strong>normas técnicas</strong> aplicáveis;</li>
+        <li>ser <strong>inspecionado</strong> conforme a norma.</li>
+      </ul>
+
+      <h3>SPCQ x SPIQ (35.6.3)</h3>
+      <p>O <strong>Sistema de Proteção Coletiva Contra Quedas (SPCQ)</strong> tem prioridade. O <strong>Sistema de Proteção Individual Contra Quedas (SPIQ)</strong> entra quando:</p>
+      <ul>
+        <li><strong>I</strong> — não for possível adotar a proteção coletiva;</li>
+        <li><strong>II</strong> — a proteção coletiva for <strong>insuficiente ou incompleta</strong>;</li>
+        <li><strong>III</strong> — for necessário atender a <strong>situações de emergência</strong>.</li>
+      </ul>
+      <p>O SPCQ deve ser <strong>projetado por profissional legalmente habilitado</strong> (35.6.3.1).</p>
+
+      <table>
+        <tr><th></th><th>Proteção coletiva (SPCQ)</th><th>Proteção individual (SPIQ)</th></tr>
+        <tr><td>Protege</td><td>Todos que estão na área, inclusive quem passa</td><td>Apenas quem está equipado e conectado</td></tr>
+        <tr><td>Depende de</td><td>Instalação correta e integridade</td><td>Instalação correta, integridade, <strong>e</strong> uso correto a cada minuto</td></tr>
+        <tr><td>Falha quando</td><td>É removida, danificada ou mal dimensionada</td><td>Tudo isso, mais: não conectar, conectar no lugar errado, ancorar mal</td></tr>
+        <tr><td>Exemplos</td><td>Guarda-corpo, fechamento de aberturas, rede de segurança, plataforma com proteção perimetral</td><td>Cinturão paraquedista com talabarte, trava-queda em linha de vida, sistema de restrição</td></tr>
+      </table>
+
+      <h3>Os quatro tipos de SPIQ (35.6.4)</h3>
+      <table>
+        <tr><th>Tipo</th><th>O que faz</th><th>Quando usar</th></tr>
+        <tr><td><strong>Restrição</strong></td><td>Impede que o trabalhador alcance a zona onde a queda é possível — ele simplesmente não chega à borda</td><td>Sempre que a tarefa permitir. É o melhor dos quatro: a queda não acontece</td></tr>
+        <tr><td><strong>Retenção</strong></td><td>Admite a queda, mas a interrompe, limitando a força transmitida ao corpo</td><td>Quando é inevitável trabalhar na zona de risco de queda</td></tr>
+        <tr><td><strong>Posicionamento</strong></td><td>Mantém o trabalhador apoiado em posição de trabalho, liberando as mãos</td><td>Sempre associado a um sistema de retenção — posicionamento sozinho não retém queda</td></tr>
+        <tr><td><strong>Acesso por cordas</strong></td><td>Progressão e sustentação por cordas</td><td>Conforme o Anexo I, com equipe e certificação específicas</td></tr>
+      </table>
+
+      <div class="card alert">
+        <strong>Limite de 6 kN (35.6.7).</strong> A força de impacto transmitida ao trabalhador na retenção da queda deve ser de, no máximo, <strong>6 kN</strong> — cerca de 600 kgf. É esse limite que obriga o absorvedor de energia: sem ele, uma queda curta já gera força muito acima do que a coluna e os órgãos internos suportam, e o sistema "segura" um trabalhador gravemente lesionado.
+      </div>
+
+      <h3>Inspeções (35.6.6)</h3>
+      <table>
+        <tr><th>Inspeção</th><th>Quando</th><th>Quem faz</th><th>Registro</th></tr>
+        <tr><td><strong>Inicial</strong></td><td>Entre o recebimento e a primeira utilização</td><td>Pessoa designada pela organização</td><td>Ficha do equipamento, com identificação e data</td></tr>
+        <tr><td><strong>Rotineira</strong></td><td><strong>Antes de cada jornada</strong> de trabalho</td><td>O próprio usuário, capacitado para isso</td><td>Registro simples, diário</td></tr>
+        <tr><td><strong>Periódica</strong></td><td>No mínimo a cada <strong>12 meses</strong>, com intervalo menor em condições severas de uso</td><td>Pessoa capacitada, conforme critérios do fabricante</td><td>Relatório com resultado e destino do equipamento</td></tr>
+      </table>
+      <p>Componentes com defeito ou <strong>que tenham sofrido a absorção de uma queda</strong> devem ser <strong>descartados</strong>, salvo quando a restauração for admitida por norma técnica.</p>
+
+      <div class="card note">
+        <strong>Descarte é descarte.</strong> Equipamento que reteve uma queda sai de circulação, e o descarte precisa ser físico: corta-se a fita, inutiliza-se o componente, registra-se a baixa. Equipamento condenado que fica no almoxarifado volta ao campo mais cedo ou mais tarde — e normalmente volta na mão de quem não sabe que ele já trabalhou.
+      </div>
+
+      <div class="match-exercise" data-pairs='[["Trabalhador nao alcanca a borda da laje","Restricao"],["A queda ocorre e e interrompida com seguranca","Retencao"],["Trabalhador fica apoiado com as maos livres","Posicionamento"],["Progressao vertical em fachada por cordas","Acesso por cordas"]]'>
+        <h4>Exercício — tipo de SPIQ</h4>
+        <p class="match-hint">Clique em uma situação à esquerda e depois no tipo de sistema correspondente à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. Existe guarda-corpo na laje, mas ele foi removido num trecho para passar material. O que acontece com o SPQ?</strong><br>
+          A proteção coletiva ficou <em>incompleta</em>, o que é exatamente a hipótese II do item 35.6.3: naquele trecho entra o SPIQ, e isso tem de estar previsto na AR — não resolvido na hora.</p>
+          <p><strong>2. Quem escolhe o sistema de proteção?</strong><br>
+          Profissional qualificado ou legalmente habilitado em segurança do trabalho, a partir da análise de risco. Para proteção coletiva e ancoragem, exige-se o legalmente habilitado, que assume a responsabilidade técnica pelo projeto.</p>
+          <p><strong>3. O cinto caiu da caçamba do carro de altura de 1,5 m. Precisa fazer alguma coisa?</strong><br>
+          O equipamento não absorveu queda de trabalhador, mas sofreu impacto. A conduta correta é inspeção antes do próximo uso, conforme critério do fabricante, e registro — na dúvida sobre integridade, descarte. Equipamento de retenção não admite "deve estar bom".</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 7 -->
+    <section class="module" data-mod="7">
+      <div class="m-eyebrow"><span class="code">35.6.9</span> EPI e fator de queda <span class="duration">55 min</span></div>
+      <h2 class="m-title">Cinto, talabarte, trava-queda e a matemática da queda</h2>
+      <p class="lede">Este é o módulo em que o erro mata. Equipamento certo, ancorado no lugar errado, com fator de queda alto e sem zona livre suficiente, não protege — apenas registra a queda.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Cintos de segurança para trabalho em altura</div>
+        <div class="video-frame"><iframe id="ytf-7" src="https://www.youtube.com/embed/bud9_RCwc18?enablejsapi=1" title="NR-35: cintos de segurança" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Grupo Share - Solução em SMS" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>O cinturão tipo paraquedista</h3>
+      <ul>
+        <li>É <strong>obrigatório</strong> nos sistemas de <strong>retenção</strong> de queda e no <strong>acesso por cordas</strong> (35.6.9).</li>
+        <li>Distribui a força do impacto pelas coxas, pelo tronco e pelos ombros — por isso o cinto abdominal <strong>não</strong> é equipamento de retenção de queda.</li>
+        <li>Deve ter <strong>Certificado de Aprovação (CA)</strong> válido e legível, conforme a NR-06.</li>
+      </ul>
+      <table>
+        <tr><th>Ponto de engate</th><th>Para que serve</th><th>Cuidado</th></tr>
+        <tr><td><strong>Dorsal</strong> (costas, entre as escápulas)</td><td>Retenção de queda — é o ponto principal</td><td>Precisa estar na altura correta; se escorregar para a lombar, muda a postura pós-queda</td></tr>
+        <tr><td><strong>Peitoral / esternal</strong></td><td>Retenção em espaços restritos e progressão em escada com trava-queda</td><td>Só quando o fabricante indica para retenção</td></tr>
+        <tr><td><strong>Laterais</strong> (cintura, par)</td><td>Posicionamento — sempre os dois juntos</td><td><strong>Nunca</strong> para retenção de queda</td></tr>
+        <tr><td><strong>Ventral</strong> (frontal baixo)</td><td>Progressão e sustentação em acesso por cordas</td><td>Uso conforme técnica específica do Anexo I</td></tr>
+      </table>
+
+      <h3>Ajuste correto — a diferença entre proteger e machucar</h3>
+      <ol class="steps">
+        <li>Vista o cinturão desembaraçado, sem fitas torcidas.</li>
+        <li>Ajuste as <strong>pernas</strong> primeiro: deve passar a mão espalmada entre a fita e a coxa, sem sobra.</li>
+        <li>Posicione a <strong>fita subpélvica</strong> embaixo dos glúteos, não na dobra do joelho.</li>
+        <li>Ajuste o <strong>peitoral</strong> na altura do esterno, não no pescoço nem na barriga.</li>
+        <li>Confira o <strong>engate dorsal</strong>: ele deve ficar entre as escápulas.</li>
+        <li>Recolha as <strong>sobras de fita</strong> nos passadores — fita solta engancha e se rasga.</li>
+      </ol>
+
+      <h3>Talabartes</h3>
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Talabarte Y para retenção de queda</div>
+        <div class="video-frame"><iframe src="https://www.youtube.com/embed/NvkG9GWpLYU" title="Talabarte Y para retenção de queda" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Luis Paulo Costa" · material complementar.</div>
+      </div>
+      <table>
+        <tr><th>Tipo</th><th>Função</th><th>Observação</th></tr>
+        <tr><td>Talabarte em <strong>Y (duplo)</strong> com absorvedor</td><td>Retenção com progressão: sempre um ramo conectado durante o deslocamento</td><td>O ramo livre se conecta no próprio cinturão apenas em ponto previsto pelo fabricante</td></tr>
+        <tr><td>Talabarte <strong>simples</strong> com absorvedor</td><td>Retenção em ponto fixo</td><td>Não permite progressão sem desconectar</td></tr>
+        <tr><td>Talabarte de <strong>posicionamento</strong> (regulável)</td><td>Apoio na posição de trabalho, nos engates laterais</td><td><strong>Não retém queda</strong> — exige sistema de retenção associado</td></tr>
+        <tr><td>Talabarte <strong>retrátil</strong></td><td>Mantém o cabo tensionado, reduzindo a queda livre</td><td>Atenção à orientação do fabricante quanto ao uso na horizontal</td></tr>
+      </table>
+      <p><strong>35.6.9.1.1</strong> — o talabarte utilizado para retenção de queda deve ser do tipo <strong>com absorvedor de energia integrado</strong> (redação incluída pela Portaria MTE nº 1.680/2025).</p>
+
+      <h3>Trava-quedas (35.6.10)</h3>
+      <p>Deve seguir as orientações do fabricante quanto à <strong>compatibilidade com a linha de vida vertical</strong> e ao <strong>comprimento máximo do extensor</strong>.</p>
+      <ul>
+        <li><strong>Guiado em corda ou cabo de aço</strong> — acompanha o trabalhador na subida e bloqueia na queda. Precisa ser do mesmo sistema da linha.</li>
+        <li><strong>Retrátil</strong> — cabo que recolhe sozinho, mantendo o sistema tensionado e a queda livre mínima.</li>
+      </ul>
+      <div class="card alert">
+        Trava-queda de um fabricante numa linha de vida de outro, sem declaração de compatibilidade, é improvisação — e some justamente no momento do impacto. O mesmo vale para extensor mais longo do que o manual permite: ele aumenta a queda livre e pode levar a força além dos 6 kN.
+      </div>
+
+      <h3>Fator de queda</h3>
+      <p>É a relação entre a distância percorrida em queda livre e o comprimento do talabarte. Quanto <strong>mais alta a ancoragem</strong>, menor o fator — e menor a força no corpo.</p>
+      <div class="calc">
+FATOR DE QUEDA  =  altura da queda livre  ÷  comprimento do talabarte
+
+Ancoragem acima da cabeça, talabarte esticado ....... FQ 0  →  severidade mínima
+Ancoragem na altura do engate dorsal ................ FQ 1  →  severidade moderada
+Ancoragem na altura dos pés ou abaixo ............... FQ 2  →  severidade crítica
+      </div>
+      <table>
+        <tr><th>Fator</th><th>Posição da ancoragem</th><th>O que acontece no corpo</th></tr>
+        <tr><td><strong>0</strong></td><td>Acima da cabeça, sem folga no talabarte</td><td>Queda livre quase nula; o absorvedor trabalha pouco</td></tr>
+        <tr><td><strong>1</strong></td><td>Na altura do ponto de engate</td><td>Queda livre igual ao talabarte; o absorvedor é essencial</td></tr>
+        <tr><td><strong>2</strong></td><td>Na altura dos pés ou abaixo</td><td>Queda livre do dobro do talabarte; força elevadíssima, risco de lesão grave mesmo com o sistema atuando</td></tr>
+      </table>
+
+      <h3>Zona livre de queda — o cálculo que salva</h3>
+      <p>É o espaço que precisa estar <strong>livre abaixo</strong> do trabalhador para o sistema travar a queda <em>antes</em> de o corpo atingir o piso ou qualquer estrutura. Exemplo com valores típicos — os números reais saem sempre do manual do fabricante:</p>
+      <div class="calc">
+Comprimento do talabarte (queda livre) ............ 1,80 m
+Alongamento do absorvedor de energia .............. 1,75 m
+Altura do engate dorsal até os pés ................ 1,50 m
+Folga de segurança ................................ 1,00 m
+---------------------------------------------------------
+ZONA LIVRE NECESSÁRIA ABAIXO DA ANCORAGEM ......... 6,05 m
+      </div>
+      <div class="card alert">
+        Leia de novo esse número e compare com a realidade do campo. Um trabalhador ancorado a <strong>4,00 m</strong> do piso, com esse arranjo, <strong>bate no chão antes de o sistema terminar de atuar</strong> — mesmo com todo o equipamento correto, dentro da validade e bem ajustado. Em altura reduzida, a solução não é o talabarte comum: é restrição, retrátil ou proteção coletiva.
+      </div>
+
+      <h3>Proibições expressas</h3>
+      <p><strong>35.6.11.1.1</strong> — talabartes <strong>não podem</strong> ser interligados entre si ou a extensores, nem amarrados com <strong>nós</strong>, salvo quando expressamente autorizado pelo fabricante. Um nó em fita pode reduzir a resistência em mais da metade.</p>
+
+      <h3>Inspeção rotineira do cinturão — o que olhar</h3>
+      <ul>
+        <li><strong>Fitas</strong>: cortes, fios puxados, desgaste por abrasão, queimadura, manchas de produto químico, descoloração forte por exposição solar.</li>
+        <li><strong>Costuras</strong>: pontos rompidos, soltos ou desalinhados — a costura é o elo mais informativo do equipamento.</li>
+        <li><strong>Fivelas e ajustes</strong>: deformação, trinca, corrosão, travamento que não prende.</li>
+        <li><strong>Argolas e engates</strong>: deformação, desgaste em quina viva, marca de impacto.</li>
+        <li><strong>Mosquetões</strong>: trava automática funcionando, gatilho sem folga, sem deformação.</li>
+        <li><strong>Absorvedor</strong>: indicador de acionamento, costura-sacrifício intacta, capa fechada.</li>
+        <li><strong>Identificação</strong>: etiqueta legível, CA válido, número de série registrado na ficha.</li>
+      </ul>
+
+      <div class="card note">
+        <strong>Demonstração prática obrigatória (parte presencial).</strong> Inspeção do cinturão costura por costura; vestimento e ajuste com conferência entre colegas; teste de funcionamento do trava-queda; identificação de absorvedor acionado; escolha do ponto de ancoragem em cenário real; e cálculo da zona livre no local, com trena. Nada disso se substitui por vídeo — e, desde a Portaria MTE nº 1.259/2026, nem o módulo teórico se substitui por EAD.
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 4 perguntas, uma com cálculo</summary>
+        <div class="ans">
+          <p><strong>1. O trabalhador conectou o talabarte nos dois engates laterais para reter a queda. Está certo?</strong><br>
+          Não. Os engates laterais são de <em>posicionamento</em>. A retenção se faz no engate dorsal (ou peitoral, quando o fabricante indicar). Posicionamento não retém queda.</p>
+          <p><strong>2. Ancoragem no piso, ao lado dos pés, com talabarte de 1,8 m. Qual o fator de queda e por que isso é grave?</strong><br>
+          Fator 2: a queda livre chega a cerca de 3,6 m, o dobro do talabarte. A energia a ser dissipada é muito maior, a força tende a ultrapassar o limite tolerável e a zona livre necessária cresce bastante. Sempre que possível, ancora-se acima da cabeça.</p>
+          <p><strong>3. Com o arranjo do exemplo (6,05 m de zona livre), é seguro trabalhar ancorado a 5 m do piso?</strong><br>
+          Não. Faltaria mais de um metro para o sistema atuar por completo. O arranjo tem de mudar: ancoragem mais alta, talabarte retrátil, sistema de restrição ou proteção coletiva.</p>
+          <p><strong>4. Pode dar um nó no talabarte para encurtá-lo?</strong><br>
+          Não, salvo autorização expressa do fabricante (35.6.11.1.1). O nó concentra tensão e reduz drasticamente a resistência da fita. Para encurtar, usa-se talabarte regulável próprio.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 8 -->
+    <section class="module" data-mod="8">
+      <div class="m-eyebrow"><span class="code">Anexos I e II</span> Ancoragem e cordas <span class="duration">45 min</span></div>
+      <h2 class="m-title">Sistemas de ancoragem e acesso por cordas</h2>
+      <p class="lede">O cinto vale o que vale a ancoragem. O Anexo II trata dos sistemas de ancoragem; o Anexo I, do acesso por cordas — a técnica com as exigências mais rígidas da norma.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Erros que mais matam: ancoragem improvisada e falta de plano de resgate</div>
+        <div class="video-frame"><iframe id="ytf-8" src="https://www.youtube.com/embed/5jXQvo2tufE?enablejsapi=1" title="Os 5 erros que mais matam em trabalho em altura" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Fechado com a Segurança" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>Anexo II — Sistemas de ancoragem</h3>
+      <ul>
+        <li><strong>3.1</strong> — tipos de ponto de ancoragem: diretamente na estrutura, <strong>ancoragem estrutural</strong> ou <strong>dispositivo de ancoragem</strong>.</li>
+        <li><strong>3.2 e 3.3</strong> — a ancoragem estrutural e seus elementos de fixação devem ser projetados e construídos sob responsabilidade de <strong>profissional legalmente habilitado</strong>; os dispositivos de ancoragem devem ser certificados, fabricados sob responsabilidade de habilitado ou por ele projetados.</li>
+        <li><strong>3.2.1</strong> — os pontos de ancoragem estrutural devem ser <strong>marcados</strong> com a identificação do fabricante, o número de lote ou série e o <strong>número máximo de trabalhadores</strong> ou a força máxima admissível. Ponto sem marcação exige reconstituição das informações ou ensaio.</li>
+        <li><strong>4.1.1 e 4.1.2</strong> — inspeção <strong>inicial</strong> após instalação, alteração ou remanejamento, e <strong>periódica</strong> no mínimo a cada <strong>12 meses</strong>.</li>
+        <li><strong>4.2</strong> — em sistemas <strong>temporários</strong>, os pontos de fixação são definidos por profissional habilitado ou escolhidos por trabalhador capacitado seguindo procedimento de seleção, com autorização formal da organização.</li>
+        <li><strong>4.3</strong> — sistemas <strong>permanentes</strong> exigem projeto e instalação sob responsabilidade de profissional habilitado.</li>
+        <li><strong>5.1.1</strong> — o dimensionamento deve calcular a <strong>força de impacto</strong> (inclusive em quedas simultâneas ou sequenciais), os <strong>esforços em cada componente</strong> e a <strong>zona livre de queda necessária</strong>.</li>
+        <li><strong>6.1</strong> — deve haver procedimento de montagem, uso, manutenção, modificação, remanejamento e desmontagem, elaborado por profissional de segurança.</li>
+      </ul>
+
+      <h3>O que NÃO é ponto de ancoragem</h3>
+      <table>
+        <tr><th>Improviso visto em campo</th><th>Por que falha</th></tr>
+        <tr><td>Tubulação hidráulica ou de gás</td><td>Dimensionada para pressão interna, não para impacto lateral; rompe e ainda gera emergência secundária</td></tr>
+        <tr><td>Bandeja ou eletrocalha</td><td>Fixação em bucha leve, projetada para o peso de cabos</td></tr>
+        <tr><td>Grade de forro, telha, rufo</td><td>Não suportam carga concentrada; cedem antes do sistema atuar</td></tr>
+        <tr><td>Extintor, corrimão comum, guarda-corpo não projetado</td><td>Não foram dimensionados para retenção de queda</td></tr>
+        <tr><td>Estrutura "parece firme"</td><td>Sem marcação, sem projeto, sem inspeção: não é ancoragem, é aposta</td></tr>
+      </table>
+
+      <h3>Anexo I — Acesso por cordas</h3>
+      <ul>
+        <li><strong>3.1</strong> — equipe de <strong>no mínimo duas pessoas</strong>, sendo uma delas o <strong>supervisor</strong>, com trabalhadores certificados e procedimentos conforme normas técnicas. Trabalhadores certificados podem ser dispensados dos treinamentos inicial e periódico (3.1.1).</li>
+        <li><strong>3.2</strong> — o trabalhador deve estar conectado a <strong>pelo menos duas cordas</strong>, em pontos de ancoragem <strong>independentes</strong>. Corda única é admitida apenas se a AR demonstrar que o uso de duas seria mais arriscado, com medidas de segurança equivalentes (3.2.1).</li>
+        <li><strong>4.3.1 e 4.3.2</strong> — inspeção <strong>antes de cada uso</strong> e, no mínimo, a cada <strong>6 meses</strong>. Equipamento com defeito ou desgaste deve ser rejeitado e <strong>descartado</strong>.</li>
+        <li><strong>4.3.3</strong> — registros de inspeção na aquisição, periodicamente e no momento da rejeição.</li>
+        <li><strong>5.1 e 5.2</strong> — a equipe deve ser capacitada em <strong>autossalvamento e resgate em equipe</strong>, e cada frente de trabalho precisa de <strong>plano de resgate</strong>.</li>
+        <li><strong>6.1</strong> — interrupção imediata com vento acima de <strong>40 km/h</strong>.</li>
+        <li><strong>6.2</strong> — entre <strong>40 e 46 km/h</strong>, a atividade só continua com justificativa assinada, análise de risco complementar elaborada por equipe multidisciplinar liderada por profissional de segurança, medidas adicionais e operação assistida pelo supervisor.</li>
+        <li><strong>2.3</strong> — ficam excluídos do anexo: recreação, esporte e turismo de aventura, arboricultura, resgate de pessoas fora da equipe e espeleologia.</li>
+      </ul>
+
+      <div class="card note">
+        <strong>Leitura de fiscalização.</strong> Em serviço de fachada, os itens que mais geram autuação são: corda única sem justificativa na AR, ausência de plano de resgate na frente de trabalho, falta do registro de inspeção semestral das cordas e ancoragem sem marcação. Repare que três dos quatro são <em>documentais</em> — a empresa costuma ter o equipamento certo e perder na gestão.
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A cobertura não tem ancoragem. Dá para usar a estrutura metálica do telhado se ela "aguenta bem"?</strong><br>
+          Só se um profissional legalmente habilitado definir e documentar esse ponto, ou se trabalhador capacitado o escolher seguindo procedimento de seleção com autorização formal da organização (item 4.2 do Anexo II). A avaliação visual de quem vai subir não substitui isso.</p>
+          <p><strong>2. Dois trabalhadores podem se conectar ao mesmo ponto de ancoragem?</strong><br>
+          Depende da marcação: o ponto informa o número máximo de trabalhadores ou a força máxima admissível (3.2.1). Sem essa informação, não há como responder — e o dimensionamento precisa considerar inclusive quedas simultâneas ou sequenciais (5.1.1).</p>
+          <p><strong>3. O vento no local está em 43 km/h. A equipe de fachada pode continuar?</strong><br>
+          Somente na faixa entre 40 e 46 km/h e com todo o rito do item 6.2: justificativa assinada, AR complementar por equipe multidisciplinar liderada por profissional de segurança, medidas adicionais e assistência do supervisor. Acima de 46 km/h, não há essa possibilidade.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 9 -->
+    <section class="module" data-mod="9">
+      <div class="m-eyebrow"><span class="code">Anexo III</span> Escadas <span class="duration">35 min</span></div>
+      <h2 class="m-title">Escadas de uso individual</h2>
+      <p class="lede">O Anexo III foi aprovado pela <strong>Portaria MTE nº 1.680/2025</strong>, com vigência a partir de <strong>02/01/2026</strong>, e já alterado pela <strong>Portaria MTE nº 1.259/2026</strong>. É o tema mais novo — e o que mais pega empresa desprevenida.</p>
+
+      <h3>Alcance e classificação</h3>
+      <ul>
+        <li><strong>2.1 e 2.1.1</strong> — trata apenas das escadas de <strong>uso individual</strong>; escadas de uso coletivo estão excluídas.</li>
+        <li><strong>3.1</strong> — classificação: <strong>fixa vertical</strong>; <strong>portátil de encosto</strong> (fixa ou extensível); e <strong>portátil autoportante</strong>.</li>
+      </ul>
+
+      <div class="card alert">
+        <strong>Mudança de 2026 — item 4.1.1.</strong> A utilização de escada como meio de acesso ou como posto de trabalho em altura deve ser <strong>precedida de análise de risco</strong> (redação dada pela Portaria MTE nº 1.259/2026). O item 4.1.1.1 acrescenta que a análise deve considerar o equipamento de acesso <strong>mais adequado em segurança e ergonomia</strong>. Na prática: subir numa escada deixou de ser ato trivial e passou a exigir avaliação documentada.
+      </div>
+
+      <h3>Hierarquia de acesso (4.1.2)</h3>
+      <table>
+        <tr><th>Ordem</th><th>Meio de acesso</th></tr>
+        <tr><td>1º</td><td>Acesso no nível do piso</td></tr>
+        <tr><td>2º</td><td>Rampa ou escada de uso coletivo</td></tr>
+        <tr><td>3º</td><td>Escada de alta inclinação</td></tr>
+        <tr><td>4º</td><td>Escada fixa vertical de uso individual</td></tr>
+      </table>
+      <p>A escada fixa vertical de uso individual é admitida <strong>somente quando os outros meios forem tecnicamente inviáveis</strong> (4.1.2.1).</p>
+
+      <h3>Escada fixa vertical — requisitos (5.2.1.1)</h3>
+      <table>
+        <tr><th>Parâmetro</th><th>Exigência</th></tr>
+        <tr><td>Largura</td><td>entre <strong>0,40 m e 0,60 m</strong></td></tr>
+        <tr><td>Espaçamento entre degraus</td><td>de <strong>0,25 m a 0,30 m</strong></td></tr>
+        <tr><td>Corrimão ou prolongamento dos montantes</td><td><strong>1,10 m a 1,20 m</strong> acima do nível superior</td></tr>
+        <tr><td>Afastamento da estrutura de apoio</td><td>mínimo de <strong>0,15 m</strong></td></tr>
+        <tr><td>Proteção contra quedas</td><td>conforme o item <strong>35.6</strong></td></tr>
+        <tr><td>Projeto</td><td>por <strong>profissional legalmente habilitado</strong></td></tr>
+        <tr><td>Plataformas de descanso (5.2.1.2)</td><td>obrigatórias acima de <strong>10 m</strong>, espaçadas em no máximo <strong>6 m</strong></td></tr>
+      </table>
+      <p><strong>5.2.1.1.1 a 5.2.1.1.4</strong> — quando a escada é usada apenas para acesso, uma <strong>análise de risco específica</strong> define a necessidade de SPIQ, e uma única análise pode abranger um <strong>grupo de escadas semelhantes</strong>.</p>
+
+      <h3>Escadas portáteis</h3>
+      <table>
+        <tr><th>Tipo</th><th>Exigência</th><th>Item</th></tr>
+        <tr><td>Todas</td><td>Manter <strong>três pontos de contato</strong> na subida e descida; se não for possível mantê-los no posto de trabalho, exige SPQ</td><td>5.2.2.1.2 / 5.2.2.1.3</td></tr>
+        <tr><td>De encosto</td><td>Ultrapassar em no mínimo <strong>1 m</strong> o nível superior quando usada para acesso; comprimento máximo de <strong>7 m</strong></td><td>5.2.2.7.4 / 5.2.2.7.5</td></tr>
+        <tr><td>Extensível</td><td>Fixação em <strong>mais de um ponto</strong>; limitador de curso ou <strong>sobreposição mínima de 1 m</strong></td><td>5.2.2.8.1 / 5.2.2.8.2</td></tr>
+        <tr><td>Autoportante</td><td>Uso somente com os <strong>limitadores atuando na abertura máxima</strong>; comprimento máximo de <strong>6 m</strong> fechada</td><td>5.2.2.9.1 / 5.2.2.9.3</td></tr>
+      </table>
+
+      <h3>Capacitação (4.2.1)</h3>
+      <p>Os trabalhadores devem ser capacitados conforme o capítulo <strong>35.4</strong>, incluindo o <strong>uso seguro de escadas de uso individual</strong>. O conteúdo de escadas entra no treinamento de altura — presencial, como todo treinamento da NR-35.</p>
+
+      <h3>Plano de adequação ao Anexo III</h3>
+      <ol class="steps">
+        <li>Inventariar todas as escadas fixas verticais e portáteis, por local e identificação.</li>
+        <li>Medir largura, espaçamento de degraus, prolongamento e afastamento das fixas verticais.</li>
+        <li>Levantar as fixas verticais com mais de 10 m sem plataforma de descanso.</li>
+        <li>Verificar quais escadas fixas têm projeto de profissional legalmente habilitado.</li>
+        <li>Elaborar a análise de risco de uso de escada — podendo agrupar escadas semelhantes.</li>
+        <li>Conferir os limites de comprimento das portáteis e descartar as fora do padrão.</li>
+        <li>Incluir o uso seguro de escadas no conteúdo do treinamento de altura.</li>
+        <li>Definir plano de ação com prazo e responsável para o que não estiver conforme.</li>
+      </ol>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A empresa tem uma escada marinheiro de 12 m para acesso à caixa d'água, sem plataforma de descanso. Está conforme?</strong><br>
+          Não. Acima de 10 m são obrigatórias plataformas de descanso, espaçadas em no máximo 6 m (5.2.1.2). Entra no plano de ação, com prazo e responsável.</p>
+          <p><strong>2. Para usar uma escada de encosto de 4 m, precisa de análise de risco?</strong><br>
+          Sim, desde a alteração do item 4.1.1 pela Portaria MTE nº 1.259/2026. A análise também deve avaliar se existe meio de acesso mais adequado em segurança e ergonomia.</p>
+          <p><strong>3. É possível fazer uma única AR para as 30 escadas fixas de um galpão?</strong><br>
+          Sim, quando usadas apenas para acesso e desde que semelhantes: uma análise pode abranger um grupo de escadas com as mesmas características (5.2.1.1.4). Características diferentes exigem avaliações próprias.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 10 -->
+    <section class="module" data-mod="10">
+      <div class="m-eyebrow"><span class="code">35.7</span> Emergência e salvamento <span class="duration">45 min</span></div>
+      <h2 class="m-title">Acidentes típicos, resgate e trauma de suspensão</h2>
+      <p class="lede">Reter a queda é metade do trabalho. A outra metade é tirar o trabalhador de lá — rápido. Um corpo suspenso e imóvel no cinturão entra em risco em <strong>minutos</strong>, não em horas.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Condutas de emergência e primeiros socorros</div>
+        <div class="video-frame"><iframe id="ytf-10" src="https://www.youtube.com/embed/8omgD_8pwQg?enablejsapi=1" title="NR-35: condutas de emergência e primeiros socorros" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Actire Technologies" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>Procedimentos de emergência (35.7.1)</h3>
+      <p>Devem contemplar, no mínimo:</p>
+      <ul>
+        <li><strong>a)</strong> os riscos a que estão sujeitos os trabalhadores envolvidos no resgate;</li>
+        <li><strong>b)</strong> o <strong>dimensionamento da equipe</strong> de resgate;</li>
+        <li><strong>c)</strong> o <strong>tempo estimado</strong> para o resgate;</li>
+        <li><strong>d)</strong> as técnicas e os equipamentos que <strong>minimizem o trauma de suspensão</strong>.</li>
+      </ul>
+      <p><strong>35.7.1.1</strong> — cada cenário de emergência identificado deve ter sua própria análise de risco. <strong>35.7.2</strong> — a organização deve assegurar à equipe os <strong>recursos necessários</strong> para a resposta.</p>
+
+      <h3>Quem resgata (35.7.3)</h3>
+      <ul>
+        <li>Os resgatistas devem ser <strong>capacitados em técnicas de resgate e primeiros socorros</strong> e estar <strong>aptos física e mentalmente</strong> para a função.</li>
+        <li><strong>35.7.3.1</strong> — equipes internas de resgate exigem conteúdo e carga horária de treinamento <strong>compatíveis com os cenários</strong> previstos. Não existe carga horária única: o treinamento se dimensiona pelo cenário real da empresa.</li>
+      </ul>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — O risco da suspensão inerte</div>
+        <div class="video-frame"><iframe src="https://www.youtube.com/embed/oWehJ-SI5sU" title="O risco mortal da suspensão inerte" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Fechado com a Segurança" · material complementar.</div>
+      </div>
+
+      <h3>Trauma de suspensão (síndrome do arnês)</h3>
+      <p>Com o trabalhador suspenso e inconsciente ou imóvel, as cintas comprimem a região das coxas, o sangue fica retido nos membros inferiores e o retorno venoso ao coração cai. O cérebro passa a receber menos sangue, e o quadro pode evoluir em <strong>poucos minutos</strong>, mesmo sem nenhuma lesão causada pelo impacto.</p>
+      <table>
+        <tr><th>Fase</th><th>O que acontece</th><th>Conduta</th></tr>
+        <tr><td>Imediata</td><td>O sistema retém a queda; o trabalhador fica suspenso</td><td>Acionar o plano de resgate e manter comunicação contínua com ele</td></tr>
+        <tr><td>Primeiros minutos</td><td>Sangue se acumula nas pernas; palidez, tontura, náusea, falta de ar</td><td>Orientar movimentação das pernas e apoio nos pés, se houver meio; acelerar o resgate</td></tr>
+        <tr><td>Evolução</td><td>Perda de consciência com a suspensão mantida</td><td>Resgate imediato — a partir daqui o tempo é o fator decisivo</td></tr>
+        <tr><td>Após o resgate</td><td>Risco na reperfusão ao deitar bruscamente</td><td>Atendimento médico mesmo sem lesão aparente; transporte e posicionamento conforme protocolo e orientação médica</td></tr>
+      </table>
+
+      <div class="card alert">
+        <strong>Acionar o 193 e esperar não é plano de resgate.</strong> A norma exige tempo estimado, equipe dimensionada e técnica definida. Se o tempo de chegada do serviço público é superior ao tempo que o cenário tolera, a empresa precisa de equipe e meios próprios — essa conclusão tem de estar escrita na análise de risco do cenário.
+      </div>
+
+      <h3>Acidentes típicos em trabalho em altura</h3>
+      <table>
+        <tr><th>Acidente</th><th>Causa recorrente</th><th>Barreira que falhou</th></tr>
+        <tr><td>Queda de pessoa</td><td>Ausência ou mau uso do SPQ, ancoragem inadequada</td><td>Hierarquia de medidas e AR</td></tr>
+        <tr><td>Queda de material ou ferramenta</td><td>Falta de isolamento da projeção vertical e de amarração</td><td>Planejamento e isolamento</td></tr>
+        <tr><td>Efeito pêndulo</td><td>Ancoragem lateral distante do ponto de trabalho</td><td>Seleção do ponto de ancoragem</td></tr>
+        <tr><td>Choque elétrico</td><td>Rede energizada próxima não identificada na AR</td><td>Riscos adicionais na AR</td></tr>
+        <tr><td>Colapso de estrutura</td><td>Telhado frágil, andaime mal montado, piso sem resistência verificada</td><td>Avaliação do local e entorno</td></tr>
+        <tr><td>Zona livre insuficiente</td><td>Sistema correto, mas sem espaço para atuar</td><td>Cálculo da zona livre de queda</td></tr>
+        <tr><td>Agravamento após a queda</td><td>Resgate demorado, trauma de suspensão</td><td>Plano de emergência (35.7)</td></tr>
+      </table>
+
+      <h3>O que todo plano de resgate precisa responder</h3>
+      <ol class="steps">
+        <li>Quais cenários existem nesta frente de trabalho?</li>
+        <li>Quem resgata, nominalmente, e quem substitui na ausência?</li>
+        <li>Com qual técnica e quais equipamentos, disponíveis onde?</li>
+        <li>Em quanto tempo, contado do acionamento até o trabalhador no solo?</li>
+        <li>Como se aciona o resgate e como se mantém comunicação com a vítima?</li>
+        <li>Quem presta os primeiros socorros e como se encaminha o atendimento médico?</li>
+        <li>Quando foi o último simulado deste cenário e qual foi o tempo medido?</li>
+      </ol>
+
+      <div class="match-exercise" data-pairs='[["Ancoragem lateral longe do ponto de trabalho","Efeito pendulo"],["Ferramenta sem amarracao e area sem isolamento","Queda de material"],["Resgate demorado com trabalhador suspenso","Trauma de suspensao"],["Telhado de fibrocimento sem linha de vida","Colapso de estrutura"]]'>
+        <h4>Exercício — causa e acidente típico</h4>
+        <p class="match-hint">Clique em uma causa à esquerda e depois no acidente típico correspondente à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. O trabalhador ficou suspenso, está consciente e conversando. Dá para esperar com calma?</strong><br>
+          Não. A consciência preservada não elimina o trauma de suspensão: a compressão das cintas age desde o primeiro momento. O resgate segue sendo imediato, com comunicação contínua e estímulo à movimentação das pernas enquanto se executa.</p>
+          <p><strong>2. A empresa precisa de brigada própria para trabalho em altura?</strong><br>
+          A norma não impõe um formato, impõe um resultado: equipe dimensionada, recursos disponíveis e tempo de resgate compatível com o cenário. Se o socorro externo não chega nesse tempo, a consequência prática é ter equipe e meios próprios.</p>
+          <p><strong>3. Qual a utilidade do simulado?</strong><br>
+          Medir o tempo real, que quase sempre é maior que o estimado no papel, e revelar falhas de acesso, de equipamento e de comunicação antes do acidente. Simulado sem cronômetro e sem registro não cumpre a função.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 11 -->
+    <section class="module" data-mod="11">
+      <div class="m-eyebrow"><span class="code">Referência</span> Glossário e FAQ <span class="duration">15 min</span></div>
+      <h2 class="m-title">Glossário e perguntas frequentes</h2>
+      <p class="lede">A NR-35 traz o glossário no próprio corpo da norma desde a reorganização do texto. Abaixo, os termos que mais aparecem em AR, PT e auditoria.</p>
+
+      <h3>Glossário</h3>
+      <table>
+        <tr><th>Termo</th><th>Significado</th></tr>
+        <tr><td>Trabalho em altura</td><td>Atividade executada acima de 2,00 m do nível inferior, com risco de queda</td></tr>
+        <tr><td>Trabalhador capacitado</td><td>Aquele que concluiu com aproveitamento o treinamento teórico e prático da NR-35</td></tr>
+        <tr><td>Trabalhador autorizado</td><td>Trabalhador capacitado cujo estado de saúde foi avaliado e considerado apto</td></tr>
+        <tr><td>Profissional qualificado</td><td>Quem comprova conclusão de curso específico na área</td></tr>
+        <tr><td>Profissional legalmente habilitado</td><td>Quem tem formação com registro no conselho de classe e pode assumir responsabilidade técnica</td></tr>
+        <tr><td>AR — Análise de Risco</td><td>Avaliação prévia dos riscos da atividade e definição das medidas de controle</td></tr>
+        <tr><td>PT — Permissão de Trabalho</td><td>Autorização formal e prévia para atividade não rotineira, com validade limitada</td></tr>
+        <tr><td>Condição impeditiva</td><td>Situação que impede o início ou obriga a interrupção da atividade</td></tr>
+        <tr><td>SPQ</td><td>Sistema de Proteção Contra Quedas, gênero que abrange coletivo e individual</td></tr>
+        <tr><td>SPCQ</td><td>Sistema de Proteção Coletiva Contra Quedas — guarda-corpo, fechamento de aberturas, redes</td></tr>
+        <tr><td>SPIQ</td><td>Sistema de Proteção Individual Contra Quedas — restrição, retenção, posicionamento e cordas</td></tr>
+        <tr><td>Cinturão tipo paraquedista</td><td>Cinto de corpo inteiro, obrigatório na retenção de queda e no acesso por cordas</td></tr>
+        <tr><td>Talabarte</td><td>Elemento de ligação entre o cinturão e a ancoragem; na retenção, com absorvedor integrado</td></tr>
+        <tr><td>Absorvedor de energia</td><td>Dispositivo que se alonga na queda e reduz a força transmitida ao corpo</td></tr>
+        <tr><td>Trava-queda</td><td>Dispositivo que corre na linha de vida e bloqueia na queda</td></tr>
+        <tr><td>Linha de vida</td><td>Componente flexível, vertical ou horizontal, que serve de ancoragem móvel</td></tr>
+        <tr><td>Ancoragem estrutural</td><td>Elemento fixado à estrutura, projetado por profissional legalmente habilitado</td></tr>
+        <tr><td>Dispositivo de ancoragem</td><td>Equipamento certificado usado como ponto de ancoragem</td></tr>
+        <tr><td>Fator de queda</td><td>Relação entre a distância de queda livre e o comprimento do talabarte</td></tr>
+        <tr><td>Zona livre de queda</td><td>Espaço abaixo do trabalhador que deve estar livre para o sistema atuar sem colisão</td></tr>
+        <tr><td>Efeito pêndulo</td><td>Deslocamento lateral após a queda, por ancoragem fora do prumo do posto de trabalho</td></tr>
+        <tr><td>Trauma de suspensão</td><td>Agravo decorrente da permanência suspenso e imóvel no cinturão após a queda</td></tr>
+      </table>
+
+      <h3>Perguntas frequentes</h3>
+      <ul>
+        <li><strong>A NR-35 só vale acima de 2 metros?</strong> O campo de aplicação é acima de 2,00 m com risco de queda. Abaixo disso, a proteção continua exigível pelo gerenciamento de riscos da NR-01 e por normas específicas — altura menor não significa ausência de risco.</li>
+        <li><strong>O treinamento pode ser EAD?</strong> Não. Desde a Portaria MTE nº 1.259/2026 (item 35.4.5), os treinamentos da NR-35 devem ser presenciais. O prazo divulgado para regularizar quem foi treinado a distância é 16/07/2027.</li>
+        <li><strong>O certificado vale 2 anos?</strong> A norma não fala em validade de certificado, e sim em treinamento periódico bienal de 8h (35.4.2.2). O que vence é a reciclagem.</li>
+        <li><strong>Quem declara a aptidão?</strong> A avaliação de saúde segue a NR-07 (item 7.5.3) e a aptidão para trabalho em altura deve constar no ASO (35.4.4.1).</li>
+        <li><strong>Toda atividade em altura exige PT?</strong> Não. A PT é exigida para atividades não rotineiras (35.5.7). Rotineiras podem ter a AR contida no procedimento operacional (35.5.6).</li>
+        <li><strong>Guarda-corpo dispensa o cinto?</strong> O guarda-corpo é proteção coletiva e tem prioridade (35.6.3). Se elimina o risco de queda e está íntegro, o SPIQ pode não ser necessário — mas quem decide é a análise de risco, por profissional qualificado ou habilitado.</li>
+        <li><strong>Posso usar o mesmo cinto do espaço confinado?</strong> Depende do equipamento: ele precisa ser adequado à tarefa, com os pontos de engate exigidos pela técnica usada e dentro da indicação do fabricante e do CA. Não é a aparência que define, é a especificação.</li>
+        <li><strong>Trabalho em altura em dia de chuva pode?</strong> Só se a AR não listar a chuva como condição impeditiva e as medidas previstas cobrirem a superfície escorregadia, o risco elétrico e a visibilidade. Na prática da manutenção predial, a chuva costuma ser impeditiva.</li>
+        <li><strong>Quanto tempo guardar AR, PT e certificados?</strong> No mínimo 5 anos, conforme a alínea j do item 35.3.1, salvo prazo específico em outra NR.</li>
+        <li><strong>Plataforma elevatória dispensa cinto?</strong> Não automaticamente. O equipamento tem seus próprios requisitos e o uso de retenção dentro do cesto segue a indicação do fabricante e a análise de risco — inclusive pelo risco de ejeção.</li>
+      </ul>
+    </section>
+
+    <!-- 12 quiz -->
+    <section class="module" data-mod="12">
+      <div class="m-eyebrow"><span class="code">Avaliação</span> Fixação <span class="duration">20 min</span></div>
+      <h2 class="m-title">Avaliação final</h2>
+      <p class="lede">Responda as questões abaixo para concluir o treinamento. São permitidas até 3 tentativas, com aprovação a partir de 70% de acerto.</p>
+      <div id="quizGate"></div>
+      <div id="quizArea" style="display:none;"></div>
+      <div id="quizResult"></div>
+    </section>
+
+    <!-- 13 histórico de acesso -->
+    <section class="module" data-mod="13">
+      <div class="m-eyebrow"><span class="code">Registro</span> Acompanhamento</div>
+      <h2 class="m-title">Histórico de acesso e resultado da prova</h2>
+      <p class="lede">Cada vez que uma aula é aberta, o horário de entrada e saída fica registrado abaixo. Todas as tentativas da prova também aparecem aqui.</p>
+
+      <div id="logTableWrap"><p class="log-empty">Nenhum acesso registrado ainda.</p></div>
+
+      <h3>Tentativas da prova</h3>
+      <div id="quizResultSummary"><p class="log-empty">Prova ainda não realizada.</p></div>
+    </section>
+
+    <div class="nav-buttons">
+      <button class="navbtn" id="prevBtn">← Anterior</button>
+      <button class="navbtn primary" id="nextBtn">Próximo módulo →</button>
+    </div>
+
+    <footer class="appfoot">
+      <strong>G.A Occupational Safety</strong> · Conteúdo baseado na NR-35 — Trabalho em Altura, com as alterações das Portarias MTE nº 1.680/2025 (Anexo III e talabarte de retenção) e nº 1.259/2026 (treinamento presencial e escadas). <strong>Material teórico de apoio ao treinamento presencial</strong>: desde o item 35.4.5, os treinamentos da NR-35 devem ser realizados na modalidade presencial, incluindo a parte prática. Consulte sempre o texto oficial da norma vigente para fins de conformidade legal.
+    </footer>
+  </main>
+</div>
+
+<div class="app" id="adminRoot" style="display:none;">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="eyebrow" style="color:rgba(236,237,241,0.5); font-size:11px;">G.A Occupational Safety</span>
+      </div>
+      <span class="eyebrow">Área administrativa</span>
+      <h1>NR-35<br>Trabalho em Altura</h1>
+      <p class="sub">Cadastro de alunos e acompanhamento do treinamento de trabalho em altura.</p>
+    </div>
+    <nav class="modlist" style="margin-top:24px;">
+      <button class="modbtn admin-tab-btn active" data-tab="dashboard"><span class="num">◆</span><span class="label">Dashboard</span></button>
+      <button class="modbtn admin-tab-btn" data-tab="alunos"><span class="num">◆</span><span class="label">Alunos</span></button>
+      <button class="modbtn admin-tab-btn" data-tab="config"><span class="num">◆</span><span class="label">Configurações</span></button>
+    </nav>
+    <a href="../index.html" class="navbtn" style="display:block; width:100%; margin-top:20px; text-align:center; text-decoration:none; border-color:rgba(236,237,241,0.3); color:var(--text);">← Meus treinamentos</a>
+    <button type="button" class="navbtn" id="adminLogoutBtn" style="width:100%; margin-top:10px; border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
+  </aside>
+
+  <main>
+    <!-- DASHBOARD -->
+    <div class="admin-panel" id="panel-dashboard">
+      <div class="m-eyebrow"><span class="code">Master</span> Visão geral</div>
+      <h2 class="m-title">Dashboard</h2>
+      <p class="lede">Acompanhamento consolidado do treinamento de todos os alunos.</p>
+
+      <div id="adminKpis" class="riskmap-wrap" style="margin-top:6px; gap:16px;"></div>
+
+      <div class="riskmap-wrap" style="margin-top:20px;">
+        <div class="card" style="flex:1; min-width:320px;">
+          <h3 style="margin-top:0; font-size:16px;">Conclusão da prova</h3>
+          <div style="position:relative; height:280px;"><canvas id="completionChart"></canvas></div>
+        </div>
+        <div class="card" style="flex:1; min-width:320px;">
+          <h3 style="margin-top:0; font-size:16px;">Ranking — melhores notas</h3>
+          <div style="position:relative; height:280px;"><canvas id="rankingChart"></canvas></div>
+        </div>
+      </div>
+
+      <h3>Feedbacks recebidos</h3>
+      <div id="feedbackListWrap"><p class="log-empty">Carregando feedbacks…</p></div>
+    </div>
+
+    <!-- ALUNOS -->
+    <div class="admin-panel" id="panel-alunos" style="display:none;">
+      <div class="m-eyebrow"><span class="code">Master</span> Gestão do treinamento</div>
+      <h2 class="m-title">Alunos autorizados</h2>
+      <p class="lede">Cadastre aqui quem pode acessar o treinamento. Cada aluno recebe um usuário e senha próprios para entrar pelo mesmo link.</p>
+
+      <div class="card">
+        <h3 style="margin-top:0;">Cadastrar novo aluno</h3>
+        <form id="addStudentForm">
+          <div class="field">
+            <label for="newStudentName">Nome completo</label>
+            <input type="text" id="newStudentName" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label for="newStudentCompany">Em nome de (empresa)</label>
+            <input type="text" id="newStudentCompany" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="newStudentUser">Usuário</label>
+            <input type="text" id="newStudentUser" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+          </div>
+          <div class="field">
+            <label for="newStudentPass">Senha inicial</label>
+            <input type="text" id="newStudentPass" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label>Matricular nos cursos</label>
+            <div id="newStudentCourses" style="margin-top:6px;"></div>
+          </div>
+          <p class="login-error" id="addStudentError"></p>
+          <button type="submit" class="login-btn" id="addStudentBtn" style="width:auto; padding:11px 22px;">Cadastrar aluno</button>
+        </form>
+      </div>
+
+      <h3>Progresso dos alunos</h3>
+      <p class="lede" style="font-size:14px; margin-bottom:14px;" id="studentsSummaryHint">Carregando alunos cadastrados…</p>
+      <div id="studentsTableWrap"></div>
+
+      <div class="log-actions" style="margin-top:6px;">
+        <button class="navbtn primary" id="downloadAllBtn">Baixar relatório de todos os alunos (.xlsx)</button>
+        <button class="navbtn" id="downloadSelectedBtn">Baixar histórico dos selecionados (.xlsx)</button>
+        <button class="navbtn" id="refreshStudentsBtn">Atualizar lista</button>
+      </div>
+
+      <div id="studentDetailWrap" style="display:none; margin-top:34px;">
+        <div class="nav-buttons" style="margin-top:0; border-top:none; padding-top:0;">
+          <h3 style="margin:0;" id="studentDetailTitle">Detalhes do aluno</h3>
+          <button class="navbtn" id="closeStudentDetailBtn">Fechar ✕</button>
+        </div>
+        <h4 style="margin:20px 0 8px; font-size:14px; color:var(--ink-soft);">Histórico de acesso (entrada e saída)</h4>
+        <div id="studentDetailLog"></div>
+        <h4 style="margin:24px 0 8px; font-size:14px; color:var(--ink-soft);">Tentativas da prova</h4>
+        <div id="studentDetailQuiz"></div>
+        <h4 style="margin:24px 0 8px; font-size:14px; color:var(--ink-soft);">Matrícula nos cursos</h4>
+        <div class="card" id="studentCoursesCard">
+          <p style="font-size:13px; color:var(--ink-soft); margin:0 0 14px;">Marque os cursos que este aluno pode acessar. Desmarcar um curso não apaga o histórico dele naquele curso.</p>
+          <div id="studentDetailCourses"></div>
+          <p class="login-error" id="studentCoursesMsg" style="margin:14px 0 0;"></p>
+          <button class="login-btn" id="saveStudentCoursesBtn" style="width:auto; padding:10px 20px; margin-top:12px;">Salvar matrícula</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIGURAÇÕES -->
+    <div class="admin-panel" id="panel-config" style="display:none;">
+      <div class="m-eyebrow"><span class="code">Master</span> Ajustes</div>
+      <h2 class="m-title">Configurações</h2>
+      <p class="lede">Ajustes que afetam como o treinamento funciona para todos os alunos.</p>
+
+      <div class="card alert">
+        <h3 style="margin-top:0;">Trocar minha senha</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:16px;">A senha inicial do acesso master fica visível no código do site. Troque assim que possível.</p>
+        <form id="changeAdminPassForm">
+          <div class="field">
+            <label for="newAdminPass">Nova senha</label>
+            <input type="text" id="newAdminPass" autocomplete="off" required>
+          </div>
+          <p class="login-error" id="changeAdminPassError"></p>
+          <button type="submit" class="login-btn" id="changeAdminPassBtn" style="width:auto; padding:11px 22px;">Salvar nova senha</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">Regras da prova</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:16px;">Vale para todos os alunos, inclusive quem já estiver com a prova em andamento.</p>
+        <form id="quizSettingsForm">
+          <div class="field">
+            <label for="settingPassPercent">Nota mínima para aprovação (%)</label>
+            <input type="number" id="settingPassPercent" min="1" max="100" required>
+          </div>
+          <div class="field">
+            <label for="settingMaxAttempts">Número máximo de tentativas</label>
+            <input type="number" id="settingMaxAttempts" min="1" max="10" required>
+          </div>
+          <p class="login-error" id="quizSettingsError"></p>
+          <button type="submit" class="login-btn" id="quizSettingsBtn" style="width:auto; padding:11px 22px;">Salvar configurações</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC5HiR5EZvHHzkM_kdbgDLDZJr7VDj1U5Q",
+  authDomain: "normas-7f1ed.firebaseapp.com",
+  projectId: "normas-7f1ed",
+  storageBucket: "normas-7f1ed.firebasestorage.app",
+  messagingSenderId: "683703418284",
+  appId: "1:683703418284:web:1b9927a1003c117d770e09",
+  measurementId: "G-B5WXY28YWD"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+
+let authReadyResolve;
+const authReady = new Promise((resolve) => { authReadyResolve = resolve; });
+onAuthStateChanged(auth, (user) => { if(user) authReadyResolve(user); });
+signInAnonymously(auth).catch(err => console.error('Falha no login anônimo do Firebase', err));
+
+// Identificador deste curso. Separa os dados deste treinamento dos demais
+// que usam o mesmo projeto Firebase (progresso, prova, feedback e configuracoes).
+const COURSE_ID = 'nr35';
+const dataKey = (username) => COURSE_ID + '__' + username;
+
+// Numero de aulas contabilizadas (modulos 0..12, incluindo a avaliacao final).
+// O modulo 13 e o historico de acesso e nao conta como aula.
+const TOTAL_LESSONS = 13;
+const LAST_LESSON_IDX = TOTAL_LESSONS - 1;
+
+// Catalogo de cursos da plataforma. Ao criar um curso novo, acrescente aqui
+// (nos dois arquivos) para que ele apareca na tela de matricula.
+const COURSE_CATALOG = [
+  {id:'nr05', nome:'NR-05 Designado (CIPA)', curto:'NR-05', path:'../nr05/index.html'},
+  {id:'nr35', nome:'NR-35 Trabalho em Altura', curto:'NR-35', path:'index.html'},
+  {id:'nr33', nome:'NR-33 Espaço Confinado (16h)', curto:'NR-33', path:'../nr33/index.html'},
+  {id:'nr33r', nome:'NR-33 Reciclagem anual (8h)', curto:'NR-33 rec.', path:'../nr33-reciclagem/index.html'}
+];
+const LESSONS_TOTAL = TOTAL_LESSONS;
+
+function courseInfo(id){ return COURSE_CATALOG.find(c => c.id === id); }
+function courseName(id){ const c = courseInfo(id); return c ? c.nome : id; }
+
+// Cursos em que o aluno esta matriculado. Cadastros antigos, feitos antes da
+// matricula por curso existir, nao tem o campo "courses" e herdam acesso a NR-05.
+function allowedCourses(u){
+  if(u && u.courses && typeof u.courses === 'object'){
+    return Object.keys(u.courses).filter(k => u.courses[k] === true);
+  }
+  return ['nr05'];
+}
+function hasCourseAccess(u){
+  return u.role === 'admin' || allowedCourses(u).includes(COURSE_ID);
+}
+function enrolledOnly(list){ return list.filter(s => s.courses.includes(COURSE_ID)); }
+
+let learnerName = '';
+let learnerUser = '';
+
+// Acesso master. Esta plataforma compartilha a colecao "users" com os demais cursos,
+// portanto o login de administrador e o mesmo ja usado na NR-05 (com a senha que voce
+// definiu no painel). As credenciais abaixo so sao usadas se nao existir nenhum admin.
+const DEFAULT_ADMIN_USER = 'admin';
+const DEFAULT_ADMIN_PASS = 'nr05master';
+
+function showLoginError(msg){
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function showAddStudentError(msg, ok){
+  const el = document.getElementById('addStudentError');
+  el.textContent = msg;
+  el.style.color = ok ? 'var(--risk-fisico)' : 'var(--red)';
+  el.style.display = 'block';
+}
+
+async function hashText(text){
+  if(typeof crypto === 'undefined' || !crypto.subtle){
+    throw new Error('Este navegador não permite login seguro nesta página (crypto.subtle indisponível). Isso costuma acontecer quando o arquivo é aberto fora de uma conexão https:// — abra pelo link original em vez do arquivo baixado.');
+  }
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function getUser(username){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'users', username));
+    return snap.exists() ? snap.data() : null;
+  }catch(e){ console.error('Falha ao consultar usuário', e); throw e; }
+}
+async function setUser(username, data){
+  await authReady;
+  await setDoc(doc(db, 'users', username), data);
+}
+async function deleteUserAccount(username){
+  await authReady;
+  await deleteDoc(doc(db, 'users', username));
+  // apaga o progresso do aluno em todos os cursos da plataforma
+  await deleteDoc(doc(db, 'userdata', username));
+  for(const c of COURSE_CATALOG){
+    await deleteDoc(doc(db, 'userdata', c.id + '__' + username));
+  }
+}
+async function getAllUsersMap(){
+  await authReady;
+  const snap = await getDocs(collection(db, 'users'));
+  const map = {};
+  snap.forEach(d => { map[d.id] = d.data(); });
+  return map;
+}
+async function loadUserData(username){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'userdata', dataKey(username)));
+    return snap.exists() ? snap.data() : {accessLog:[], quizAttempts:[]};
+  }catch(e){ console.error('Falha ao carregar progresso', e); return {accessLog:[], quizAttempts:[]}; }
+}
+async function persistUserData(){
+  if(!learnerUser) return;
+  try{
+    await authReady;
+    await setDoc(doc(db, 'userdata', dataKey(learnerUser)), {
+      accessLog: accessLog.map(a => ({
+        modulo:a.modulo, numero:a.numero,
+        entrada:a.entrada.toISOString(),
+        saida: a.saida ? a.saida.toISOString() : null
+      })),
+      quizAttempts: quizAttempts.map(q => ({...q, quando: q.quando.toISOString()}))
+    });
+  }catch(e){ console.error('Falha ao salvar progresso', e); }
+}
+
+async function ensureAdminBootstrap(){
+  try{
+    const users = await getAllUsersMap();
+    const hasAdmin = Object.values(users).some(u => u.role === 'admin');
+    if(!hasAdmin){
+      const hash = await hashText(DEFAULT_ADMIN_PASS);
+      await setUser(DEFAULT_ADMIN_USER, {name:'Administrador', hash, role:'admin'});
+    }
+  }catch(err){
+    console.error('Falha ao preparar acesso admin', err);
+  }
+}
+
+const loginForm = document.getElementById('loginForm');
+
+async function startSession(username, name){
+  learnerUser = username;
+  learnerName = name;
+  await loadQuizSettings();
+  const data = await loadUserData(username);
+  accessLog = [];
+  (data.accessLog || []).forEach(a => {
+    accessLog.push({
+      modulo:a.modulo, numero:a.numero,
+      entrada:new Date(a.entrada),
+      saida: a.saida ? new Date(a.saida) : new Date(a.entrada)
+    });
+    seen.add(a.numero - 1);
+  });
+  openEntryIndex = null;
+  quizAttempts = (data.quizAttempts || []).map(q => ({...q, quando:new Date(q.quando)}));
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'grid';
+  document.getElementById('learnerLabel').textContent = 'Colaborador(a): ' + learnerName;
+  current = 0;
+  seen.add(0);
+  maxUnlocked = Math.max(0, ...seen);
+  VIDEO_MODULES.forEach(v => { if(seen.has(v)) videosWatched.add(v); });
+  renderLog();
+  renderQuizSummary();
+  renderQuizGate();
+  render();
+  openEntry(0);
+  await persistUserData();
+}
+
+let currentAdminUser = '';
+
+function switchAdminTab(tab){
+  document.querySelectorAll('.admin-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('panel-' + tab).style.display = 'block';
+  document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchAdminTab(btn.dataset.tab));
+});
+
+async function startAdminSession(username){
+  currentAdminUser = username;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminRoot').style.display = 'grid';
+  switchAdminTab('dashboard');
+  await loadQuizSettings();
+  document.getElementById('settingPassPercent').value = PASS_PERCENT;
+  document.getElementById('settingMaxAttempts').value = MAX_ATTEMPTS;
+  await renderStudentsTable();
+  await renderFeedbackList();
+}
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submitBtn = document.getElementById('loginSubmitBtn');
+  document.getElementById('loginError').style.display = 'none';
+  try{
+    const user = document.getElementById('loginUser').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value;
+    if(!user || !pass){ showLoginError('Informe o usuário e a senha para continuar.'); return; }
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Entrando…';
+    const record = await getUser(user);
+    if(!record){ showLoginError('Usuário ou senha incorretos. Confira os dados e tente novamente.'); return; }
+    const hash = await hashText(pass);
+    if(hash !== record.hash){ showLoginError('Usuário ou senha incorretos. Confira os dados e tente novamente.'); return; }
+    if(record.role !== 'admin' && !hasCourseAccess(record)){
+      const libs = allowedCourses(record);
+      const el = document.getElementById('loginError');
+      const links = libs
+        .map(id => courseInfo(id))
+        .filter(c => c && c.id !== COURSE_ID)
+        .map(c => `<a href="${c.path}" style="color:var(--mint);">${c.nome}</a>`)
+        .join(' · ');
+      el.innerHTML = libs.length
+        ? `Seu acesso não contempla este treinamento.${links ? '<br>Treinamentos liberados para você: ' + links : ''}`
+        : 'Seu acesso ainda não contempla nenhum treinamento. Contate o responsável pelo treinamento para efetuar a matrícula.';
+      el.style.display = 'block';
+      return;
+    }
+    salvarSessao(user);
+    if(record.role === 'admin'){
+      await startAdminSession(user);
+    } else {
+      await startSession(user, record.name);
+    }
+  }catch(err){
+    console.error('Erro no login', err);
+    showLoginError('Não foi possível concluir o acesso no momento. Tente novamente em instantes. Se o problema persistir, contate o responsável pelo treinamento.');
+  }finally{
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Entrar →';
+  }
+});
+
+document.getElementById('adminLogoutBtn').addEventListener('click', () => {
+  limparSessao();
+  currentAdminUser = '';
+  document.getElementById('adminRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+});
+
+document.getElementById('studentLogoutBtn').addEventListener('click', async () => {
+  closeOpenEntry();
+  await persistUserData();
+  limparSessao();
+  learnerUser = '';
+  learnerName = '';
+  document.getElementById('appRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+});
+
+document.getElementById('changeAdminPassForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const el = document.getElementById('changeAdminPassError');
+  el.style.display = 'none';
+  try{
+    const newPass = document.getElementById('newAdminPass').value;
+    if(newPass.length < 4){
+      el.textContent = 'Use uma senha com pelo menos 4 caracteres.';
+      el.style.color = 'var(--red)';
+      el.style.display = 'block';
+      return;
+    }
+    const current = await getUser(currentAdminUser);
+    const hash = await hashText(newPass);
+    await setUser(currentAdminUser, {...current, hash});
+    document.getElementById('newAdminPass').value = '';
+    el.textContent = 'Senha atualizada. Use a nova senha no próximo login.';
+    el.style.color = 'var(--green)';
+    el.style.display = 'block';
+  }catch(err){
+    console.error('Erro ao trocar senha', err);
+    el.textContent = 'Erro ao salvar: ' + (err && err.message ? err.message : 'tente novamente.');
+    el.style.color = 'var(--red)';
+    el.style.display = 'block';
+  }
+});
+
+document.getElementById('quizSettingsForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const el = document.getElementById('quizSettingsError');
+  el.style.display = 'none';
+  try{
+    const passPercent = Number(document.getElementById('settingPassPercent').value);
+    const maxAttempts = Number(document.getElementById('settingMaxAttempts').value);
+    if(passPercent < 1 || passPercent > 100 || maxAttempts < 1 || maxAttempts > 10){
+      el.textContent = 'Valores fora do intervalo permitido.';
+      el.style.color = 'var(--red)';
+      el.style.display = 'block';
+      return;
+    }
+    await saveQuizSettings(passPercent, maxAttempts);
+    el.textContent = 'Configurações salvas com sucesso.';
+    el.style.color = 'var(--green)';
+    el.style.display = 'block';
+  }catch(err){
+    console.error('Erro ao salvar configurações', err);
+    el.textContent = 'Erro ao salvar: ' + (err && err.message ? err.message : 'tente novamente.');
+    el.style.color = 'var(--red)';
+    el.style.display = 'block';
+  }
+});
+
+document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  document.getElementById('addStudentError').style.display = 'none';
+  try{
+    const name = document.getElementById('newStudentName').value.trim();
+    const company = document.getElementById('newStudentCompany').value.trim();
+    const user = document.getElementById('newStudentUser').value.trim().toLowerCase();
+    const pass = document.getElementById('newStudentPass').value;
+    if(!name || !user || !pass){ showAddStudentError('Preencha o nome, o usuário e a senha inicial.'); return; }
+    if(pass.length < 4){ showAddStudentError('A senha inicial deve ter no mínimo 4 caracteres.'); return; }
+    const existing = await getUser(user);
+    if(existing){ showAddStudentError('Este nome de usuário já está em uso. Escolha outro.'); return; }
+    const courses = readCourseChecks('newStudentCourses');
+    if(Object.keys(courses).length === 0){ showAddStudentError('Selecione ao menos um treinamento para matricular o aluno.'); return; }
+    const hash = await hashText(pass);
+    await setUser(user, {name, company, hash, role:'aluno', courses});
+    document.getElementById('newStudentName').value = '';
+    document.getElementById('newStudentCompany').value = '';
+    document.getElementById('newStudentUser').value = '';
+    document.getElementById('newStudentPass').value = '';
+    showAddStudentError(`Aluno "${name}" cadastrado. Usuário: ${user}`, true);
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao cadastrar aluno', err);
+    showAddStudentError('Não foi possível concluir o cadastro. Tente novamente em instantes.');
+  }
+});
+
+document.getElementById('refreshStudentsBtn').addEventListener('click', () => { renderStudentsTable(); renderFeedbackList(); });
+
+// por padrao, o aluno novo ja entra matriculado no curso que esta aberto
+renderCourseChecks('newStudentCourses', [COURSE_ID]);
+
+function summarizeQuiz(quizAttempts){
+  const attempts = quizAttempts || [];
+  const aprovado = attempts.some(a => a.aprovado);
+  const best = attempts.reduce((max, a) => (!max || a.percent > max.percent) ? a : max, null);
+  return { attemptsCount: attempts.length, aprovado, best };
+}
+
+async function getAllFeedback(){
+  try{
+    await authReady;
+    const snap = await getDocs(collection(db, 'feedback'));
+    const list = [];
+    // mostra apenas os feedbacks deste curso
+    snap.forEach(d => { if(d.id.startsWith(COURSE_ID + '__')) list.push(d.data()); });
+    return list.sort((a,b) => new Date(b.quando) - new Date(a.quando));
+  }catch(e){ console.error('Falha ao carregar feedbacks', e); return []; }
+}
+
+async function renderFeedbackList(){
+  const wrap = document.getElementById('feedbackListWrap');
+  if(!wrap) return;
+  const list = await getAllFeedback();
+  if(list.length === 0){
+    wrap.innerHTML = '<p class="log-empty">Nenhum feedback recebido ainda.</p>';
+    return;
+  }
+  wrap.innerHTML = list.map(f => `
+    <div class="card" style="margin:10px 0;">
+      <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <strong>${f.name || f.username}</strong>
+        <span class="ts" style="font-size:12px; color:var(--ink-soft);">${formatTs(new Date(f.quando))}</span>
+      </div>
+      <p style="margin:8px 0 0; font-size:14px;">${f.comentario ? f.comentario : '<span style="color:var(--ink-soft);">(sem comentário escrito)</span>'}</p>
+    </div>
+  `).join('');
+}
+
+async function getAllStudents(){
+  const users = await getAllUsersMap();
+  const studentEntries = Object.entries(users).filter(([, u]) => u.role !== 'admin');
+  const students = await Promise.all(studentEntries.map(async ([username, u]) => {
+    const data = await loadUserData(username);
+    const contentSeen = new Set((data.accessLog || []).filter(a => a.numero <= TOTAL_LESSONS).map(a => a.numero)).size;
+    const quizSummary = summarizeQuiz(data.quizAttempts);
+    return {
+      username,
+      name: u.name,
+      company: u.company || '',
+      courses: allowedCourses(u),
+      aulasVistas: contentSeen,
+      tempoEstudo: somaAccessLog(data.accessLog),
+      accessLog: data.accessLog || [],
+      quizAttempts: data.quizAttempts || [],
+      ...quizSummary
+    };
+  }));
+  return students;
+}
+
+let studentsCache = [];
+let completionChartRef = null;
+let rankingChartRef = null;
+
+async function renderStudentsTable(){
+  const hint = document.getElementById('studentsSummaryHint');
+  const wrap = document.getElementById('studentsTableWrap');
+  hint.textContent = 'Carregando alunos cadastrados…';
+  const all = await getAllStudents();
+  studentsCache = all;
+  const deste = enrolledOnly(all);
+  if(all.length === 0){
+    hint.textContent = 'Nenhum aluno cadastrado ainda. Use o formulário acima para adicionar o primeiro.';
+    wrap.innerHTML = '';
+    renderCharts([]);
+    return;
+  }
+  const outros = all.length - deste.length;
+  hint.textContent = `${deste.length} aluno(s) matriculado(s) neste curso`
+    + (outros > 0 ? ` · ${outros} cadastrado(s) somente em outros cursos.` : '.');
+  renderStudentsFilter(studentsCache);
+  renderCharts(deste);
+}
+
+// Marca os cursos do aluno, destacando o curso atual.
+function courseBadges(courses){
+  if(courses.length === 0) return '<span style="color:var(--red); font-size:11px;">sem matrícula</span>';
+  return courses.map(id => {
+    const c = courseInfo(id);
+    const atual = id === COURSE_ID;
+    const cor = atual ? 'var(--green)' : 'rgba(236,237,241,0.25)';
+    const txt = atual ? 'var(--mint)' : 'var(--ink-soft)';
+    return `<span style="display:inline-block; margin:1px 3px 1px 0; padding:2px 7px; border:1px solid ${cor}; border-radius:20px; font-size:10.5px; color:${txt}; white-space:nowrap;">${c ? c.curto : id}</span>`;
+  }).join('');
+}
+
+function renderStudentsFilter(students){
+  const wrap = document.getElementById('studentsTableWrap');
+  const filterVal = (document.getElementById('companyFilter')?.value || '').toLowerCase();
+  const mostrarTodos = document.getElementById('showAllCourses')?.checked || false;
+
+  let base = mostrarTodos ? students : enrolledOnly(students);
+  const filtered = filterVal ? base.filter(s => (s.company || '').toLowerCase().includes(filterVal)) : base;
+
+  const rows = filtered.map(s => {
+    const quizCell = s.attemptsCount === 0 ? 'Não realizada' : `${s.best.percent}% (${s.attemptsCount}/${MAX_ATTEMPTS} tent.) — ${s.aprovado ? 'Aprovado' : 'Reprovado'}`;
+    const neste = s.courses.includes(COURSE_ID);
+    return `<tr${neste ? '' : ' style="opacity:.55;"'}>
+      <td><input type="checkbox" class="student-select" data-user="${s.username}"></td>
+      <td>${s.name}</td>
+      <td>${s.company || '—'}</td>
+      <td class="ts">${s.username}</td>
+      <td>${courseBadges(s.courses)}</td>
+      <td>${neste ? s.aulasVistas + ' / ' + LESSONS_TOTAL : '—'}</td>
+      <td>${neste ? hhmm(s.tempoEstudo) : '—'}</td>
+      <td>${neste ? quizCell : '—'}</td>
+      <td>
+        <button class="navbtn" data-action="ver" data-user="${s.username}" style="padding:6px 10px; font-size:11px;">Ver</button>
+        <button class="navbtn" data-action="matricula" data-user="${s.username}" style="padding:6px 10px; font-size:11px;">Matrícula</button>
+        <button class="navbtn" data-action="editar" data-user="${s.username}" style="padding:6px 10px; font-size:11px;">Editar</button>
+        <button class="navbtn" data-action="excluir" data-user="${s.username}" style="padding:6px 10px; font-size:11px; border-color:var(--red); color:var(--red);">Excluir</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div style="display:flex; gap:22px; align-items:flex-end; flex-wrap:wrap;">
+      <div class="field" style="max-width:280px; margin-bottom:0;">
+        <label for="companyFilter">Filtrar por empresa</label>
+        <input type="text" id="companyFilter" placeholder="Digite o nome da empresa…" value="${filterVal}">
+      </div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); padding-bottom:10px;">
+        <input type="checkbox" id="showAllCourses" ${mostrarTodos ? 'checked' : ''}>
+        Mostrar alunos de outros cursos
+      </label>
+    </div>
+    <table class="log-table" style="margin-top:16px;">
+      <tr><th><input type="checkbox" id="selectAllStudents"></th><th>Nome</th><th>Empresa</th><th>Usuário</th><th>Cursos</th><th>Aulas vistas</th><th>Tempo</th><th>Prova</th><th>Ações</th></tr>
+      ${rows || '<tr><td colspan="9" class="log-empty">Nenhum aluno encontrado para esse filtro.</td></tr>'}
+    </table>`;
+
+  document.getElementById('companyFilter').addEventListener('input', () => renderStudentsFilter(studentsCache));
+  document.getElementById('showAllCourses').addEventListener('change', () => renderStudentsFilter(studentsCache));
+  if(filterVal){
+    const f = document.getElementById('companyFilter');
+    f.focus(); f.selectionStart = f.value.length;
+  }
+
+  document.getElementById('selectAllStudents').addEventListener('change', (e) => {
+    wrap.querySelectorAll('.student-select').forEach(cb => { cb.checked = e.target.checked; });
+  });
+
+  wrap.querySelectorAll('button[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => handleStudentAction(btn.dataset.action, btn.dataset.user));
+  });
+}
+
+// Lista de checkboxes de curso, usada no cadastro e na edicao de matricula.
+function renderCourseChecks(containerId, marcados){
+  const box = document.getElementById(containerId);
+  if(!box) return;
+  // estilos inline porque ".field input" do CSS global forca width:100% e
+  // esticaria o checkbox pela largura inteira do cartao.
+  const cxStyle = "width:17px; height:17px; min-width:17px; padding:0; margin:0; flex:0 0 auto; accent-color:var(--green); cursor:pointer;";
+  const rowStyle = "display:flex; align-items:center; gap:11px; margin:0 0 8px; padding:11px 13px; border:1.5px solid var(--line); border-radius:8px; background:var(--paper); cursor:pointer;";
+  const txtStyle = "font-family:'Inter', sans-serif; text-transform:none; letter-spacing:normal; font-size:14px; font-weight:400; color:var(--text);";
+  box.innerHTML = COURSE_CATALOG.map(c => `
+    <label style="${rowStyle}">
+      <input type="checkbox" class="course-check" data-course="${c.id}" style="${cxStyle}" ${marcados.includes(c.id) ? 'checked' : ''}>
+      <span style="${txtStyle}">${c.nome}${c.id === COURSE_ID ? ' <span style="color:var(--mint); font-size:11.5px; font-family:\'IBM Plex Mono\', monospace;">· este curso</span>' : ''}</span>
+    </label>`).join('');
+}
+function readCourseChecks(containerId){
+  const out = {};
+  document.querySelectorAll(`#${containerId} .course-check`).forEach(cb => {
+    if(cb.checked) out[cb.dataset.course] = true;
+  });
+  return out;
+}
+
+async function saveStudentCourses(username){
+  const msg = document.getElementById('studentCoursesMsg');
+  const courses = readCourseChecks('studentDetailCourses');
+  try{
+    const atual = await getUser(username);
+    if(!atual) throw new Error('cadastro não encontrado');
+    await setUser(username, {...atual, courses});
+    const nomes = Object.keys(courses).map(courseName);
+    msg.style.color = 'var(--mint)';
+    msg.textContent = nomes.length
+      ? 'Matrícula salva: ' + nomes.join(' · ')
+      : 'Aluno sem matrícula — ele não conseguirá entrar em nenhum curso.';
+    msg.style.display = 'block';
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao salvar matrícula', err);
+    msg.style.color = 'var(--red)';
+    msg.textContent = 'Erro ao salvar: ' + (err && err.message ? err.message : 'tente novamente.');
+    msg.style.display = 'block';
+  }
+}
+
+function kpiCard(label, value, color){
+  return `<div class="card" style="flex:1; min-width:150px; text-align:center; padding:20px 14px;">
+    <div style="font-family:'Archivo Black',sans-serif; font-size:30px; color:${color || 'var(--text)'};">${value}</div>
+    <div style="font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin-top:6px;">${label}</div>
+  </div>`;
+}
+
+function renderKpis(students){
+  const wrap = document.getElementById('adminKpis');
+  if(!wrap) return;
+  const withAttempt = students.filter(s => s.attemptsCount > 0);
+  const aprovados = withAttempt.filter(s => s.aprovado).length;
+  const mediaAulas = students.length ? (students.reduce((sum,s) => sum + s.aulasVistas, 0) / students.length).toFixed(1) : '0';
+  wrap.innerHTML = [
+    kpiCard('Alunos cadastrados', students.length),
+    kpiCard('Aprovados', aprovados, 'var(--green)'),
+    kpiCard('Reprovados', withAttempt.length - aprovados, 'var(--red)'),
+    kpiCard('Aulas vistas (média)', mediaAulas + ' / ' + TOTAL_LESSONS)
+  ].join('');
+}
+
+function renderCharts(students){
+  renderKpis(students);
+  if(typeof Chart === 'undefined') return;
+  const withAttempt = students.filter(s => s.attemptsCount > 0);
+  const aprovados = withAttempt.filter(s => s.aprovado).length;
+  const reprovados = withAttempt.filter(s => !s.aprovado).length;
+  const semTentativa = students.length - withAttempt.length;
+
+  const completionCtx = document.getElementById('completionChart');
+  if(completionChartRef) completionChartRef.destroy();
+  completionChartRef = new Chart(completionCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Aprovados', 'Reprovados', 'Ainda não fez a prova'],
+      datasets: [{ data: [aprovados, reprovados, semTentativa], backgroundColor: ['#16A34A', '#F0555C', 'rgba(236,237,241,0.25)'] }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins: { legend: { position:'bottom', labels: { color: '#ECEDF1', font:{size:13} } } } }
+  });
+
+  const ranking = students
+    .filter(s => s.attemptsCount > 0)
+    .sort((a,b) => b.best.percent - a.best.percent)
+    .slice(0, 8);
+  const rankingCtx = document.getElementById('rankingChart');
+  if(rankingChartRef) rankingChartRef.destroy();
+  rankingChartRef = new Chart(rankingCtx, {
+    type: 'bar',
+    data: {
+      labels: ranking.map(s => s.name),
+      datasets: [{ label: 'Melhor nota (%)', data: ranking.map(s => s.best.percent), backgroundColor: '#16A34A' }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { beginAtZero:true, max:100, ticks:{ color:'#9CA0AC' }, grid:{ color:'rgba(236,237,241,0.1)' } },
+        y: { ticks:{ color:'#ECEDF1' }, grid:{ display:false } }
+      }
+    }
+  });
+}
+
+function handleStudentAction(action, username){
+  const student = studentsCache.find(s => s.username === username);
+  if(!student) return;
+  if(action === 'ver') showStudentDetail(student, false);
+  if(action === 'matricula') showStudentDetail(student, true);
+  if(action === 'editar') editStudent(student);
+  if(action === 'excluir') deleteStudent(student);
+}
+
+function showStudentDetail(student, focoMatricula){
+  document.getElementById('studentDetailWrap').style.display = 'block';
+  document.getElementById('studentDetailTitle').textContent = `Detalhes — ${student.name} (${student.username})`;
+
+  const logWrap = document.getElementById('studentDetailLog');
+  if(student.accessLog.length === 0){
+    logWrap.innerHTML = '<p class="log-empty">Nenhum acesso registrado.</p>';
+  } else {
+    const rows = student.accessLog.slice().reverse().map(a => `<tr><td>${a.numero}. ${a.modulo}</td><td class="ts">${formatTs(new Date(a.entrada))}</td><td class="ts">${a.saida ? formatTs(new Date(a.saida)) : '— (em andamento)'}</td></tr>`).join('');
+    logWrap.innerHTML = `<table class="log-table"><tr><th>Aula</th><th>Entrada</th><th>Saída</th></tr>${rows}</table>`;
+  }
+
+  const quizWrap = document.getElementById('studentDetailQuiz');
+  if(student.quizAttempts.length === 0){
+    quizWrap.innerHTML = '<p class="log-empty">Prova ainda não realizada.</p>';
+  } else {
+    const rows = student.quizAttempts.map((a, i) => `<tr><td>${i+1}</td><td>${a.score} de ${a.total}</td><td>${a.percent}%</td><td>${a.aprovado ? 'Aprovado' : 'Reprovado'}</td><td class="ts">${formatTs(new Date(a.quando))}</td></tr>`).join('');
+    quizWrap.innerHTML = `<table class="log-table"><tr><th>Tentativa</th><th>Pontuação</th><th>Percentual</th><th>Resultado</th><th>Realizada em</th></tr>${rows}</table>`;
+  }
+  renderCourseChecks('studentDetailCourses', student.courses);
+  const msg = document.getElementById('studentCoursesMsg');
+  msg.style.display = 'none';
+  msg.textContent = '';
+  const saveBtn = document.getElementById('saveStudentCoursesBtn');
+  saveBtn.onclick = () => saveStudentCourses(student.username);
+
+  const alvo = focoMatricula ? document.getElementById('studentCoursesCard') : document.getElementById('studentDetailWrap');
+  alvo.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('closeStudentDetailBtn').addEventListener('click', () => {
+  document.getElementById('studentDetailWrap').style.display = 'none';
+});
+
+async function editStudent(student){
+  const newName = prompt('Nome completo:', student.name);
+  if(newName === null) return;
+  const newCompany = prompt('Em nome de (empresa):', student.company || '');
+  if(newCompany === null) return;
+  const newPass = prompt('Nova senha (deixe em branco para não alterar a senha):', '');
+  try{
+    const atual = await getUser(student.username);
+    const patch = { name: newName.trim() || student.name, company: newCompany.trim(), role: 'aluno',
+                    courses: (atual && atual.courses) ? atual.courses : {[COURSE_ID]: true} };
+    if(newPass && newPass.trim()){
+      if(newPass.trim().length < 4){ alert('A senha deve ter no mínimo 4 caracteres. Nenhuma alteração foi salva.'); return; }
+      patch.hash = await hashText(newPass.trim());
+    } else {
+      patch.hash = atual.hash;
+    }
+    await setUser(student.username, patch);
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao editar aluno', err);
+    alert('Não foi possível salvar as alterações. Tente novamente em instantes.');
+  }
+}
+
+async function deleteStudent(student){
+  const ok = confirm(`Excluir o aluno "${student.name}" (${student.username})?\n\nIsso apaga o cadastro e o histórico dele em TODOS os cursos da plataforma, e não pode ser desfeito.\n\nSe você só quer tirar o acesso a este curso, cancele e use o botão "Matrícula".`);
+  if(!ok) return;
+  try{
+    await deleteUserAccount(student.username);
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao excluir aluno', err);
+    alert('Não foi possível concluir a exclusão. Tente novamente em instantes.');
+  }
+}
+
+document.getElementById('downloadAllBtn').addEventListener('click', async () => {
+  const students = enrolledOnly(await getAllStudents());
+  const wb = XLSX.utils.book_new();
+  const summaryRows = [
+    ['G.A Occupational Safety — Treinamento NR-35 Trabalho em Altura'],
+    ['Relatório de todos os alunos'],
+    ['Exportado em:', formatTs(new Date())],
+    [],
+    ['Nome', 'Usuário', 'Aulas vistas', 'Tempo de estudo', 'Tentativas', 'Melhor nota', 'Resultado']
+  ];
+  students.forEach(s => {
+    summaryRows.push([
+      s.name, s.username, `${s.aulasVistas}/${TOTAL_LESSONS}`, hhmm(s.tempoEstudo),
+      s.attemptsCount, s.attemptsCount ? `${s.best.percent}%` : '-',
+      s.attemptsCount ? (s.aprovado ? 'Aprovado' : 'Reprovado') : 'Não realizada'
+    ]);
+  });
+  const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
+  wsSummary['!cols'] = [{wch:26},{wch:18},{wch:14},{wch:12},{wch:12},{wch:16}];
+  XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumo');
+
+  const logRows = [['Nome', 'Usuário', 'Aula', 'Entrada', 'Saída']];
+  students.forEach(s => {
+    s.accessLog.forEach(a => logRows.push([s.name, s.username, `${a.numero}. ${a.modulo}`, formatTs(new Date(a.entrada)), a.saida ? formatTs(new Date(a.saida)) : 'Em andamento']));
+  });
+  const wsLog = XLSX.utils.aoa_to_sheet(logRows);
+  wsLog['!cols'] = [{wch:22},{wch:16},{wch:30},{wch:22},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsLog, 'Historico completo');
+
+  const quizRows = [['Nome', 'Usuário', 'Tentativa', 'Pontuação', 'Percentual', 'Resultado', 'Realizada em']];
+  students.forEach(s => {
+    s.quizAttempts.forEach((a, i) => quizRows.push([s.name, s.username, i+1, `${a.score}/${a.total}`, `${a.percent}%`, a.aprovado ? 'Aprovado' : 'Reprovado', formatTs(new Date(a.quando))]));
+  });
+  const wsQuiz = XLSX.utils.aoa_to_sheet(quizRows);
+  wsQuiz['!cols'] = [{wch:22},{wch:16},{wch:10},{wch:12},{wch:12},{wch:12},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsQuiz, 'Tentativas de prova');
+
+  XLSX.writeFile(wb, `nr35-altura-relatorio-alunos-${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
+document.getElementById('downloadSelectedBtn').addEventListener('click', async () => {
+  const selectedUsers = [...document.querySelectorAll('.student-select:checked')].map(cb => cb.dataset.user);
+  if(selectedUsers.length === 0){ alert('Selecione ao menos um aluno na tabela, marcando a caixa à esquerda do nome.'); return; }
+  const students = studentsCache.filter(s => selectedUsers.includes(s.username));
+
+  const wb = XLSX.utils.book_new();
+  const logRows = [['Nome', 'Usuário', 'Aula', 'Entrada', 'Saída']];
+  students.forEach(s => {
+    s.accessLog.forEach(a => logRows.push([s.name, s.username, `${a.numero}. ${a.modulo}`, formatTs(new Date(a.entrada)), a.saida ? formatTs(new Date(a.saida)) : 'Em andamento']));
+  });
+  const wsLog = XLSX.utils.aoa_to_sheet(logRows);
+  wsLog['!cols'] = [{wch:22},{wch:16},{wch:30},{wch:22},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsLog, 'Historico de acesso');
+
+  const quizRows = [['Nome', 'Usuário', 'Tentativa', 'Pontuação', 'Percentual', 'Resultado', 'Realizada em']];
+  students.forEach(s => {
+    s.quizAttempts.forEach((a, i) => quizRows.push([s.name, s.username, i+1, `${a.score}/${a.total}`, `${a.percent}%`, a.aprovado ? 'Aprovado' : 'Reprovado', formatTs(new Date(a.quando))]));
+  });
+  const wsQuiz = XLSX.utils.aoa_to_sheet(quizRows);
+  wsQuiz['!cols'] = [{wch:22},{wch:16},{wch:10},{wch:12},{wch:12},{wch:12},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsQuiz, 'Tentativas de prova');
+
+  XLSX.writeFile(wb, `nr35-altura-selecionados-${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
+ensureAdminBootstrap();
+loadQuizSettings();
+
+const modules = [
+  {title:"Introdução", dot:"var(--mint)", min:30},
+  {title:"Responsabilidades", dot:"var(--risk-acidente)", min:30},
+  {title:"Autorização e capacitação", dot:"var(--risk-fisico)", min:40},
+  {title:"Planejamento e hierarquia", dot:"var(--risk-ergonomico)", min:35},
+  {title:"Análise de Risco", dot:"var(--risk-acidente)", min:50},
+  {title:"Permissão de Trabalho", dot:"var(--risk-quimico)", min:35},
+  {title:"Proteção contra quedas", dot:"var(--risk-fisico)", min:45},
+  {title:"EPI e fator de queda", dot:"var(--risk-ergonomico)", min:55},
+  {title:"Ancoragem e cordas", dot:"var(--risk-biologico)", min:45},
+  {title:"Escadas (Anexo III)", dot:"var(--risk-acidente)", min:35},
+  {title:"Emergência e salvamento", dot:"var(--risk-quimico)", min:45},
+  {title:"Glossário e FAQ", dot:"var(--mint)", min:15},
+  {title:"Avaliação final", dot:"var(--mint)", min:20},
+  {title:"Histórico de acesso", dot:"rgba(236,237,241,0.4)", min:0}
+];
+
+let current = 0;
+const seen = new Set([0]);
+let accessLog = [];
+let openEntryIndex = null;
+
+function openEntry(i){
+  if(i > LAST_LESSON_IDX) return;
+  accessLog.push({
+    modulo: modules[i].title,
+    numero: i + 1,
+    entrada: new Date(),
+    saida: null
+  });
+  openEntryIndex = accessLog.length - 1;
+  renderLog();
+}
+
+function closeOpenEntry(){
+  if(openEntryIndex !== null && accessLog[openEntryIndex] && !accessLog[openEntryIndex].saida){
+    accessLog[openEntryIndex].saida = new Date();
+  }
+  openEntryIndex = null;
+}
+
+function formatTs(d){
+  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}
+
+function renderLog(){
+  const wrap = document.getElementById('logTableWrap');
+  if(!wrap) return;
+  if(accessLog.length === 0){
+    wrap.innerHTML = '<p class="log-empty">Nenhum acesso registrado ainda.</p>';
+    return;
+  }
+  const rows = accessLog.slice().reverse().map(a => `<tr><td>${a.numero}. ${a.modulo}</td><td class="ts">${formatTs(a.entrada)}</td><td class="ts">${a.saida ? formatTs(a.saida) : '— (em andamento)'}</td></tr>`).join('');
+  wrap.innerHTML = `<table class="log-table"><tr><th>Aula</th><th>Entrada</th><th>Saída</th></tr>${rows}</table>`;
+}
+
+window.addEventListener('beforeunload', () => {
+  if(openEntryIndex !== null && accessLog[openEntryIndex] && !accessLog[openEntryIndex].saida){
+    accessLog[openEntryIndex].saida = new Date();
+    persistUserData();
+  }
+});
+
+const modlist = document.getElementById('modlist');
+modules.forEach((m, i) => {
+  if(i === TOTAL_LESSONS){
+    const sep = document.createElement('div');
+    sep.style.cssText = 'height:1px;background:rgba(236,237,241,0.14);margin:14px 4px 12px;';
+    modlist.appendChild(sep);
+  }
+  const btn = document.createElement('button');
+  btn.className = 'modbtn';
+  const numHtml = i === 12 ? '<span class="num">⏱</span>' : `<span class="num">${i+1}</span>`;
+  btn.innerHTML = `${numHtml}<span class="label">${m.title}</span><span class="dot" style="background:${m.dot}"></span>`;
+  btn.addEventListener('click', () => goTo(i));
+  modlist.appendChild(btn);
+});
+
+const VIDEO_MODULES = [0, 2, 4, 6, 7, 8, 10];
+const videosWatched = new Set();
+
+// ---- TEMPO MINIMO POR MODULO ----------------------------------------------
+// A soma dos minutos declarados em "modules" fecha as 8h (480 min) exigidas
+// pelo item 35.4.2.1. O aluno so avanca depois de cumprir o tempo da aula,
+// o que e calculado a partir do proprio historico de acesso ja gravado.
+const TEMPO_LIVRE = false; // true libera o avanco imediato (uso em demonstracao)
+
+function somaAccessLog(log, numero){
+  let total = 0;
+  (log || []).forEach(a => {
+    if(numero !== undefined && a.numero !== numero) return;
+    const ini = new Date(a.entrada).getTime();
+    const fim = a.saida ? new Date(a.saida).getTime() : Date.now();
+    if(fim > ini) total += (fim - ini) / 1000;
+  });
+  return total;
+}
+function faltaNoModulo(i){
+  if(TEMPO_LIVRE) return 0;
+  const necessario = (modules[i] && modules[i].min ? modules[i].min : 0) * 60;
+  return Math.max(0, necessario - somaAccessLog(accessLog, i + 1));
+}
+function mmss(s){
+  s = Math.ceil(s);
+  return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+function hhmm(seg){
+  const hh = Math.floor(seg / 3600);
+  const mm = Math.floor((seg % 3600) / 60);
+  return hh > 0 ? hh + 'h' + String(mm).padStart(2, '0') : mm + ' min';
+}
+
+// Aplica os bloqueios de avanco sem redesenhar a pagina inteira,
+// para nao jogar o aluno de volta ao topo a cada segundo.
+function aplicarBloqueios(){
+  const videoPendente = VIDEO_MODULES.includes(current) && !videosWatched.has(current);
+  const falta = faltaNoModulo(current);
+  const travado = videoPendente || falta > 0;
+  document.querySelectorAll('#modlist .modbtn').forEach((btn, i) => {
+    btn.disabled = travado && i > current;
+  });
+  const nextBtn = document.getElementById('nextBtn');
+  if(!nextBtn) return;
+  if(current === modules.length - 1){
+    nextBtn.textContent = 'Concluído ✓';
+    nextBtn.disabled = true;
+  } else if(videoPendente){
+    nextBtn.textContent = 'Assista o vídeo até o fim para continuar';
+    nextBtn.disabled = true;
+  } else if(falta > 0){
+    nextBtn.textContent = 'Leia a aula — próximo módulo em ' + mmss(falta);
+    nextBtn.disabled = true;
+  } else {
+    nextBtn.textContent = 'Próximo módulo →';
+    nextBtn.disabled = false;
+  }
+}
+setInterval(() => {
+  if(!learnerUser) return;
+  const app = document.getElementById('appRoot');
+  if(!app || app.style.display === 'none') return;
+  aplicarBloqueios();
+  const el = document.getElementById('progressLabel');
+  if(el) el.textContent = el.textContent.replace(/· .*$/, '· ' + hhmm(somaAccessLog(accessLog)) + ' de estudo');
+}, 1000);
+let maxUnlocked = 0;
+
+window.onYouTubeIframeAPIReady = function(){
+  VIDEO_MODULES.forEach(i => {
+    const el = document.getElementById('ytf-' + i);
+    if(!el) return;
+    new YT.Player('ytf-' + i, {
+      events: {
+        onStateChange: (e) => {
+          if(e.data === YT.PlayerState.ENDED){
+            videosWatched.add(i);
+            if(maxUnlocked <= i) maxUnlocked = i + 1;
+            render();
+          }
+        }
+      }
+    });
+  });
+};
+
+function render(){
+  document.querySelectorAll('.module').forEach(el => {
+    el.classList.toggle('active', Number(el.dataset.mod) === current);
+  });
+  document.querySelectorAll('#modlist .modbtn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === current);
+    btn.classList.toggle('done', seen.has(i));
+  });
+  document.getElementById('prevBtn').disabled = current === 0;
+  aplicarBloqueios();
+  const contentSeen = [...seen].filter(i => i <= LAST_LESSON_IDX).length;
+  const fillPct = (contentSeen / TOTAL_LESSONS) * 100;
+  document.getElementById('progressFill').style.width = fillPct + '%';
+  document.getElementById('progressLabel').textContent = `${contentSeen} / ${TOTAL_LESSONS} aulas · ${hhmm(somaAccessLog(accessLog))} de estudo`;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+async function goTo(i){
+  try{
+    if(i > current && VIDEO_MODULES.includes(current) && !videosWatched.has(current)){
+      return;
+    }
+    if(i > current && faltaNoModulo(current) > 0){
+      return;
+    }
+    closeOpenEntry();
+    current = i;
+    seen.add(i);
+    if(maxUnlocked < i) maxUnlocked = i;
+    if(i <= LAST_LESSON_IDX){
+      openEntry(i);
+    }
+    render();
+    await persistUserData();
+  }catch(err){
+    console.error('Erro ao navegar entre módulos', err);
+    alert('Não foi possível abrir o próximo módulo. Atualize a página e tente novamente. Se o problema persistir, informe o responsável pelo treinamento.');
+  }
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => { if(current>0) goTo(current-1); });
+document.getElementById('nextBtn').addEventListener('click', () => { if(current<modules.length-1) goTo(current+1); });
+
+function initMatchExercises(){
+  document.querySelectorAll('.match-exercise').forEach(box => {
+    const pairs = JSON.parse(box.dataset.pairs);
+    const termsCol = box.querySelector('.match-terms');
+    const defsCol = box.querySelector('.match-defs');
+    const feedback = box.querySelector('.match-feedback');
+    const shuffledDefs = [...pairs].sort(() => Math.random() - 0.5);
+    let selectedTerm = null;
+    let solved = 0;
+
+    pairs.forEach(([term]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'match-item';
+      btn.textContent = term;
+      btn.dataset.term = term;
+      btn.addEventListener('click', () => {
+        termsCol.querySelectorAll('.match-item').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedTerm = term;
+      });
+      termsCol.appendChild(btn);
+    });
+
+    shuffledDefs.forEach(([term, def]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'match-item';
+      btn.textContent = def;
+      btn.addEventListener('click', () => {
+        if(!selectedTerm) { feedback.textContent = 'Escolha primeiro um termo à esquerda.'; return; }
+        const correctPair = pairs.find(p => p[0] === selectedTerm);
+        const termBtn = [...termsCol.querySelectorAll('.match-item')].find(b => b.dataset.term === selectedTerm);
+        if(correctPair[1] === def){
+          btn.classList.add('correct');
+          btn.disabled = true;
+          termBtn.classList.remove('selected');
+          termBtn.classList.add('correct');
+          termBtn.disabled = true;
+          solved++;
+          feedback.textContent = solved === pairs.length ? 'Muito bem! Você ligou todos os pares corretamente.' : 'Certo! Continue.';
+          feedback.style.color = 'var(--green)';
+        } else {
+          btn.classList.add('wrong');
+          feedback.textContent = 'Não é essa — tente de novo.';
+          feedback.style.color = 'var(--red)';
+          setTimeout(() => btn.classList.remove('wrong'), 700);
+        }
+        selectedTerm = null;
+      });
+      defsCol.appendChild(btn);
+    });
+  });
+}
+initMatchExercises();
+
+render();
+
+// QUIZ
+const questions = [
+  {
+    q: "Segundo o campo de aplicação da NR-35, o que caracteriza trabalho em altura?",
+    opts: ["Qualquer atividade executada fora do nível do piso", "Atividade executada acima de 2,00 m do nível inferior, onde haja risco de queda", "Atividade executada acima de 3,00 m, independentemente do risco de queda"],
+    correct: 1
+  },
+  {
+    q: "Qual a carga horária mínima do treinamento inicial de trabalho em altura?",
+    opts: ["4 horas", "8 horas", "16 horas"],
+    correct: 1
+  },
+  {
+    q: "Qual a periodicidade do treinamento periódico previsto na NR-35?",
+    opts: ["Anual", "Bienal (a cada dois anos)", "Trienal"],
+    correct: 1
+  },
+  {
+    q: "Desde a Portaria MTE nº 1.259/2026, em que modalidade os treinamentos da NR-35 devem ser realizados?",
+    opts: ["Exclusivamente presencial", "Presencial ou a distância, à escolha da empresa", "Semipresencial, com a parte teórica em EAD"],
+    correct: 0
+  },
+  {
+    q: "O que define um trabalhador autorizado para trabalho em altura?",
+    opts: ["Ter o certificado de treinamento de 8 horas", "Ser capacitado e ter o estado de saúde avaliado e considerado apto", "Ter mais de um ano de experiência na função"],
+    correct: 1
+  },
+  {
+    q: "Na hierarquia de medidas do item 35.5.2, qual é a primeira providência a ser considerada?",
+    opts: ["Fornecer cinturão tipo paraquedista", "Instalar guarda-corpo no perímetro", "Evitar o trabalho em altura"],
+    correct: 2
+  },
+  {
+    q: "Em quais atividades a Permissão de Trabalho é obrigatória?",
+    opts: ["Em todas as atividades em altura", "Somente nas atividades não rotineiras", "Somente nas atividades acima de 10 metros"],
+    correct: 1
+  },
+  {
+    q: "Qual é a validade da Permissão de Trabalho?",
+    opts: ["30 dias, renovável", "Limitada à duração da atividade, restrita ao turno de trabalho ou à jornada", "Válida enquanto a obra estiver em andamento"],
+    correct: 1
+  },
+  {
+    q: "Qual o limite máximo da força de impacto transmitida ao trabalhador na retenção da queda?",
+    opts: ["6 kN", "15 kN", "22 kN"],
+    correct: 0
+  },
+  {
+    q: "O talabarte utilizado para retenção de queda deve ser de que tipo?",
+    opts: ["Talabarte simples de posicionamento", "Talabarte com absorvedor de energia integrado", "Qualquer talabarte, desde que duplo"],
+    correct: 1
+  },
+  {
+    q: "Sobre o fator de queda, qual afirmação está correta?",
+    opts: ["Quanto mais alta a ancoragem em relação ao engate do cinto, menor o fator de queda", "O fator de queda não depende da posição da ancoragem", "Ancorar na altura dos pés reduz a força sobre o corpo"],
+    correct: 0
+  },
+  {
+    q: "No acesso por cordas (Anexo I), qual é a exigência quanto à equipe e às cordas?",
+    opts: ["Um trabalhador sozinho, conectado a uma corda", "Equipe de no mínimo duas pessoas, sendo uma o supervisor, com conexão a pelo menos duas cordas em ancoragens independentes", "Equipe de no mínimo três pessoas, com uma corda cada"],
+    correct: 1
+  },
+  {
+    q: "No acesso por cordas, a atividade deve ser interrompida imediatamente quando a velocidade do vento ultrapassar:",
+    opts: ["20 km/h", "40 km/h", "60 km/h"],
+    correct: 1
+  },
+  {
+    q: "Conforme o Anexo III, o uso de escada como meio de acesso ou posto de trabalho deve ser:",
+    opts: ["Precedido de análise de risco", "Autorizado apenas por Permissão de Trabalho", "Dispensado de qualquer avaliação prévia"],
+    correct: 0
+  },
+  {
+    q: "Com que frequência deve ser feita a inspeção rotineira dos componentes do sistema de proteção individual?",
+    opts: ["A cada 12 meses", "Antes de cada jornada de trabalho", "Somente quando houver suspeita de defeito"],
+    correct: 1
+  },
+  {
+    q: "Por quanto tempo, no mínimo, a documentação prevista na NR-35 deve ser arquivada?",
+    opts: ["2 anos", "5 anos", "Não há prazo definido"],
+    correct: 1
+  },
+  {
+    q: "O que é o trauma de suspensão e por que ele importa no plano de resgate?",
+    opts: ["Lesão na coluna causada pelo impacto da queda, tratada apenas no hospital", "Agravo causado pela permanência suspenso e imóvel no cinturão, que pode evoluir em poucos minutos e exige resgate rápido", "Desconforto muscular após longas jornadas em altura, sem gravidade"],
+    correct: 1
+  },
+  {
+    q: "Os componentes do sistema de proteção que sofreram a absorção de uma queda devem ser:",
+    opts: ["Reutilizados após limpeza", "Descartados, salvo quando a restauração for admitida por norma técnica", "Enviados para reforma e reutilizados por mais 12 meses"],
+    correct: 1
+  }
+];
+
+let MAX_ATTEMPTS = 3;
+let PASS_PERCENT = 70;
+
+async function loadQuizSettings(){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'config', 'settings_' + COURSE_ID));
+    if(snap.exists()){
+      const d = snap.data();
+      if(d.passPercent) PASS_PERCENT = d.passPercent;
+      if(d.maxAttempts) MAX_ATTEMPTS = d.maxAttempts;
+    }
+  }catch(e){ console.error('Falha ao carregar configurações', e); }
+}
+async function saveQuizSettings(passPercent, maxAttempts){
+  await authReady;
+  await setDoc(doc(db, 'config', 'settings_' + COURSE_ID), { passPercent, maxAttempts });
+  PASS_PERCENT = passPercent;
+  MAX_ATTEMPTS = maxAttempts;
+}
+let quizAttempts = [];
+let quizInProgress = false;
+let score = 0;
+let answered = 0;
+
+function buildQuizQuestions(){
+  score = 0;
+  answered = 0;
+  const quizArea = document.getElementById('quizArea');
+  quizArea.innerHTML = '';
+  document.getElementById('quizResult').innerHTML = '';
+
+  questions.forEach((item, qi) => {
+    const box = document.createElement('div');
+    box.className = 'quiz-q';
+    const p = document.createElement('p');
+    p.className = 'qtext';
+    p.textContent = `${qi+1}. ${item.q}`;
+    box.appendChild(p);
+
+    item.opts.forEach((opt, oi) => {
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.textContent = opt;
+      b.addEventListener('click', () => {
+        const allOpts = box.querySelectorAll('.opt');
+        allOpts.forEach(o => o.disabled = true);
+        if(oi === item.correct){
+          b.classList.add('correct');
+          score++;
+        } else {
+          b.classList.add('wrong');
+          allOpts[item.correct].classList.add('correct');
+        }
+        answered++;
+        if(answered === questions.length){
+          finishQuizAttempt();
+        }
+      });
+      box.appendChild(b);
+    });
+    quizArea.appendChild(box);
+  });
+}
+
+async function finishQuizAttempt(){
+  const percent = Math.round((score / questions.length) * 100);
+  const aprovado = percent >= PASS_PERCENT;
+  quizAttempts.push({ score, total: questions.length, percent, aprovado, quando: new Date() });
+  quizInProgress = false;
+  document.getElementById('quizArea').style.display = 'none';
+  await persistUserData();
+  renderQuizGate();
+  renderQuizSummary();
+}
+
+const MOTIVATIONAL_PHRASES = [
+  "Segurança não é sorte — é escolha repetida todos os dias.",
+  "Cada procedimento seguido é uma vida protegida, a começar pela sua.",
+  "O acidente mais fácil de evitar é aquele que a gente previne antes.",
+  "Prevenir custa um minuto. Remediar pode custar uma vida inteira.",
+  "Quem cuida da segurança no trabalho, cuida de quem volta pra casa."
+];
+
+function renderQuizGate(){
+  const gate = document.getElementById('quizGate');
+  if(!gate) return;
+  if(quizInProgress){ gate.innerHTML = ''; return; }
+
+  const passed = quizAttempts.some(a => a.aprovado);
+  const attemptsUsed = quizAttempts.length;
+
+  if(passed){
+    const phrase = MOTIVATIONAL_PHRASES[Math.floor(Math.random() * MOTIVATIONAL_PHRASES.length)];
+    const bestPassed = quizAttempts.find(a => a.aprovado);
+    gate.innerHTML = `
+      <div class="card note">
+        <strong>Parabéns, você foi aprovado! 🎉</strong>
+        <p style="margin:10px 0 0;">Você acertou ${bestPassed.score} de ${bestPassed.total} questões (${bestPassed.percent}%) — acima do mínimo exigido de ${PASS_PERCENT}%. Entre em contato com o instrutor responsável pelo treinamento para retirar seu certificado.</p>
+        <p style="margin:14px 0 0; font-style:italic; color:var(--mint);">"${phrase}"</p>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3 style="margin-top:0;">Que tal avaliar o curso?</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:14px;">Não é obrigatório, mas sua opinião ajuda a melhorar o treinamento.</p>
+        <form id="feedbackForm">
+          <div class="field">
+            <label for="feedbackText">Seu comentário (opcional)</label>
+            <textarea id="feedbackText" rows="4" style="width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper); color:var(--text); font-family:'Inter',sans-serif; font-size:14.5px; resize:vertical;"></textarea>
+          </div>
+          <p class="login-error" id="feedbackMsg"></p>
+          <button type="submit" class="login-btn" id="feedbackSubmitBtn" style="width:auto; padding:11px 22px;">Enviar avaliação</button>
+        </form>
+      </div>
+    `;
+    document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msgEl = document.getElementById('feedbackMsg');
+      const text = document.getElementById('feedbackText').value.trim();
+      try{
+        await authReady;
+        await setDoc(doc(db, 'feedback', dataKey(learnerUser)), { name: learnerName, username: learnerUser, curso: COURSE_ID, comentario: text, quando: new Date().toISOString() });
+        msgEl.textContent = 'Obrigado pelo feedback!';
+        msgEl.style.color = 'var(--green)';
+        msgEl.style.display = 'block';
+      }catch(err){
+        console.error('Erro ao salvar feedback', err);
+        msgEl.textContent = 'Não foi possível enviar agora. Tente novamente mais tarde.';
+        msgEl.style.color = 'var(--red)';
+        msgEl.style.display = 'block';
+      }
+    });
+    return;
+  }
+  if(attemptsUsed >= MAX_ATTEMPTS){
+    gate.innerHTML = `<div class="card alert"><strong>Reprovado.</strong> Você usou as ${MAX_ATTEMPTS} tentativas disponíveis sem atingir os ${PASS_PERCENT}% mínimos. Entre em contato com o instrutor responsável pelo treinamento.</div>`;
+    return;
+  }
+  const lastLine = attemptsUsed > 0
+    ? `<p class="lede" style="margin-bottom:16px;">Última tentativa: <strong>${quizAttempts[attemptsUsed-1].percent}%</strong> de acerto (mínimo para aprovação: ${PASS_PERCENT}%). Você ainda pode tentar novamente.</p>`
+    : '';
+  gate.innerHTML = `${lastLine}<button class="login-btn" id="startQuizBtn" style="width:auto; padding:12px 26px;">${attemptsUsed > 0 ? 'Realizar novamente' : 'Iniciar prova'} (tentativa ${attemptsUsed+1} de ${MAX_ATTEMPTS})</button>`;
+  document.getElementById('startQuizBtn').addEventListener('click', () => {
+    quizInProgress = true;
+    document.getElementById('quizArea').style.display = 'block';
+    document.getElementById('quizResult').innerHTML = '';
+    buildQuizQuestions();
+    renderQuizGate();
+  });
+}
+
+function renderQuizSummary(){
+  const el = document.getElementById('quizResultSummary');
+  if(!el) return;
+  if(quizAttempts.length === 0){
+    el.innerHTML = '<p class="log-empty">Prova ainda não realizada.</p>';
+    return;
+  }
+  const rows = quizAttempts.map((a, i) => `<tr><td>${i+1}</td><td>${a.score} de ${a.total}</td><td>${a.percent}%</td><td>${a.aprovado ? 'Aprovado' : 'Reprovado'}</td><td class="ts">${formatTs(a.quando)}</td></tr>`).join('');
+  el.innerHTML = `<table class="log-table">
+    <tr><th>Tentativa</th><th>Pontuação</th><th>Percentual</th><th>Resultado</th><th>Realizada em</th></tr>
+    ${rows}
+  </table>`;
+}
+
+// ---- SESSAO COMPARTILHADA COM O PORTAL -------------------------------------
+// O portal e os cursos usam a mesma colecao "users", entao o aluno entra uma
+// vez e circula entre os treinamentos sem repetir login. A sessao vale apenas
+// nesta aba e e sempre revalidada no Firestore ao abrir cada curso.
+const SESSION_KEY = 'normas_sessao';
+function salvarSessao(username){ try{ sessionStorage.setItem(SESSION_KEY, username); }catch(e){} }
+function limparSessao(){ try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){} }
+
+async function restaurarSessao(){
+  let u = '';
+  try{ u = sessionStorage.getItem(SESSION_KEY) || ''; }catch(e){ return; }
+  if(!u) return;
+  try{
+    const record = await getUser(u);
+    if(!record){ limparSessao(); return; }
+    if(record.role === 'admin'){ await startAdminSession(u); return; }
+    if(!hasCourseAccess(record)) return;   // sem matricula neste curso: fica no login
+    await startSession(u, record.name);
+  }catch(e){ console.error('Falha ao restaurar a sessão', e); }
+}
+restaurarSessao();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G.A Occupational Safety · Treinamento NR-33 Espaço Confinado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+<script src="https://www.youtube.com/iframe_api" defer></script>
+<style>
+  :root{
+    --green: #16A34A;
+    --green-deep: #0F7F3B;
+    --mint: #8FDCB0;
+    --ink: #0D0F16;
+    --ink-soft: #9CA0AC;
+    --paper: #1B1E2C;
+    --paper-raised: #242736;
+    --text: #ECEDF1;
+    --red: #F0555C;
+    --risk-fisico: #2DBFD1;
+    --risk-quimico: #F2545B;
+    --risk-biologico: #C9A15A;
+    --risk-ergonomico: #E3B341;
+    --risk-acidente: #5B8DEF;
+    --line: rgba(236,237,241,0.12);
+    --shadow: 0 10px 30px rgba(0,0,0,0.45);
+    --grid: rgba(236,237,241,0.045);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  .hazard-bar{
+    height:3px;
+    width:100%;
+    background:linear-gradient(90deg, var(--green) 0%, var(--mint) 100%);
+    position:fixed; top:0; left:0; z-index:50;
+  }
+
+  .app{
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    min-height:100vh;
+    padding-top:8px;
+  }
+
+  /* SIDEBAR */
+  .sidebar{
+    background:var(--ink);
+    color:var(--text);
+    padding:32px 22px 24px;
+    position:sticky;
+    top:8px;
+    height:calc(100vh - 8px);
+    overflow-y:auto;
+    border-right:1px solid rgba(0,0,0,0.3);
+  }
+  .brand{
+    display:flex; flex-direction:column; gap:2px; margin-bottom:6px;
+  }
+  .brand-mark{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  }
+  .brand-mark svg{ flex:0 0 auto; width:34px; height:34px; }
+  .brand .eyebrow{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--mint);
+    font-size:12.5px;
+  }
+  .brand h1{
+    font-family:'Archivo Black', sans-serif;
+    font-size:24px;
+    line-height:1.05;
+    margin:4px 0 0;
+    letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .brand .sub{
+    font-size:12.5px;
+    color:rgba(236,237,241,0.55);
+    margin-top:8px;
+    line-height:1.5;
+  }
+
+  .progress-track{
+    height:4px;
+    width:100%;
+    background:rgba(236,237,241,0.15);
+    border-radius:4px;
+    margin:20px 0 10px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:var(--green);
+    transition:width .4s ease;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:rgba(236,237,241,0.5);
+    margin-bottom:14px;
+  }
+
+  .curriculum-total{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:rgba(236,237,241,0.65);
+    display:flex; align-items:center; gap:6px; margin:2px 0 0;
+  }
+  .curriculum-total b{ color:var(--mint); }
+
+  nav.modlist{
+    display:flex; flex-direction:column; gap:2px;
+    margin-top:16px;
+  }
+  .modbtn{
+    display:flex; align-items:center; gap:12px;
+    background:transparent; border:none; color:inherit;
+    text-align:left; cursor:pointer;
+    padding:11px 10px; border-radius:8px;
+    font-family:'Inter', sans-serif; font-size:13.5px; font-weight:500;
+    color:rgba(236,237,241,0.75);
+    transition:background .15s ease, color .15s ease;
+  }
+  .modbtn:hover{ background:rgba(236,237,241,0.06); color:var(--text); }
+  .modbtn.active{ background:rgba(22,163,74,0.14); color:var(--text); }
+  .modbtn.active .num{ background:var(--green); color:#fff; }
+  .modbtn:focus-visible{ outline:2px solid var(--green); outline-offset:2px; }
+
+  .num{
+    flex:0 0 auto;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:rgba(236,237,241,0.12);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; font-weight:600;
+    color:rgba(236,237,241,0.6);
+  }
+  .modbtn.done .num{ background:var(--green); color:#fff; }
+  .modbtn.done .num::after{ content:"✓"; }
+  .modbtn .label{ flex:1; }
+  .modbtn .dot{
+    width:8px; height:8px; border-radius:50%; flex:0 0 auto;
+  }
+
+  /* MAIN */
+  main{
+    padding:52px 64px 90px;
+    max-width:880px;
+  }
+  .module{ display:none; animation:fade .35s ease; }
+  .module.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .m-eyebrow{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:0.14em;
+    font-weight:600; font-size:13px; color:var(--mint);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:10px;
+  }
+  .m-eyebrow .code{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--ink); color:var(--green);
+    padding:2px 8px; border-radius:4px; letter-spacing:0;
+    font-size:11.5px;
+  }
+  .m-eyebrow .duration{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0; text-transform:none;
+    color:var(--ink-soft); font-size:12px;
+    display:flex; align-items:center; gap:5px;
+  }
+  .m-eyebrow .duration::before{ content:"⏱"; font-size:11px; }
+
+  h2.m-title{
+    font-family:'Archivo Black', sans-serif;
+    font-size:38px; line-height:1.08; margin:0 0 22px;
+    letter-spacing:-0.01em; max-width:640px;
+    color:var(--text);
+  }
+  .lede{
+    font-size:17px; line-height:1.65; color:var(--ink-soft);
+    max-width:640px; margin-bottom:34px;
+  }
+  h3{
+    font-family:'Archivo Black', sans-serif;
+    font-size:18px; margin:36px 0 14px; letter-spacing:-0.005em;
+    color:var(--text);
+  }
+  p, li{ font-size:15px; line-height:1.7; color:var(--text); }
+  ul, ol{ padding-left:20px; margin:0 0 16px; }
+  li{ margin-bottom:8px; }
+  strong{ font-weight:700; }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 24px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .card.alert{ border-left:5px solid var(--red); }
+  .card.note{ border-left:5px solid var(--green); }
+
+  table{ width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+  th, td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); }
+  th{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em; font-size:12px; color:var(--ink-soft); }
+  tr:last-child td{ border-bottom:none; }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 24px; }
+  .chip{
+    display:flex; align-items:center; gap:8px;
+    padding:7px 13px; border-radius:100px;
+    font-size:13px; font-weight:600; color:#fff;
+  }
+  .chip .sw{ width:11px; height:11px; border-radius:50%; background:#fff; opacity:.9; }
+
+  .video-wrap{
+    margin:22px 0 28px;
+    border-radius:12px; overflow:hidden;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .video-wrap .vid-label{
+    background:var(--ink); color:var(--green);
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+    font-size:12px; padding:9px 16px;
+  }
+  .video-frame{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-frame iframe{ position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
+  .video-wrap.video-link{ display:block; text-decoration:none; color:inherit; cursor:pointer; }
+  .video-thumb{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.8; }
+  .play-badge{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    background:var(--green); color:#fff; padding:11px 20px; border-radius:100px;
+    font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em;
+    font-weight:700; font-size:13px; white-space:nowrap;
+    display:flex; align-items:center; gap:8px;
+  }
+  .video-wrap.video-link:hover .play-badge{ background:var(--green-deep); }
+
+  /* MAPA DE RISCO */
+  .riskmap-wrap{
+    display:flex; gap:36px; align-items:flex-start; flex-wrap:wrap;
+    margin:26px 0 10px;
+  }
+  .riskmap-plan{ flex:0 0 340px; position:relative; }
+  .riskmap-legend{ flex:1; min-width:220px; }
+  .riskmap-legend .item{
+    display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:13.5px;
+  }
+  .riskmap-legend .sz{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-left:auto; }
+
+  .nav-buttons{
+    display:flex; justify-content:space-between; margin-top:50px;
+    padding-top:24px; border-top:1px solid var(--line);
+  }
+  .navbtn{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+    font-size:13px; padding:11px 20px; border-radius:8px; cursor:pointer;
+    border:1.5px solid var(--text); background:transparent; color:var(--text);
+    transition:background .15s ease, color .15s ease;
+  }
+  .navbtn:hover{ background:var(--green); color:var(--ink); border-color:var(--green); }
+  .navbtn.primary{ background:var(--ink); color:var(--green); border-color:var(--ink); }
+  .navbtn.primary:hover{ background:var(--green-deep); color:#fff; }
+  .navbtn:disabled{ opacity:.3; cursor:not-allowed; }
+  .navbtn:disabled:hover{ background:transparent; color:var(--text); border-color:var(--text); }
+
+  /* QUIZ */
+  .quiz-q{ background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-bottom:18px; }
+  .quiz-q p.qtext{ font-weight:600; margin:0 0 14px; font-size:15px; color:var(--text); }
+  .opt{
+    display:block; width:100%; text-align:left;
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:8px; padding:11px 14px; margin-bottom:9px;
+    font-size:14px; cursor:pointer; color:var(--text);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt:hover{ border-color:var(--green); }
+  .opt.correct{ background:rgba(22,163,74,0.16); border-color:var(--green); }
+  .opt.wrong{ background:rgba(240,85,92,0.14); border-color:var(--red); }
+  .opt:disabled{ cursor:default; }
+  .match-exercise{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; margin:22px 0;
+  }
+  .match-exercise h4{ margin:0 0 4px; font-size:15px; }
+  .match-hint{ font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
+  .match-cols{ display:flex; gap:22px; flex-wrap:wrap; }
+  .match-col{ flex:1; min-width:220px; display:flex; flex-direction:column; gap:8px; }
+  .match-item{
+    text-align:left; padding:10px 14px; border-radius:8px;
+    border:1.5px solid var(--line); background:var(--paper);
+    color:var(--text); font-size:13.5px; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .match-item:hover{ border-color:var(--green); }
+  .match-item.selected{ border-color:var(--green); background:rgba(22,163,74,0.12); }
+  .match-item.correct{ border-color:var(--green); background:rgba(22,163,74,0.2); cursor:default; }
+  .match-item.wrong{ border-color:var(--red); background:rgba(240,85,92,0.14); }
+  .match-item:disabled{ cursor:default; opacity:.85; }
+  .match-feedback{ margin:14px 0 0; font-size:13px; color:var(--ink-soft); }
+
+  .quiz-score{
+    font-family:'Archivo Black', sans-serif; font-size:22px; text-align:center;
+    padding:26px; background:var(--ink); color:var(--green); border-radius:12px; margin-top:8px;
+  }
+
+  /* HISTÓRICO */
+  .log-table{ width:100%; border-collapse:collapse; margin:10px 0 20px; font-size:13.5px; }
+  .log-table th, .log-table td{ padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; color:var(--text); }
+  .log-table th{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; font-size:11.5px; letter-spacing:.05em; color:var(--ink-soft); }
+  .log-table td.ts{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap; }
+  .log-empty{ color:var(--ink-soft); font-size:14px; padding:18px 0; }
+  .log-actions{ display:flex; gap:12px; margin-top:6px; flex-wrap:wrap; }
+
+  footer.appfoot{
+    max-width:640px; font-size:12px; color:var(--ink-soft); margin-top:60px;
+    padding-top:18px; border-top:1px solid var(--line);
+  }
+
+  @media (max-width: 880px){
+    .app{ grid-template-columns:1fr; }
+    .sidebar{ position:static; height:auto; order:2; max-height:70vh; }
+    main{ padding:28px 20px 60px; order:1; }
+    h2.m-title{ font-size:28px; }
+  }
+
+  /* LOGIN / HOME */
+  .login-screen{
+    position:fixed; inset:0; z-index:100;
+    background:var(--ink);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .login-hazard{
+    position:absolute; top:0; left:0; width:100%; height:3px;
+    background:linear-gradient(90deg, var(--green) 0%, var(--mint) 100%);
+  }
+  .login-card{
+    position:relative;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:44px 40px 36px;
+    width:100%; max-width:400px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.55);
+  }
+  .login-card::before, .login-card::after,
+  .login-corner-tl, .login-corner-br{
+    content:""; position:absolute; width:18px; height:18px;
+    border-color:var(--green); border-style:solid; border-width:0;
+    opacity:.85;
+  }
+  .login-card::before{ top:-9px; left:-9px; border-top-width:2px; border-left-width:2px; border-radius:4px 0 0 0; }
+  .login-card::after{ bottom:-9px; right:-9px; border-bottom-width:2px; border-right-width:2px; border-radius:0 0 4px 0; }
+  .login-company{
+    display:flex; align-items:center; gap:8px; margin-bottom:18px;
+  }
+  .login-company svg{ width:26px; height:26px; flex:0 0 auto; }
+  .login-company span{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.1em; font-weight:700;
+    font-size:13px; color:var(--mint);
+  }
+  .login-card h1{
+    font-family:'Archivo Black', sans-serif; font-size:26px; margin:0 0 6px; letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .login-card .login-sub{
+    font-size:13.5px; color:var(--ink-soft); margin-bottom:28px; line-height:1.55;
+  }
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; font-family:'Barlow Condensed', sans-serif; text-transform:uppercase;
+    letter-spacing:.06em; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;
+  }
+  .field input{
+    width:100%; padding:11px 13px; border-radius:8px;
+    border:1.5px solid var(--line); background:var(--paper);
+    font-family:'Inter', sans-serif; font-size:14.5px; color:var(--text);
+  }
+  .field input:focus{ outline:none; border-color:var(--green); }
+  .login-btn{
+    width:100%; margin-top:10px; padding:13px;
+    background:var(--green); color:#fff; border:none; border-radius:8px;
+    font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.08em;
+    font-weight:700; font-size:14px; cursor:pointer;
+    transition:background .15s ease;
+  }
+  .login-btn:hover{ background:var(--green-deep); color:#fff; }
+  .login-error{
+    color:var(--red); font-size:12.5px; margin-top:-8px; margin-bottom:14px; display:none;
+  }
+  .login-note{
+    font-size:11.5px; color:var(--ink-soft); margin-top:22px; line-height:1.5; opacity:.9;
+  }
+
+  /* CONTEUDO APROFUNDADO */
+  .check{ margin:20px 0; border:1px solid var(--line); border-radius:10px; background:var(--paper); padding:0 18px; }
+  .check summary{ cursor:pointer; padding:15px 0; font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em; font-size:13px; color:var(--mint); font-weight:600; list-style:none; }
+  .check summary::-webkit-details-marker{ display:none; }
+  .check summary::before{ content:'+ '; font-family:'IBM Plex Mono', monospace; }
+  .check[open] summary::before{ content:'- '; }
+  .check .ans{ border-top:1px solid var(--line); padding:14px 0 18px; font-size:14px; line-height:1.7; }
+  .check .ans p{ margin:0 0 14px; }
+  .check .ans p:last-child{ margin-bottom:0; }
+  .calc{ background:var(--ink); border-left:3px solid var(--green); padding:16px 18px; margin:20px 0; border-radius:0 8px 8px 0; font-family:'IBM Plex Mono', monospace; font-size:12.5px; line-height:1.85; color:var(--mint); overflow-x:auto; white-space:pre; }
+  ol.steps{ counter-reset:st; list-style:none; padding-left:0; margin:18px 0; }
+  ol.steps li{ counter-increment:st; position:relative; padding-left:44px; margin-bottom:14px; line-height:1.65; }
+  ol.steps li::before{ content:counter(st); position:absolute; left:0; top:-1px; width:28px; height:28px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-size:12px; font-weight:600; }
+  .vid-src{ background:var(--ink); color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-size:11px; padding:9px 16px; line-height:1.5; }
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-hazard"></div>
+  <div class="login-card">
+    <div class="login-company">
+      <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>G.A Occupational Safety</span>
+    </div>
+    <h1 id="loginTitle">Entrar no treinamento</h1>
+    <p class="login-sub" id="loginSubtext">Treinamento NR-33 Espaço Confinado — trabalhador autorizado e vigia. Acesse com o usuário e a senha fornecidos pelo responsável pelo treinamento.</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginUser">Usuário</label>
+        <input type="text" id="loginUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+      </div>
+      <div class="field">
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required>
+      </div>
+      <p class="login-error" id="loginError"></p>
+      <button type="submit" class="login-btn" id="loginSubmitBtn">Entrar →</button>
+    </form>
+
+    <p class="login-note">G.A Occupational Safety · Os acessos são cadastrados pelo responsável pelo treinamento. O histórico de acesso e o resultado da avaliação ficam registrados nesta plataforma. Ainda não possui credenciais? Solicite ao responsável pelo treinamento.</p>
+  </div>
+</div>
+
+<div class="hazard-bar"></div>
+
+<div class="app" id="appRoot" style="display:none;">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="eyebrow" style="color:rgba(236,237,241,0.5); font-size:11px;">G.A Occupational Safety</span>
+      </div>
+      <span class="eyebrow">Segurança do Trabalho</span>
+      <h1>NR-33<br>Espaço Confinado</h1>
+      <p class="sub">Entrada e trabalho em espaços confinados — formação de trabalhador autorizado e vigia</p>
+      <p class="curriculum-total">Carga horária: <b>16h</b> · 8h teóricas aqui + 8h práticas presenciais · NR-33, Anexo III<br><span style="color:var(--mint);">Cada aula tem tempo mínimo de permanência.</span></p>
+      <p class="curriculum-total" id="learnerLabel" style="margin-top:4px;"></p>
+    </div>
+
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 13 aulas vistas</div>
+
+    <nav class="modlist" id="modlist"></nav>
+    <a href="../index.html" class="navbtn" style="display:block; width:100%; margin-top:20px; text-align:center; text-decoration:none; border-color:rgba(236,237,241,0.3); color:var(--text);">← Meus treinamentos</a>
+    <button type="button" class="navbtn" id="studentLogoutBtn" style="width:100%; margin-top:10px; border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
+  </aside>
+
+  <main>
+    <!-- 0 -->
+    <section class="module" data-mod="0">
+      <div class="m-eyebrow"><span class="code">NR-33</span> Introdução <span class="duration">30 min</span></div>
+      <h2 class="m-title">O que é um espaço confinado</h2>
+      <p class="lede">A NR-33 trabalha com uma definição fechada, de <strong>três requisitos simultâneos</strong>. Faltou um, não é espaço confinado pela norma. Estão todos presentes, é — por mais que o local pareça inofensivo.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — O que são espaços confinados</div>
+        <div class="video-frame"><iframe id="ytf-0" src="https://www.youtube.com/embed/q6v_ls9VhrE?enablejsapi=1" title="NR 33: o que são espaços confinados" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Marcio Guadalupe - Segurança do Trabalho" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>A definição (33.2.2)</h3>
+      <p>Considera-se espaço confinado qualquer área ou ambiente que atenda <strong>simultaneamente</strong>:</p>
+      <ol class="steps">
+        <li><strong>Não ser projetado para ocupação humana contínua</strong> — o lugar não foi feito para alguém ficar lá dentro trabalhando.</li>
+        <li><strong>Possuir meios limitados de entrada e saída</strong> — a saída é estreita, alta, baixa, única ou difícil, e atrapalha tanto o trabalho quanto o socorro.</li>
+        <li><strong>Existir ou poder existir atmosfera perigosa</strong> — o ar lá dentro é perigoso agora, ou pode se tornar perigoso durante o serviço.</li>
+      </ol>
+
+      <h3>Atmosfera perigosa (33.2.2.1)</h3>
+      <table>
+        <tr><th>Tipo</th><th>O que é</th><th>Exemplo de origem</th></tr>
+        <tr><td><strong>Deficiência de oxigênio</strong></td><td>O2 abaixo do aceitável</td><td>Oxidação (ferrugem), fermentação, deslocamento por outro gás, consumo por solda</td></tr>
+        <tr><td><strong>Enriquecimento de oxigênio</strong></td><td>O2 acima do aceitável</td><td>Vazamento de cilindro, uso indevido de oxigênio para ventilar</td></tr>
+        <tr><td><strong>Contaminantes</strong></td><td>Gases, vapores ou poeiras que danifiquem a saúde</td><td>H2S em esgoto, CO de motor, vapor de solvente, resíduo de produto químico</td></tr>
+        <tr><td><strong>Atmosfera explosiva</strong></td><td>Mistura inflamável em concentração de risco</td><td>Metano em galeria, vapor de combustível em tanque</td></tr>
+      </table>
+      <p><strong>33.2.2.2</strong> — também são espaços confinados os locais não destinados à ocupação, com entrada e saída limitadas, usados para <strong>armazenar material capaz de engolfar ou afogar</strong> o trabalhador. É o caso de silos de grão, moegas e tanques de produto a granel: o risco ali é o soterramento, não só o ar.</p>
+
+      <h3>Reconhecendo no campo</h3>
+      <table>
+        <tr><th>Local</th><th>Costuma ser espaço confinado?</th><th>Por quê</th></tr>
+        <tr><td>Reservatório ou caixa d'água</td><td>Sim</td><td>Acesso por escotilha, sem ocupação contínua, atmosfera pode se alterar</td></tr>
+        <tr><td>Galeria de esgoto, poço de visita</td><td>Sim</td><td>H2S e metano, acesso vertical único</td></tr>
+        <tr><td>Tanque, vaso de pressão, caldeira</td><td>Sim</td><td>Resíduo de produto, acesso por boca de visita</td></tr>
+        <tr><td>Silo de grão, moega</td><td>Sim</td><td>Engolfamento e atmosfera por fermentação</td></tr>
+        <tr><td>Poço de elevador, caixa de passagem profunda</td><td>Em geral sim</td><td>Acesso limitado e possibilidade de acúmulo de gases</td></tr>
+        <tr><td>Casa de máquinas ventilada, com porta comum</td><td>Não, em geral</td><td>Acesso normal e ocupação prevista — avaliar caso a caso</td></tr>
+        <tr><td>Almoxarifado sem janela</td><td>Não</td><td>Projetado para ocupação, acesso por porta comum</td></tr>
+      </table>
+
+      <div class="card alert">
+        <strong>Dois equívocos que custam vidas.</strong> O primeiro é achar que espaço confinado precisa ser apertado: um reservatório de 200 m³ é enorme por dentro e continua sendo espaço confinado. O segundo é julgar pela aparência — a atmosfera perigosa não tem cor, muitas vezes não tem cheiro, e o local pode estar seguro de manhã e letal à tarde, dependendo do que foi feito ali.
+      </div>
+
+      <h3>Norma vigente</h3>
+      <p>O texto em vigor é o aprovado pela <strong>Portaria MTP nº 1.690/2022</strong>, que revisou integralmente a norma e revogou as Portarias nº 202/2006 e nº 1.409/2012. A estrutura atual é: 33.1 Objetivo · 33.2 Campo de aplicação · 33.3 Responsabilidades · 33.4 Gerenciamento de riscos ocupacionais · 33.5 Medidas de prevenção · 33.6 Capacitação · 33.7 Disposições gerais, mais os Anexos I (sinalização), II (modelo de PET) e III (capacitação).</p>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. Uma vala de 2,5 m de profundidade, aberta, larga e ventilada, é espaço confinado?</strong><br>
+          Em regra não, porque dificilmente atende aos três requisitos ao mesmo tempo — em especial os meios limitados de entrada e saída. Mas se a vala for estreita, profunda, com acesso único e houver possibilidade de acúmulo de gases ou soterramento, a avaliação muda. Quem decide é o levantamento de perigos, não o apelido do local.</p>
+          <p><strong>2. O tanque está limpo, lavado e com a boca aberta há dois dias. Deixou de ser espaço confinado?</strong><br>
+          Não. A caracterização é do <em>espaço</em>, não da condição do momento. O que a ventilação e a limpeza fazem é controlar o risco — e isso precisa ser comprovado por medição, registrado na PET e mantido durante toda a permanência.</p>
+          <p><strong>3. Qual o terceiro requisito que mais gera discussão?</strong><br>
+          O "possa existir" atmosfera perigosa. Ele inclui o espaço que está seguro agora mas pode mudar durante o trabalho — por solda consumindo oxigênio, por vapor de solvente, por gás que migra de uma tubulação vizinha. É esse "possa existir" que coloca muitos locais aparentemente tranquilos dentro da norma.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 1 -->
+    <section class="module" data-mod="1">
+      <div class="m-eyebrow"><span class="code">Riscos</span> Por que mata <span class="duration">30 min</span></div>
+      <h2 class="m-title">O que torna o espaço confinado tão letal</h2>
+      <p class="lede">Espaço confinado tem uma característica cruel: o acidente raramente tem uma vítima só. O primeiro cai, alguém entra para socorrer sem equipamento, cai também. É o padrão que se repete nos relatórios há décadas.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Vídeo institucional — Espaços Confinados (FUNDACENTRO)</div>
+        <div class="video-frame"><iframe id="ytf-1" src="https://www.youtube.com/embed/cxUgdEZSEC8?enablejsapi=1" title="Espaços Confinados - Fundacentro" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">FUNDACENTRO — Fundação Jorge Duprat Figueiredo, instituto vinculado ao Ministério do Trabalho e Emprego.</div>
+      </div>
+
+      <h3>O ar que não avisa</h3>
+      <p>Nenhum dos sentidos humanos mede oxigênio. Uma atmosfera com 12% de O2 parece exatamente igual a uma com 21%: mesma cor, mesma temperatura, mesmo cheiro. E a perda de capacidade de julgamento vem <em>antes</em> da percepção de que algo está errado — a vítima não consegue concluir que precisa sair.</p>
+      <table>
+        <tr><th>Oxigênio (% vol)</th><th>Efeito de referência no organismo</th></tr>
+        <tr><td><strong>20,9%</strong></td><td>Ar atmosférico normal</td></tr>
+        <tr><td><strong>19,5%</strong></td><td>Limite inferior aceitável pela norma, com causa conhecida e controlada</td></tr>
+        <tr><td>16 a 19%</td><td>Queda de coordenação, aumento da frequência cardíaca e respiratória</td></tr>
+        <tr><td>12 a 16%</td><td>Falta de ar, prejuízo do julgamento, fadiga rápida</td></tr>
+        <tr><td>10 a 12%</td><td>Confusão mental, cianose, risco de inconsciência</td></tr>
+        <tr><td>abaixo de 10%</td><td>Inconsciência em poucos minutos ou segundos, com risco de morte</td></tr>
+      </table>
+      <p class="vid-src" style="border-radius:8px;">Faixas de referência consagradas na literatura de higiene ocupacional, usadas para fins didáticos. Os parâmetros normativos de entrada são os do item 33.5.15.2.</p>
+
+      <h3>O gás sulfídrico e a armadilha do olfato</h3>
+      <p>O H2S, presente em esgoto, estações elevatórias, fossas e tanques com matéria orgânica, tem cheiro característico de ovo podre em concentrações baixas. Em concentrações altas, ele <strong>paralisa o nervo olfativo</strong>: a pessoa deixa de sentir o cheiro justamente quando o ambiente ficou mais perigoso. "Parou de feder, melhorou" é uma das leituras mais perigosas que existem em espaço confinado.</p>
+
+      <div class="card alert">
+        <strong>O efeito dominó do resgate improvisado.</strong> A sequência se repete: o trabalhador perde a consciência lá dentro; o colega, movido pelo impulso de ajudar, desce sem proteção respiratória e sem linha de vida; encontra a mesma atmosfera e cai em segundos. É por isso que a norma exige vigia, plano de resgate e equipe dimensionada <em>antes</em> da entrada — e por isso que o vigia nunca entra. Entrar para salvar, sem equipamento, é trocar uma vítima por duas.
+      </div>
+
+      <h3>Os outros riscos, além do ar</h3>
+      <table>
+        <tr><th>Risco</th><th>Como aparece</th></tr>
+        <tr><td>Engolfamento e soterramento</td><td>Grão, areia, lodo ou líquido que cede sob o trabalhador</td></tr>
+        <tr><td>Energias perigosas</td><td>Agitador que parte, válvula que abre, linha que pressuriza, eletricidade</td></tr>
+        <tr><td>Incêndio e explosão</td><td>Vapor inflamável somado a trabalho a quente ou faísca</td></tr>
+        <tr><td>Choque e queda</td><td>Acesso vertical, piso molhado, escada interna precária</td></tr>
+        <tr><td>Térmico</td><td>Calor acumulado, sem troca de ar, com EPI pesado</td></tr>
+        <tr><td>Biológico</td><td>Esgoto, matéria orgânica, animais peçonhentos e roedores</td></tr>
+        <tr><td>Ergonômico e psicossocial</td><td>Postura forçada, confinamento prolongado, claustrofobia</td></tr>
+      </table>
+
+      <h3>As quatro proibições absolutas (33.7.1)</h3>
+      <p>É proibida a entrada e o trabalho em espaço confinado:</p>
+      <ul>
+        <li><strong>a)</strong> sem autorização;</li>
+        <li><strong>b)</strong> sem avaliação atmosférica ou sem monitoramento contínuo;</li>
+        <li><strong>c)</strong> sem vigia;</li>
+        <li><strong>d)</strong> sem capacitação.</li>
+      </ul>
+      <div class="card note">
+        Guarde esta lista. Ela é o resumo da norma inteira e serve como teste final antes de qualquer entrada: se uma dessas quatro faltar, a entrada é proibida — independentemente de pressa, de ordem recebida ou de o serviço ser "rapidinho".
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. Por que não se deve confiar no olfato para avaliar um espaço confinado?</strong><br>
+          Porque vários gases perigosos não têm cheiro — e o H2S, que tem, anestesia o olfato em concentrações altas. Além disso, nenhum sentido humano detecta deficiência de oxigênio, que é a causa mais comum de morte nesses ambientes.</p>
+          <p><strong>2. O colega desmaiou dentro do tanque. Você é o vigia. O que faz?</strong><br>
+          Não entra. Aciona imediatamente a equipe de resgate conforme o plano, mantém a comunicação, opera o movimentador de pessoas se houver e controla o acesso para impedir que outra pessoa entre. O vigia que entra deixa a entrada sem ninguém e costuma virar a segunda vítima.</p>
+          <p><strong>3. A atmosfera foi medida e estava boa. Por que o monitoramento precisa continuar?</strong><br>
+          Porque a condição muda durante o trabalho: a solda consome oxigênio, o solvente evapora, o resíduo do fundo é revolvido e libera gás, uma linha vizinha vaza. A medição inicial autoriza a entrada; o monitoramento contínuo mantém a autorização válida.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 2 -->
+    <section class="module" data-mod="2">
+      <div class="m-eyebrow"><span class="code">33.3</span> Responsabilidades <span class="duration">45 min</span></div>
+      <h2 class="m-title">As funções e quem responde pelo quê</h2>
+      <p class="lede">A NR-33 monta a operação com papéis definidos. Essa divisão não é burocracia: cada função existe para cobrir uma falha específica que já matou gente.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Introdução, definições e funções</div>
+        <div class="video-frame"><iframe id="ytf-2" src="https://www.youtube.com/embed/29vM9RsNQHk?enablejsapi=1" title="NR 33 - introdução e definição" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "EHS Consultoria — Segurança do Trabalho" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>Quem é quem</h3>
+      <table>
+        <tr><th>Função</th><th>Papel central</th><th>Entra no espaço?</th></tr>
+        <tr><td><strong>Organização</strong> (33.3.1)</td><td>Indicar o responsável técnico, prover meios, sinalizar e bloquear os espaços, capacitar, fornecer equipamentos, garantir emergência e supervisionar contratadas</td><td>—</td></tr>
+        <tr><td><strong>Responsável técnico</strong> (33.3.2)</td><td>Cadastrar os espaços, adaptar a PET, elaborar os procedimentos, indicar os equipamentos, elaborar o plano de resgate e coordenar a capacitação</td><td>Não necessariamente</td></tr>
+        <tr><td><strong>Supervisor de entrada</strong> (33.3.3)</td><td>Emitir a PET, testar os equipamentos, implementar a permissão, garantir emergência disponível, cancelar a entrada, encerrar a PET</td><td>Não — permanece fora</td></tr>
+        <tr><td><strong>Vigia</strong> (33.3.4)</td><td>Controlar quem entra e sai, manter contato permanente, acionar o resgate, operar o movimentador de pessoas, ordenar o abandono</td><td><strong>Nunca</strong></td></tr>
+        <tr><td><strong>Trabalhador autorizado</strong> (33.3.5)</td><td>Seguir os treinamentos e a PET, usar corretamente os meios fornecidos, comunicar situações de risco</td><td>Sim</td></tr>
+        <tr><td><strong>Equipe de emergência e salvamento</strong> (33.3.6)</td><td>Manter salvamento e primeiros socorros operantes e participar do simulado anual</td><td>Somente equipada e conforme o plano</td></tr>
+      </table>
+
+      <h3>O vigia em detalhe (33.3.4)</h3>
+      <p>É a função mais subestimada e a mais decisiva. Compete ao vigia, entre outras atribuições: controlar a entrada e a saída, manter contato com os trabalhadores no interior, acionar a equipe de resgate, operar os movimentadores de pessoas, ordenar o abandono quando perceber qualquer sinal de perigo — e <strong>não realizar outras tarefas</strong> enquanto estiver nessa função.</p>
+      <ul>
+        <li><strong>33.3.4.1</strong> — o vigia <em>pode</em> acompanhar mais de um espaço confinado, desde que atendidas as condições das alíneas a a f, que incluem estar junto ou próximo às entradas e manter todos os espaços no seu campo visual.</li>
+        <li><strong>33.3.4.1.1</strong> — havendo vigilância eletrônica, duas dessas condições podem ser dispensadas.</li>
+        <li><strong>33.3.4.6</strong> — o supervisor de entrada pode desempenhar a função de vigia, já que o conteúdo da capacitação do vigia está contido na dele.</li>
+      </ul>
+
+      <div class="card alert">
+        <strong>"Vigia" não é alguém parado olhando.</strong> É quem mantém a contagem de pessoas, o contato e o acionamento do resgate. Vigia que atende telefone, assina nota, busca ferramenta ou cobre outro serviço deixou de ser vigia — e nesse intervalo a entrada ficou sem a única barreira que funciona depois que algo dá errado lá dentro.
+      </div>
+
+      <h3>Contratante e contratada (33.4.3)</h3>
+      <ul>
+        <li>Há obrigações próprias para a contratante e para a contratada em trabalhos realizados por prestadores de serviço.</li>
+        <li><strong>33.4.3.1</strong> — a contratada deve cumprir a norma <strong>mesmo quando a contratante não tiver essa obrigação</strong>. Ou seja: a prestadora não se escora na ausência de exigência do cliente.</li>
+        <li>Na prática de facilities e manutenção predial, isso significa levar o seu próprio responsável técnico, o seu procedimento, o seu detector e o seu plano de resgate — e exigir do cliente o cadastro do espaço e o bloqueio das energias que são dele.</li>
+      </ul>
+
+      <div class="match-exercise" data-pairs='[["Emitir e encerrar a PET","Supervisor de entrada"],["Permanecer fora e acionar o resgate","Vigia"],["Cadastrar os espacos e elaborar o plano de resgate","Responsavel tecnico"],["Executar o servico seguindo a PET","Trabalhador autorizado"]]'>
+        <h4>Exercício — quem faz o quê</h4>
+        <p class="match-hint">Clique em uma atribuição à esquerda e depois na função correspondente à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A equipe tem supervisor de entrada e dois trabalhadores autorizados, mas ninguém de vigia. Pode entrar?</strong><br>
+          Não. A ausência de vigia é uma das proibições expressas do item 33.7.1. O supervisor pode acumular a função de vigia, desde que isso esteja previsto e ele fique fora, dedicado a ela — o que significa que não poderá se ausentar para outras tarefas.</p>
+          <p><strong>2. Um vigia pode cuidar de três bocas de visita ao mesmo tempo?</strong><br>
+          Pode, se atendidas as condições do item 33.3.4.1 — entre elas permanecer junto ou próximo às entradas e manter todos os espaços no campo visual. Com vigilância eletrônica, parte dessas condições pode ser dispensada. Fora dessas condições, não.</p>
+          <p><strong>3. O cliente diz que naquele tanque "nunca precisou de PET". E agora?</strong><br>
+          A contratada cumpre a NR-33 mesmo assim (33.4.3.1). A prática do cliente não revoga a norma, e quem responde pelo trabalhador que entra é quem o empregou.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 3 -->
+    <section class="module" data-mod="3">
+      <div class="m-eyebrow"><span class="code">33.6</span> Capacitação <span class="duration">35 min</span></div>
+      <h2 class="m-title">Capacitação, autorização e aptidão</h2>
+      <p class="lede">A NR-33 tem uma exigência de capacitação que quase nenhuma outra norma tem: <strong>metade da carga horária precisa ser prática</strong>. E o certificado precisa dizer em que tipo de espaço o trabalhador foi capacitado.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — A norma do zero</div>
+        <div class="video-frame"><iframe src="https://www.youtube.com/embed/ZhcF2G9scUg" title="NR-33 do zero" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Marcio Guadalupe - Segurança do Trabalho" · material complementar.</div>
+      </div>
+
+      <h3>Cargas horárias (Anexo III)</h3>
+      <table>
+        <tr><th>Público</th><th>Inicial</th><th>Periódica</th><th>Eventual</th></tr>
+        <tr><td>Supervisor de entrada</td><td>40 h</td><td>8 h, anual</td><td>Conforme NR-01 ou desvios nos procedimentos</td></tr>
+        <tr><td><strong>Vigia e trabalhador autorizado</strong></td><td><strong>16 h</strong></td><td><strong>8 h, anual</strong></td><td>Conforme NR-01 ou desvios</td></tr>
+        <tr><td>Equipe de emergência e salvamento</td><td>24 h ou 32 h, conforme o plano e o nível do resgatista</td><td>24 h ou 32 h, bianual</td><td>Conforme NR-01, desvios no resgate ou simulados</td></tr>
+      </table>
+
+      <div class="card alert">
+        <strong>Anexo III, item 1.2 — a parte prática deve ser de no mínimo 50% da carga horária.</strong> Para este curso de 16 h, isso significa <strong>8 h de teoria</strong> e <strong>8 h de prática</strong>. Esta plataforma cobre a metade teórica; a parte prática é presencial, com equipamentos que simulem situações reais (Anexo III, item 2.2), e precisa ser registrada à parte.
+      </div>
+
+      <h3>Requisitos da capacitação (33.6)</h3>
+      <ul>
+        <li>A capacitação segue as diretrizes gerais da <strong>NR-01</strong>, com avaliação de aprendizagem.</li>
+        <li>Os <strong>instrutores</strong> devem ter proficiência comprovada no assunto.</li>
+        <li>O <strong>certificado</strong> deve registrar o <strong>tipo de espaço confinado</strong> e as atividades desenvolvidas, com a <strong>anuência do responsável técnico</strong> da NR-33.</li>
+      </ul>
+      <div class="card note">
+        Esse detalhe do certificado derruba muita documentação em auditoria. Certificado genérico de "NR-33 — 16 horas", sem dizer em que tipo de espaço e sem a anuência do responsável técnico, não atende ao que a norma pede. Quem foi capacitado para reservatório de água não está automaticamente capacitado para tanque de combustível.
+      </div>
+
+      <h3>Aptidão (33.5.19)</h3>
+      <ul>
+        <li><strong>33.5.19.1</strong> — a avaliação de saúde deve considerar as condições <strong>físicas e mentais</strong>, incluindo os <strong>riscos psicossociais</strong>, para o trabalho em espaço confinado.</li>
+        <li><strong>33.5.19.2</strong> — a aptidão deve estar registrada no <strong>ASO</strong>, nos termos da NR-07.</li>
+      </ul>
+      <p>Na prática, o exame precisa olhar claustrofobia, crises de pânico, uso de medicamentos que causem sonolência, condições que possam gerar mal súbito e capacidade de usar proteção respiratória. Um ASO que só diz "apto" sem mencionar espaço confinado não sustenta a autorização.</p>
+
+      <h3>O que compõe o dossiê de cada trabalhador</h3>
+      <ol class="steps">
+        <li>Certificado da capacitação inicial, com tipo de espaço, carga horária e anuência do responsável técnico.</li>
+        <li>Registro da parte prática, com descrição dos exercícios e dos equipamentos usados.</li>
+        <li>Avaliação de aprendizagem com resultado individual.</li>
+        <li>ASO com aptidão expressa para espaço confinado.</li>
+        <li>Comprovante das capacitações periódicas anuais de 8 h.</li>
+        <li>Designação formal da função exercida: vigia, trabalhador autorizado ou supervisor.</li>
+      </ol>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. Um curso de 16 h inteiramente em sala atende a NR-33?</strong><br>
+          Não. O Anexo III exige no mínimo 50% de carga prática, com equipamentos que simulem situações reais. Um curso 100% teórico, presencial ou não, descumpre esse requisito.</p>
+          <p><strong>2. Qual a periodicidade da reciclagem do vigia e do trabalhador autorizado?</strong><br>
+          Anual, com 8 horas. Diferente da NR-35, que é bienal.</p>
+          <p><strong>3. O que o certificado precisa trazer, além do básico?</strong><br>
+          O tipo de espaço confinado e as atividades desenvolvidas, com a anuência do responsável técnico da NR-33.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 4 -->
+    <section class="module" data-mod="4">
+      <div class="m-eyebrow"><span class="code">33.4</span> Gerenciamento de riscos <span class="duration">45 min</span></div>
+      <h2 class="m-title">Cadastro dos espaços e gestão do risco</h2>
+      <p class="lede">A NR-33 começa antes da entrada: a empresa precisa saber <strong>quantos e quais</strong> espaços confinados existem, onde estão e o que há dentro deles. Sem cadastro, todo o resto é improviso documentado.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Introdução à norma e gestão do risco</div>
+        <div class="video-frame"><iframe id="ytf-4" src="https://www.youtube.com/embed/0850LJAhH88?enablejsapi=1" title="NR 33: segurança em espaços confinados" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Marcio Guadalupe - Segurança do Trabalho" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>Levantamento preliminar de perigos (33.4.1)</h3>
+      <p>O levantamento deve considerar, entre outras situações, a existência ou construção de <strong>novos espaços</strong>, a <strong>alteração de geometria ou dos meios de acesso</strong> dos existentes e a <strong>mudança de uso</strong> que altere o risco (33.4.1.1).</p>
+      <p>Quando o trabalho <strong>não puder ser evitado</strong>, o item 33.4.1.2 manda considerar os perigos das <strong>adjacências</strong>, a possibilidade de <strong>formação de atmosferas perigosas</strong>, as <strong>energias perigosas</strong> e as demais medidas previstas na norma.</p>
+
+      <div class="card note">
+        <strong>A primeira pergunta é sempre a mesma: dá para não entrar?</strong> Limpeza por sistema externo, inspeção por câmera ou drone, manutenção com o equipamento desmontado e levado à oficina, amostragem por ponto externo. A entrada que não acontece é a única 100% segura — e essa avaliação precisa estar documentada, não ser apenas uma boa intenção.
+      </div>
+
+      <h3>Cadastro dos espaços confinados (33.4.2)</h3>
+      <table>
+        <tr><th>Informação</th><th>Para que serve na hora da entrada</th></tr>
+        <tr><td>Identificação do espaço</td><td>Vincula a PET ao local certo; evita bloquear o tanque errado</td></tr>
+        <tr><td>Volume</td><td>Dimensiona a ventilação e o tempo de purga</td></tr>
+        <tr><td>Aberturas</td><td>Define ponto de insuflação, exaustão e via de resgate</td></tr>
+        <tr><td>Acessos</td><td>Diz se cabe resgate vertical, se precisa tripé, se há passagem para maca</td></tr>
+        <tr><td>Condição (ativo ou inativo)</td><td>Indica se há produto, processo ou linha viva ligada ao espaço</td></tr>
+        <tr><td>Croqui, com previsão de bloqueios e raquetes</td><td>É o mapa do bloqueio de energias — mostra onde raquetear e travar</td></tr>
+        <tr><td>Produtos armazenados</td><td>Antecipa o contaminante, o EPR necessário e o risco de explosão</td></tr>
+      </table>
+
+      <h3>Quando os procedimentos precisam ser revistos (33.5.3)</h3>
+      <ul>
+        <li>alteração do nível de risco previsto na NR-01;</li>
+        <li><strong>entrada não autorizada</strong> — o quase-acidente mais ignorado do setor;</li>
+        <li>acidente;</li>
+        <li>condição não prevista durante a entrada.</li>
+      </ul>
+
+      <h3>Sinalização (33.5.13)</h3>
+      <ul>
+        <li><strong>33.5.13.1</strong> — sinalização <strong>permanente</strong> junto à entrada, conforme o <strong>Anexo I</strong>.</li>
+        <li>Sinalização complementar quando necessário, e <strong>indelével</strong> em locais agressivos.</li>
+        <li>Sinalização <strong>provisória</strong> durante as operações, delimitando a área de trabalho.</li>
+      </ul>
+
+      <h3>Documentação a manter no estabelecimento (33.5.21)</h3>
+      <ul>
+        <li>cadastro dos espaços confinados;</li>
+        <li>PETs emitidas, arquivadas por <strong>5 anos</strong>;</li>
+        <li>inventário de riscos;</li>
+        <li>modelo de PET adotado pela organização;</li>
+        <li>procedimentos de segurança;</li>
+        <li>plano de resgate.</li>
+      </ul>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A empresa tem 40 reservatórios iguais. Precisa cadastrar um por um?</strong><br>
+          Sim. O cadastro é por espaço, porque volume, aberturas, acessos, condição e croqui mudam de um para outro — e é do croqui que sai o plano de bloqueio. O que pode ser padronizado é o procedimento, não o cadastro.</p>
+          <p><strong>2. Encontraram um trabalhador que entrou sem PET, e nada aconteceu. Fim do assunto?</strong><br>
+          Não. Entrada não autorizada é uma das hipóteses que obrigam a revisão dos procedimentos (33.5.3). É um alerta gratuito: investigar por que foi possível entrar e corrigir antes que a próxima vez tenha consequência.</p>
+          <p><strong>3. Qual item do cadastro mais ajuda o resgate?</strong><br>
+          Os acessos e o croqui. Eles dizem se o resgate vertical é viável, se há espaço para maca e onde ficam os bloqueios — informação que ninguém consegue levantar com calma durante uma emergência.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 5 -->
+    <section class="module" data-mod="5">
+      <div class="m-eyebrow"><span class="code">33.5.5</span> PET <span class="duration">50 min</span></div>
+      <h2 class="m-title">Permissão de Entrada e Trabalho</h2>
+      <p class="lede">A regra do item <strong>33.5.5</strong> não tem exceção: <strong>toda e qualquer entrada</strong> e trabalho em espaço confinado deve ser precedida da emissão da PET. Não existe entrada rápida, entrada só para olhar, entrada de cinco minutos.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — PET e caracterização do espaço</div>
+        <div class="video-frame"><iframe id="ytf-5" src="https://www.youtube.com/embed/eOkufg0CiMo?enablejsapi=1" title="Aula NR 33 - espaço confinado e PET" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Renata Sonnesso Rivadam Ferreira" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>Campos obrigatórios (33.5.6)</h3>
+      <p>A PET adotada pela organização deve conter, no mínimo: identificação do espaço a ser adentrado, objetivo da entrada, perigos e medidas de controle, <strong>avaliação quantitativa da atmosfera</strong>, relação nominal das pessoas envolvidas, horários e as assinaturas correspondentes.</p>
+
+      <h3>Formato, rastreabilidade e arquivo</h3>
+      <ul>
+        <li><strong>33.5.7</strong> — a PET pode ser em meio <strong>físico, em duas vias</strong>, ou <strong>digital</strong>, com requisitos de acesso e certificação da assinatura.</li>
+        <li><strong>33.5.8</strong> — as PETs devem ser <strong>rastreáveis</strong>.</li>
+        <li><strong>33.5.9</strong> — devem ser <strong>arquivadas por 5 anos</strong> e, conforme o item 33.5.9.1, disponibilizadas aos trabalhadores quando solicitadas.</li>
+      </ul>
+
+      <h3>Validade e prorrogação (33.5.12)</h3>
+      <table>
+        <tr><th>Regra</th><th>Detalhe</th></tr>
+        <tr><td>Validade</td><td>Limitada a <strong>uma jornada de trabalho</strong></td></tr>
+        <tr><td>Prorrogação</td><td>Admitida nas condições previstas no item 33.5.12.1</td></tr>
+        <tr><td>Limite absoluto</td><td>A validade total, <strong>incluindo as prorrogações, não pode exceder 24 horas</strong> (33.5.12.1.1)</td></tr>
+      </table>
+
+      <h3>Encerramento (33.5.11)</h3>
+      <p>A PET é encerrada nas hipóteses previstas na norma — entre elas a conclusão do serviço, o término da validade e a ocorrência de condição não prevista. Encerrar significa: todos fora, contagem conferida, espaço fechado e sinalizado, bloqueios tratados conforme o procedimento e documento arquivado.</p>
+
+      <div class="card alert">
+        <strong>Anexo II — o detalhe que o supervisor não pode ignorar.</strong> O modelo informativo de PET deixa expresso que o supervisor de entrada <strong>não deve permitir a entrada se algum campo não estiver preenchido</strong>. Campo em branco não é formalidade pendente: é informação que ninguém verificou. E traz os parâmetros de referência do teste após a ventilação — <strong>inflamáveis abaixo de 10% do LIE</strong> e <strong>oxigênio entre 19,5% e 23%</strong>.
+      </div>
+
+      <h3>O que invalida uma PET</h3>
+      <ul>
+        <li>Emitida por quem não é supervisor de entrada capacitado e designado.</li>
+        <li>Sem avaliação quantitativa da atmosfera, ou com valores preenchidos antes da medição.</li>
+        <li>Sem a relação nominal de quem entra — contagem de pessoas é a base do resgate.</li>
+        <li>Com campos em branco, ainda que considerados "não aplicáveis", sem a devida marcação.</li>
+        <li>Reaproveitada de outro turno, outro espaço ou outra equipe.</li>
+        <li>Sem encerramento, deixando em aberto se todos saíram.</li>
+      </ul>
+
+      <div class="card note">
+        <strong>Caso de campo.</strong> Equipe de manutenção predial vai trocar a boia de um reservatório. O encarregado diz que é "coisa de dez minutos" e que a PET do mês passado "ainda serve, é o mesmo tanque". O técnico aceita, o trabalhador entra e passa mal com o cheiro de produto de limpeza acumulado.<br><br>
+        <strong>Quantos erros?</strong> Pelo menos quatro: PET reaproveitada, validade vencida, ausência de avaliação atmosférica imediatamente antes da entrada e desconsideração de um contaminante novo introduzido depois da última avaliação. O tempo curto do serviço não reduz nenhum desses riscos — só reduz a chance de alguém perceber a tempo.
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A equipe saiu para o almoço e voltou. Precisa de PET nova?</strong><br>
+          Depende do procedimento e das condições: a saída de todos normalmente encerra a etapa, e o retorno exige nova avaliação atmosférica e revalidação conforme as regras de prorrogação. O que não se admite é voltar e descer sem medir de novo.</p>
+          <p><strong>2. O serviço vai durar três dias. Dá para emitir uma PET só?</strong><br>
+          Não. A validade é limitada a uma jornada, e mesmo com prorrogações o total não pode passar de 24 horas (33.5.12.1.1). São emissões novas a cada jornada.</p>
+          <p><strong>3. Por quanto tempo as PETs ficam arquivadas e quem pode vê-las?</strong><br>
+          Cinco anos, de forma rastreável, e devem ser disponibilizadas aos trabalhadores quando solicitadas (33.5.9 e 33.5.9.1).</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 6 -->
+    <section class="module" data-mod="6">
+      <div class="m-eyebrow"><span class="code">33.5.14</span> Energias perigosas <span class="duration">40 min</span></div>
+      <h2 class="m-title">Bloqueio, raqueteamento e isolamento</h2>
+      <p class="lede">Atmosfera é o risco mais lembrado do espaço confinado. Energia perigosa é o que mata quem já estava lá dentro achando que tudo estava resolvido: o agitador que parte, a válvula que abre, a linha que pressuriza.</p>
+
+      <h3>A sequência de bloqueio (33.5.14.1)</h3>
+      <p>A norma descreve uma sequência de <strong>13 etapas</strong>, da preparação até a liberação para retomada da operação. A lógica, em blocos:</p>
+      <ol class="steps">
+        <li><strong>Preparar</strong> — identificar todas as fontes de energia que chegam ao espaço: elétrica, mecânica, hidráulica, pneumática, térmica, química, gravitacional e energia armazenada.</li>
+        <li><strong>Comunicar</strong> — avisar operação e todos os afetados antes de desligar.</li>
+        <li><strong>Desligar e isolar</strong> — parar pelo dispositivo de corte adequado, nunca apenas pelo circuito de controle.</li>
+        <li><strong>Bloquear e etiquetar</strong> — dispositivo de bloqueio individual, com etiqueta identificando quem bloqueou.</li>
+        <li><strong>Dissipar a energia residual</strong> — despressurizar, drenar, resfriar, descarregar capacitores, calçar partes que possam se mover por gravidade.</li>
+        <li><strong>Raquetear</strong> — instalar raquetes ou flanges cegas nas linhas que chegam ao espaço, conforme o croqui do cadastro.</li>
+        <li><strong>Testar</strong> — tentar acionar com o comando, confirmar que não parte, confirmar pressão zero.</li>
+        <li><strong>Liberar</strong> — só então autorizar a entrada pela PET.</li>
+        <li><strong>Retomar</strong> — ao fim, remover bloqueios na ordem inversa, com todos fora e conferidos.</li>
+      </ol>
+
+      <h3>Requisitos do bloqueio (33.5.14.2 a 33.5.14.4)</h3>
+      <ul>
+        <li><strong>33.5.14.2</strong> — o bloqueio exige <strong>dispositivo individual</strong> e <strong>etiquetas</strong> de identificação.</li>
+        <li><strong>33.5.14.3</strong> — é <strong>proibido</strong> que pessoas não autorizadas removam bloqueios.</li>
+        <li><strong>33.5.14.4</strong> — é <strong>proibido</strong> neutralizar a energia apenas pelo <strong>circuito de controle</strong>.</li>
+      </ul>
+
+      <div class="card alert">
+        <strong>Cadeado individual, e não cadeado do setor.</strong> Cada pessoa que entra coloca o seu próprio dispositivo. Enquanto houver um cadeado na garra, a energia não volta — e o dono daquele cadeado é exatamente quem ainda pode estar lá dentro. Chave reserva guardada "para emergência" na gaveta do supervisor anula todo o sistema.
+      </div>
+
+      <div class="card note">
+        <strong>Por que o circuito de controle não serve.</strong> Desligar pelo botão, pelo CLP ou pelo remoto não isola fisicamente a energia: uma falha de comando, um religamento automático, uma manobra remota de outro operador e o equipamento parte. O bloqueio precisa ser no dispositivo de corte, travado fisicamente.
+      </div>
+
+      <h3>Raquetes e flanges cegas</h3>
+      <p>Válvula fechada não é bloqueio: ela pode vazar, pode ser aberta por engano e pode ter sido fechada na posição errada. Para linhas que chegam ao espaço confinado, a barreira confiável é a <strong>raquete</strong> ou o <strong>flange cego</strong>, instalado no ponto previsto no croqui do cadastro, com registro de instalação e de retirada.</p>
+
+      <div class="match-exercise" data-pairs='[["Agitador interno parte durante o servico","Energia mecanica"],["Linha pressuriza e injeta produto no tanque","Energia hidraulica ou pneumatica"],["Capacitor mantem carga apos o desligamento","Energia armazenada"],["Material escorrega de um nivel superior","Energia gravitacional"]]'>
+        <h4>Exercício — identifique a energia perigosa</h4>
+        <p class="match-hint">Clique na situação à esquerda e depois no tipo de energia à direita.</p>
+        <div class="match-cols">
+          <div class="match-col match-terms"></div>
+          <div class="match-col match-defs"></div>
+        </div>
+        <p class="match-feedback"></p>
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. A bomba foi desligada no painel e o disjuntor está desarmado. Está bloqueado?</strong><br>
+          Não. Desarmar não é bloquear: falta o dispositivo de bloqueio individual com etiqueta, a dissipação da energia residual e o teste de confirmação. Disjuntor desarmado pode ser rearmado por qualquer um que passe pelo painel.</p>
+          <p><strong>2. O serviço acabou e um cadeado continua na garra, mas ninguém sabe de quem é. Pode cortar?</strong><br>
+          Não por conta própria. O cadeado que resta significa que alguém pode não ter saído. A conduta é parar, fazer a contagem de pessoas, localizar o responsável e seguir o procedimento formal de remoção excepcional, com autorização e registro.</p>
+          <p><strong>3. Por que raquetear se a válvula já está fechada e travada?</strong><br>
+          Porque a válvula é um elemento de operação, sujeito a vazamento por assento, e não uma barreira de isolamento. A raquete ou o flange cego interrompe fisicamente a linha.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 7 -->
+    <section class="module" data-mod="7">
+      <div class="m-eyebrow"><span class="code">33.5.15</span> Atmosfera <span class="duration">50 min</span></div>
+      <h2 class="m-title">Avaliação e monitoramento atmosférico</h2>
+      <p class="lede">É aqui que a norma fica mais técnica — e com razão: a medição é o que transforma "acho que está bom" em autorização para alguém descer.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Uso do detector de gases</div>
+        <div class="video-frame"><iframe id="ytf-7" src="https://www.youtube.com/embed/JmZtiPSLJAA?enablejsapi=1" title="Espaço confinado NR-33: uso do detector de gases" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "PerCon" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>A avaliação inicial (33.5.15.1)</h3>
+      <p>Deve ser realizada com o supervisor de entrada, <strong>de fora do espaço confinado</strong> e <strong>imediatamente antes da entrada</strong>. Medir de fora não é detalhe: é o que impede que a primeira pessoa a verificar o ar seja justamente a primeira vítima.</p>
+
+      <h3>Os parâmetros de oxigênio (33.5.15.2)</h3>
+      <div class="calc">
+OXIGENIO IDEAL ................................. 20,9 %
+
+FAIXA ACEITAVEL ................................ 19,5 %  a  23 %
+   -> somente se a causa da variacao for
+      CONHECIDA e CONTROLADA
+
+ANEXO II - teste apos ventilacao
+   Inflamaveis .................... abaixo de 10 % do LIE
+   Oxigenio ....................... entre 19,5 % e 23 %
+      </div>
+      <div class="card alert">
+        Repare na condição do item 33.5.15.2: estar dentro da faixa <strong>não basta</strong>. Se o oxigênio marca 19,8%, alguém precisa saber <em>por que</em> não está em 20,9% e ter esse motivo sob controle. Variação sem explicação é alerta, não aprovação.
+      </div>
+
+      <h3>Entendendo o LIE</h3>
+      <p>LIE é o Limite Inferior de Explosividade: a menor concentração do gás no ar capaz de propagar chama. O detector não mostra a concentração absoluta, e sim o <strong>percentual do LIE</strong>. O parâmetro de 10% do LIE existe porque uma margem de 90% é o mínimo razoável diante de erro de leitura, bolsão não medido e liberação súbita de vapor.</p>
+      <div class="calc">
+Exemplo com metano (LIE aproximado de 5 % em volume no ar)
+
+   100 % do LIE  =  5,00 % de metano no ar   -> mistura explosiva
+    10 % do LIE  =  0,50 % de metano no ar   -> limite do Anexo II
+
+Ou seja: o detector apitando "10 % LIE" significa que ja existe
+meio por cento de metano no ambiente, um decimo do necessario
+para explodir. Nao e uma leitura tranquila: e um limite de parada.
+      </div>
+
+      <h3>Monitoramento contínuo (33.5.15.3)</h3>
+      <p>O monitoramento deve ser <strong>contínuo durante toda a permanência</strong> dos trabalhadores, de forma <strong>remota ou presencial</strong>, conforme previsto no procedimento de segurança. Medir só na entrada autoriza o início; é o monitoramento contínuo que mantém a autorização de pé.</p>
+
+      <h3>Requisitos dos equipamentos (33.5.15.4)</h3>
+      <ul>
+        <li>leitura <strong>instantânea</strong> e direta;</li>
+        <li><strong>segurança intrínseca</strong>, para não ser fonte de ignição em atmosfera inflamável;</li>
+        <li><strong>alarmes</strong> audíveis e visíveis;</li>
+        <li><strong>manual em português</strong>;</li>
+        <li>demais condições previstas nas alíneas do item.</li>
+      </ul>
+
+      <h3>Rotina diária do detector</h3>
+      <table>
+        <tr><th>Procedimento</th><th>Quando</th><th>Base</th></tr>
+        <tr><td><strong>Auto-zero</strong> (ajuste de ar fresco)</td><td>Diariamente, em ar limpo, fora do espaço</td><td>33.5.15.5</td></tr>
+        <tr><td><strong>Teste de resposta</strong> (bump test)</td><td>Diariamente, com gás padrão, antes do uso</td><td>33.5.15.5</td></tr>
+        <tr><td>Ajuste por trabalhador capacitado</td><td>Quando houver falha no teste</td><td>33.5.15.5.1</td></tr>
+        <tr><td><strong>Calibração</strong></td><td>Conforme o fabricante, por <strong>laboratório acreditado pelo Inmetro</strong></td><td>33.5.15.6</td></tr>
+      </table>
+      <div class="card note">
+        Teste de resposta e calibração não são a mesma coisa. O teste diário só confirma que o sensor <em>reage</em> ao gás e que o alarme dispara. A calibração ajusta a exatidão da leitura e tem de ser feita por laboratório acreditado. Detector que nunca passou por nenhum dos dois é um aparelho que mostra números, não um instrumento de segurança.
+      </div>
+
+      <h3>Como medir direito</h3>
+      <ol class="steps">
+        <li>Faça o auto-zero em ar limpo e o teste de resposta antes de sair para o campo.</li>
+        <li>Meça <strong>de fora</strong>, com a bomba e a mangueira de amostragem, nunca entrando para medir.</li>
+        <li>Respeite o <strong>tempo de resposta</strong>: a amostra leva segundos para percorrer a mangueira e sensibilizar o sensor. Consulte o manual e aguarde a estabilização antes de ler.</li>
+        <li>Meça em <strong>níveis diferentes</strong> — topo, meio e fundo. Gases mais densos que o ar, como o H2S, acumulam no fundo; mais leves, como o metano, sobem.</li>
+        <li>Siga a ordem: <strong>oxigênio primeiro</strong>, depois inflamáveis, depois tóxicos. O sensor catalítico de inflamáveis depende de oxigênio para funcionar; com atmosfera pobre, sua leitura perde confiabilidade.</li>
+        <li>Registre os valores na PET, com horário. Valor sem horário não comprova que a medição foi imediatamente antes da entrada.</li>
+        <li>Mantenha o monitoramento durante toda a permanência, com alarme audível para quem está dentro e para o vigia.</li>
+      </ol>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 4 perguntas, uma com cálculo</summary>
+        <div class="ans">
+          <p><strong>1. O detector marca 19,6% de oxigênio. Está dentro da faixa, pode entrar?</strong><br>
+          Só se a causa da variação for conhecida e controlada, como exige o item 33.5.15.2. Sem saber por que falta oxigênio, não se entra: aquele 1,3% a menos veio de algum lugar, e esse "algum lugar" pode continuar consumindo oxigênio depois que alguém descer.</p>
+          <p><strong>2. Com metano, quanto representa 10% do LIE em volume?</strong><br>
+          Cerca de 0,5% de metano no ar, já que o LIE do metano fica em torno de 5% em volume. É o limite de referência do Anexo II para o teste após a ventilação.</p>
+          <p><strong>3. Por que medir em vários níveis?</strong><br>
+          Porque a atmosfera se estratifica. Medir só na boca de visita pode mostrar ar limpo enquanto o fundo está com H2S acumulado ou com deficiência de oxigênio.</p>
+          <p><strong>4. Fizemos a calibração anual. Precisa do teste diário?</strong><br>
+          Precisa. São coisas diferentes: o auto-zero e o teste de resposta são diários (33.5.15.5); a calibração segue o fabricante e vai a laboratório acreditado pelo Inmetro (33.5.15.6).</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 8 -->
+    <section class="module" data-mod="8">
+      <div class="m-eyebrow"><span class="code">33.5.16</span> Ventilação <span class="duration">35 min</span></div>
+      <h2 class="m-title">Ventilação, purga, lavagem e inertização</h2>
+      <p class="lede">Medir diz como está o ar. Ventilar é o que muda o ar. E uma das proibições mais importantes da norma inteira está justamente aqui.</p>
+
+      <h3>O que a norma determina (33.5.16)</h3>
+      <ul>
+        <li><strong>33.5.16.1</strong> — antes da atividade, o espaço deve ser <strong>ventilado, purgado, lavado ou inertizado</strong>, conforme o caso.</li>
+        <li><strong>33.5.16.2</strong> — as condições térmicas devem observar o disposto na <strong>NR-09 (Anexo III)</strong>.</li>
+        <li><strong>33.5.16.3</strong> — é <strong>proibida a ventilação com oxigênio puro</strong>.</li>
+      </ul>
+
+      <div class="card alert">
+        <strong>Oxigênio puro nunca.</strong> Parece lógico "melhorar o ar" com oxigênio, e é exatamente por isso que o erro acontece. Em atmosfera enriquecida, materiais que normalmente queimam devagar passam a arder violentamente, e roupa, cabelo e graxa impregnados de oxigênio pegam fogo com uma faísca mínima. Enriquecimento de oxigênio é, por definição da própria norma, atmosfera perigosa.
+      </div>
+
+      <h3>Qual técnica para qual situação</h3>
+      <table>
+        <tr><th>Técnica</th><th>O que faz</th><th>Quando se usa</th></tr>
+        <tr><td><strong>Ventilação</strong></td><td>Troca o ar do interior por ar limpo</td><td>Regra geral, antes e durante a permanência</td></tr>
+        <tr><td><strong>Purga</strong></td><td>Desloca a atmosfera interna com gás ou vapor</td><td>Remoção de vapores de produto antes da ventilação com ar</td></tr>
+        <tr><td><strong>Lavagem</strong></td><td>Remove resíduo aderido às paredes e ao fundo</td><td>Tanques com borra, produto seco ou resíduo químico</td></tr>
+        <tr><td><strong>Inertização</strong></td><td>Substitui a atmosfera por gás inerte para eliminar o risco de explosão</td><td>Situações específicas — e atenção: o espaço inertizado é letal, exige ar respirável assistido</td></tr>
+      </table>
+
+      <h3>Ventilação que funciona de verdade</h3>
+      <ul>
+        <li><strong>Posicione a captação do ar limpo longe de fontes de contaminação</strong> — escapamento de gerador, saída de exaustor, tráfego de veículos. Já houve morte por insuflar monóxido de carbono dentro do espaço.</li>
+        <li><strong>Leve o duto até o fundo</strong>. Ventilar só a boca de visita troca o ar da parte de cima e deixa o bolsão perigoso exatamente onde o trabalhador vai ficar.</li>
+        <li><strong>Garanta saída para o ar</strong>: sem uma segunda abertura ou sem retorno, o ar insuflado não circula.</li>
+        <li><strong>Respeite o tempo</strong>: o tempo de ventilação depende do volume do espaço e da vazão do ventilador — por isso o volume está no cadastro (33.4.2).</li>
+        <li><strong>Meça depois de ventilar</strong>, e continue medindo. Ventilação não substitui medição: ela muda a condição que a medição vai comprovar.</li>
+        <li><strong>Mantenha a ventilação durante a permanência</strong> sempre que o procedimento previr, principalmente com solda, pintura ou solvente lá dentro.</li>
+      </ul>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. O oxigênio deu 19,2%. Dá para abrir um cilindro de O2 lá dentro por alguns segundos?</strong><br>
+          Nunca. A ventilação com oxigênio puro é proibida pelo item 33.5.16.3 e cria atmosfera enriquecida, que é um risco de incêndio gravíssimo. A correção se faz com ventilação de ar limpo e nova medição.</p>
+          <p><strong>2. Ventilamos por 20 minutos. Já pode entrar?</strong><br>
+          Só depois de medir. O tempo de ventilação é estimativa baseada em volume e vazão; a autorização vem do resultado da medição feita de fora, imediatamente antes da entrada.</p>
+          <p><strong>3. Onde posicionar a entrada de ar do ventilador?</strong><br>
+          Em local com ar comprovadamente limpo, longe de escapamentos, geradores, exaustão de outros serviços e tráfego. O ar que entra no duto é o ar que o trabalhador vai respirar.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 9 -->
+    <section class="module" data-mod="9">
+      <div class="m-eyebrow"><span class="code">33.5.17</span> Equipamentos <span class="duration">40 min</span></div>
+      <h2 class="m-title">Proteção respiratória e equipamentos de entrada</h2>
+      <p class="lede">Nesta parte mora o erro mais fatal do espaço confinado: usar máscara com filtro onde falta oxigênio. Filtro purifica o ar que existe — ele não cria ar.</p>
+
+      <h3>Proteção respiratória</h3>
+      <ul>
+        <li><strong>33.5.4</strong> — a organização deve ter procedimento para <strong>seleção e uso de respiradores</strong>.</li>
+        <li><strong>33.5.17.2</strong> — em atmosfera <strong>IPVS</strong> (imediatamente perigosa à vida e à saúde), o equipamento exigido é <strong>máscara autônoma de pressão positiva</strong> ou <strong>linha de ar comprimido com cilindro auxiliar de escape</strong>.</li>
+      </ul>
+      <table>
+        <tr><th>Equipamento</th><th>Fornece ar?</th><th>Serve para deficiência de O2?</th></tr>
+        <tr><td>Respirador com filtro químico ou mecânico</td><td>Não — apenas purifica o ar ambiente</td><td><strong>Não. Nunca.</strong></td></tr>
+        <tr><td>Linha de ar comprimido com cilindro de escape</td><td>Sim, de fonte externa</td><td>Sim, conforme o procedimento</td></tr>
+        <tr><td>Máscara autônoma de pressão positiva</td><td>Sim, cilindro no próprio usuário</td><td>Sim — padrão para IPVS e resgate</td></tr>
+      </table>
+      <div class="card alert">
+        <strong>O filtro não cria oxigênio.</strong> Entrar em atmosfera com deficiência de O2 usando respirador com filtro é o mesmo que entrar sem nada — com o agravante de a pessoa se sentir protegida. Em atmosfera IPVS, só ar assistido: autônoma de pressão positiva ou linha de ar com cilindro de escape.
+      </div>
+
+      <h3>Equipamentos elétricos e ferramentas</h3>
+      <ul>
+        <li><strong>33.5.17.1</strong> — equipamentos elétricos em <strong>áreas classificadas</strong> devem ter certificação ou documento emitido no âmbito do <strong>Sinmetro</strong>.</li>
+        <li>Iluminação apropriada, em baixa tensão e com proteção adequada ao ambiente.</li>
+        <li>Ferramentas antifaiscantes onde houver risco de atmosfera inflamável.</li>
+        <li>Equipamentos de comunicação que funcionem dentro do espaço — rádio que não alcança o fundo do tanque não serve ao vigia.</li>
+      </ul>
+
+      <h3>Acesso e movimentação de pessoas</h3>
+      <ul>
+        <li><strong>Tripé com guincho e trava-queda</strong> para acessos verticais — é o que permite o resgate sem entrada.</li>
+        <li><strong>Cinturão tipo paraquedista</strong> com conexão adequada: quando há risco de queda somado, aplicam-se também os requisitos da <strong>NR-35</strong>.</li>
+        <li>Escadas e plataformas internas conferidas antes do uso: corrosão interna é regra, não exceção.</li>
+        <li>Iluminação de emergência e lanterna individual.</li>
+      </ul>
+
+      <div class="card note">
+        <strong>NR-33 e NR-35 se somam, não se substituem.</strong> Descer num reservatório por escada vertical de 6 m é trabalho em altura <em>e</em> espaço confinado: exige PET, vigia, medição e monitoramento pela NR-33, e análise de risco, ancoragem, sistema de proteção contra quedas e capacitação própria pela NR-35. Duas capacitações, dois conjuntos de exigências, um único serviço.
+      </div>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. O trabalhador vai entrar num tanque com vapor de solvente e oxigênio em 19,0%. Máscara com filtro para vapores orgânicos resolve?</strong><br>
+          Não. Com deficiência de oxigênio, nenhum filtro serve. A situação pede ar assistido — e, antes disso, pede ventilação e nova medição, já que entrar numa atmosfera dessas deveria ser a última alternativa, não a primeira.</p>
+          <p><strong>2. Pode usar a lanterna comum do celular dentro de um tanque que teve combustível?</strong><br>
+          Não. Em área classificada, o equipamento elétrico precisa de certificação no âmbito do Sinmetro (33.5.17.1). Aparelho comum é fonte potencial de ignição.</p>
+          <p><strong>3. Para que serve o tripé na boca do espaço?</strong><br>
+          Para acesso seguro e, principalmente, para o <strong>resgate sem entrada</strong>: o vigia pode içar o trabalhador de fora, sem que ninguém precise descer. É o equipamento que transforma o plano de resgate em algo executável em segundos.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 10 -->
+    <section class="module" data-mod="10">
+      <div class="m-eyebrow"><span class="code">33.5.20</span> Emergência <span class="duration">45 min</span></div>
+      <h2 class="m-title">Plano de resgate e salvamento</h2>
+      <p class="lede">Em espaço confinado, o tempo entre a perda de consciência e a morte costuma ser menor que o tempo de chegada de um socorro externo. Por isso o plano de resgate não é documento de prateleira: é condição para autorizar a entrada.</p>
+
+      <div class="video-wrap">
+        <div class="vid-label">▸ Aula em vídeo — Treinamento de espaços confinados</div>
+        <div class="video-frame"><iframe id="ytf-10" src="https://www.youtube.com/embed/9npi8gV9yNM?enablejsapi=1" title="Treinamento NR-33 espaços confinados" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-src">Canal "Protege - SMS" · material complementar. Em caso de divergência, prevalece o texto oficial da norma.</div>
+      </div>
+
+      <h3>O plano de resgate (33.5.20)</h3>
+      <ul>
+        <li><strong>33.5.20.1</strong> — deve existir plano de resgate, integrado ou não ao plano de emergência da organização.</li>
+        <li><strong>33.5.20.2</strong> — o plano deve conter, entre outros: os <strong>perigos</strong> envolvidos, a <strong>equipe dimensionada</strong>, o <strong>tempo de resposta</strong>, as <strong>técnicas</strong> a serem empregadas e os <strong>simulados</strong>.</li>
+        <li><strong>33.3.6</strong> — compete à equipe de emergência e salvamento manter salvamento e primeiros socorros operantes e <strong>participar do simulado anual</strong>.</li>
+      </ul>
+
+      <h3>A hierarquia do resgate</h3>
+      <table>
+        <tr><th>Ordem</th><th>Modalidade</th><th>Como funciona</th></tr>
+        <tr><td>1ª</td><td><strong>Autossalvamento</strong></td><td>O próprio trabalhador sai ao primeiro alarme. É por isso que o detector tem alarme audível e que o abandono é ordenado cedo.</td></tr>
+        <tr><td>2ª</td><td><strong>Resgate sem entrada</strong></td><td>O vigia iça a vítima de fora, pelo tripé e pelo cinturão já conectado. Rápido e sem expor mais ninguém.</td></tr>
+        <tr><td>3ª</td><td><strong>Resgate com entrada</strong></td><td>Somente pela equipe de emergência, equipada com ar assistido, conforme o plano. É a última opção, nunca a primeira.</td></tr>
+      </table>
+
+      <div class="card alert">
+        <strong>A regra que precisa estar tatuada na equipe: o vigia não entra.</strong> Nem para socorrer, nem para dar uma olhada, nem por um segundo. Se o vigia entra, a entrada fica sem controle, ninguém aciona o resgate e a contagem de pessoas se perde. Socorrer sem equipamento não é coragem — é a forma mais comum de o acidente de uma vítima virar acidente de três.
+      </div>
+
+      <h3>Por que o resgate sem entrada é tão decisivo</h3>
+      <p>Com o trabalhador já conectado ao cabo do tripé antes de descer, o içamento começa no instante em que o vigia percebe o problema. Sem isso, a sequência vira: acionar o resgate, aguardar deslocamento, montar equipamento, equipar o resgatista, descer e só então içar. São minutos — e minutos é exatamente o que falta numa atmosfera deficiente de oxigênio.</p>
+
+      <h3>O simulado</h3>
+      <ol class="steps">
+        <li>Escolha um cenário real da planta, com um espaço do cadastro.</li>
+        <li>Cronometre do acionamento até a vítima fora do espaço.</li>
+        <li>Teste a comunicação, o acesso, o tripé e os equipamentos de fato, não no papel.</li>
+        <li>Registre o tempo medido e compare com o tempo de resposta previsto no plano.</li>
+        <li>Corrija o plano quando o tempo real não fechar com o previsto.</li>
+        <li>Repita ao menos anualmente, conforme o item 33.3.6.</li>
+      </ol>
+
+      <h3>Primeiros socorros no contexto</h3>
+      <p>Após a retirada: afastar a vítima da atmosfera contaminada, avaliar consciência e respiração, acionar o serviço médico e manter monitoramento. Mesmo que a pessoa pareça recuperada, a avaliação médica é obrigatória — algumas exposições têm efeito tardio, e a aparente melhora imediata não significa ausência de dano.</p>
+
+      <details class="check">
+        <summary>Verificação de aprendizagem — 3 perguntas</summary>
+        <div class="ans">
+          <p><strong>1. O plano de resgate diz "acionar o Corpo de Bombeiros". É suficiente?</strong><br>
+          Não por si só. O plano precisa trazer perigos, equipe dimensionada, tempo de resposta, técnicas e simulados (33.5.20.2). Se o tempo de chegada do serviço externo é maior que o tempo que o cenário tolera, o plano precisa prever meios próprios.</p>
+          <p><strong>2. Por que conectar o trabalhador ao tripé antes de ele descer?</strong><br>
+          Porque viabiliza o resgate sem entrada: o içamento pode começar imediatamente, sem expor um segundo trabalhador e sem o tempo de montagem durante a emergência.</p>
+          <p><strong>3. O simulado foi feito e o tempo deu o dobro do previsto. O que fazer?</strong><br>
+          Corrigir o plano e as condições — acesso, equipamento posicionado, equipe, comunicação — e repetir. O simulado existe justamente para encontrar essa diferença antes que ela apareça num acidente real.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- 11 -->
+    <section class="module" data-mod="11">
+      <div class="m-eyebrow"><span class="code">Referência</span> Glossário e FAQ <span class="duration">15 min</span></div>
+      <h2 class="m-title">Glossário e perguntas frequentes</h2>
+
+      <h3>Glossário</h3>
+      <table>
+        <tr><th>Termo</th><th>Significado</th></tr>
+        <tr><td>Espaço confinado</td><td>Área não projetada para ocupação humana contínua, com meios limitados de entrada e saída, onde exista ou possa existir atmosfera perigosa</td></tr>
+        <tr><td>Atmosfera perigosa</td><td>Deficiência ou enriquecimento de oxigênio, presença de contaminantes nocivos ou atmosfera explosiva</td></tr>
+        <tr><td>Atmosfera IPVS</td><td>Imediatamente perigosa à vida e à saúde; exige ar assistido</td></tr>
+        <tr><td>PET</td><td>Permissão de Entrada e Trabalho, obrigatória para toda e qualquer entrada</td></tr>
+        <tr><td>Responsável técnico</td><td>Quem cadastra os espaços, elabora procedimentos e o plano de resgate e coordena a capacitação</td></tr>
+        <tr><td>Supervisor de entrada</td><td>Quem emite, implementa e encerra a PET; permanece fora e pode acumular a função de vigia</td></tr>
+        <tr><td>Vigia</td><td>Quem permanece fora, controla entrada e saída, mantém contato e aciona o resgate — nunca entra</td></tr>
+        <tr><td>Trabalhador autorizado</td><td>Capacitado e designado para entrar no espaço confinado</td></tr>
+        <tr><td>LIE</td><td>Limite Inferior de Explosividade; o detector indica o percentual dele</td></tr>
+        <tr><td>Engolfamento</td><td>Envolvimento por material sólido ou líquido capaz de soterrar ou afogar</td></tr>
+        <tr><td>Purga</td><td>Deslocamento da atmosfera interna por outro gás ou vapor</td></tr>
+        <tr><td>Inertização</td><td>Substituição da atmosfera por gás inerte para eliminar risco de explosão</td></tr>
+        <tr><td>Raquete / flange cego</td><td>Barreira física que interrompe a linha que chega ao espaço</td></tr>
+        <tr><td>Bump test</td><td>Teste diário de resposta do detector com gás padrão</td></tr>
+        <tr><td>Resgate sem entrada</td><td>Içamento da vítima de fora, pelo tripé, sem expor outro trabalhador</td></tr>
+      </table>
+
+      <h3>Perguntas frequentes</h3>
+      <ul>
+        <li><strong>Preciso de PET mesmo para entrar só para olhar?</strong> Sim. O item 33.5.5 fala em toda e qualquer entrada e trabalho, sem exceção por duração ou finalidade.</li>
+        <li><strong>Qual a validade da PET?</strong> Uma jornada, com prorrogação possível e teto absoluto de 24 horas somando tudo (33.5.12.1.1).</li>
+        <li><strong>Quanto tempo guardo as PETs?</strong> Cinco anos, de forma rastreável, e disponíveis aos trabalhadores quando solicitadas.</li>
+        <li><strong>O supervisor pode ser o vigia?</strong> Pode, pois o conteúdo da capacitação do vigia está contido na do supervisor — desde que ele permaneça fora e dedicado à função.</li>
+        <li><strong>Qual a carga horária do meu treinamento?</strong> Vigia e trabalhador autorizado: 16 h inicial e 8 h anuais. Supervisor: 40 h inicial e 8 h anuais. No mínimo metade da carga é prática.</li>
+        <li><strong>Posso usar máscara com filtro?</strong> Só em atmosfera com oxigênio adequado e contaminante compatível com o filtro, conforme o procedimento de seleção de respiradores. Em deficiência de oxigênio ou atmosfera IPVS, jamais.</li>
+        <li><strong>Oxigênio em 19,5% libera a entrada?</strong> Está no limite da faixa, e só vale se a causa da variação for conhecida e controlada. Na dúvida, ventila e mede de novo.</li>
+        <li><strong>A NR-33 exige treinamento presencial como a NR-35?</strong> A NR-33 não tem a trava de modalidade que a NR-35 passou a ter em 2026. A capacitação segue as diretrizes da NR-01 — mas a exigência de no mínimo 50% de carga prática, com equipamentos que simulem situações reais, impõe a presença física nessa metade.</li>
+        <li><strong>Trabalho dentro de tanque com escada vertical: é NR-33 ou NR-35?</strong> As duas. Elas se somam e cada uma tem sua capacitação própria.</li>
+        <li><strong>Quem pode remover um bloqueio?</strong> Apenas quem está autorizado; o item 33.5.14.3 proíbe a remoção por pessoas não autorizadas.</li>
+      </ul>
+    </section>
+
+    <!-- 12 quiz -->
+    <section class="module" data-mod="12">
+      <div class="m-eyebrow"><span class="code">Avaliação</span> Fixação <span class="duration">20 min</span></div>
+      <h2 class="m-title">Avaliação final</h2>
+      <p class="lede">Responda as questões abaixo para concluir a parte teórica. São permitidas até 3 tentativas, com aprovação a partir de 70% de acerto.</p>
+      <div id="quizGate"></div>
+      <div id="quizArea" style="display:none;"></div>
+      <div id="quizResult"></div>
+    </section>
+
+    <!-- 13 histórico -->
+    <section class="module" data-mod="13">
+      <div class="m-eyebrow"><span class="code">Registro</span> Acompanhamento</div>
+      <h2 class="m-title">Histórico de acesso e resultado da prova</h2>
+      <p class="lede">Cada vez que uma aula é aberta, o horário de entrada e saída fica registrado abaixo. Todas as tentativas da prova também aparecem aqui.</p>
+
+      <div id="logTableWrap"><p class="log-empty">Nenhum acesso registrado ainda.</p></div>
+
+      <h3>Tentativas da prova</h3>
+      <div id="quizResultSummary"><p class="log-empty">Prova ainda não realizada.</p></div>
+    </section>
+
+    <div class="nav-buttons">
+      <button class="navbtn" id="prevBtn">← Anterior</button>
+      <button class="navbtn primary" id="nextBtn">Próximo módulo →</button>
+    </div>
+
+    <footer class="appfoot">
+      <strong>G.A Occupational Safety</strong> · Conteúdo baseado na NR-33 — Segurança e Saúde nos Trabalhos em Espaços Confinados, texto aprovado pela Portaria MTP nº 1.690/2022. <strong>Esta plataforma cobre a parte teórica</strong> do treinamento de 16h de trabalhador autorizado e vigia: o Anexo III exige que no mínimo 50% da carga horária seja prática, realizada presencialmente com equipamentos que simulem situações reais. Consulte sempre o texto oficial da norma vigente para fins de conformidade legal.
+    </footer>
+  </main>
+</div>
+
+<div class="app" id="adminRoot" style="display:none;">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="eyebrow" style="color:rgba(236,237,241,0.5); font-size:11px;">G.A Occupational Safety</span>
+      </div>
+      <span class="eyebrow">Área administrativa</span>
+      <h1>NR-33<br>Espaço Confinado</h1>
+      <p class="sub">Cadastro de alunos e acompanhamento do treinamento de espaço confinado.</p>
+    </div>
+    <nav class="modlist" style="margin-top:24px;">
+      <button class="modbtn admin-tab-btn active" data-tab="dashboard"><span class="num">◆</span><span class="label">Dashboard</span></button>
+      <button class="modbtn admin-tab-btn" data-tab="alunos"><span class="num">◆</span><span class="label">Alunos</span></button>
+      <button class="modbtn admin-tab-btn" data-tab="config"><span class="num">◆</span><span class="label">Configurações</span></button>
+    </nav>
+    <a href="../index.html" class="navbtn" style="display:block; width:100%; margin-top:20px; text-align:center; text-decoration:none; border-color:rgba(236,237,241,0.3); color:var(--text);">← Meus treinamentos</a>
+    <button type="button" class="navbtn" id="adminLogoutBtn" style="width:100%; margin-top:10px; border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
+  </aside>
+
+  <main>
+    <!-- DASHBOARD -->
+    <div class="admin-panel" id="panel-dashboard">
+      <div class="m-eyebrow"><span class="code">Master</span> Visão geral</div>
+      <h2 class="m-title">Dashboard</h2>
+      <p class="lede">Acompanhamento consolidado do treinamento de todos os alunos.</p>
+
+      <div id="adminKpis" class="riskmap-wrap" style="margin-top:6px; gap:16px;"></div>
+
+      <div class="riskmap-wrap" style="margin-top:20px;">
+        <div class="card" style="flex:1; min-width:320px;">
+          <h3 style="margin-top:0; font-size:16px;">Conclusão da prova</h3>
+          <div style="position:relative; height:280px;"><canvas id="completionChart"></canvas></div>
+        </div>
+        <div class="card" style="flex:1; min-width:320px;">
+          <h3 style="margin-top:0; font-size:16px;">Ranking — melhores notas</h3>
+          <div style="position:relative; height:280px;"><canvas id="rankingChart"></canvas></div>
+        </div>
+      </div>
+
+      <h3>Feedbacks recebidos</h3>
+      <div id="feedbackListWrap"><p class="log-empty">Carregando feedbacks…</p></div>
+    </div>
+
+    <!-- ALUNOS -->
+    <div class="admin-panel" id="panel-alunos" style="display:none;">
+      <div class="m-eyebrow"><span class="code">Master</span> Gestão do treinamento</div>
+      <h2 class="m-title">Alunos autorizados</h2>
+      <p class="lede">Cadastre aqui quem pode acessar o treinamento. Cada aluno recebe um usuário e senha próprios para entrar pelo mesmo link.</p>
+
+      <div class="card">
+        <h3 style="margin-top:0;">Cadastrar novo aluno</h3>
+        <form id="addStudentForm">
+          <div class="field">
+            <label for="newStudentName">Nome completo</label>
+            <input type="text" id="newStudentName" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label for="newStudentCompany">Em nome de (empresa)</label>
+            <input type="text" id="newStudentCompany" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="newStudentUser">Usuário</label>
+            <input type="text" id="newStudentUser" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+          </div>
+          <div class="field">
+            <label for="newStudentPass">Senha inicial</label>
+            <input type="text" id="newStudentPass" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label>Matricular nos cursos</label>
+            <div id="newStudentCourses" style="margin-top:6px;"></div>
+          </div>
+          <p class="login-error" id="addStudentError"></p>
+          <button type="submit" class="login-btn" id="addStudentBtn" style="width:auto; padding:11px 22px;">Cadastrar aluno</button>
+        </form>
+      </div>
+
+      <h3>Progresso dos alunos</h3>
+      <p class="lede" style="font-size:14px; margin-bottom:14px;" id="studentsSummaryHint">Carregando alunos cadastrados…</p>
+      <div id="studentsTableWrap"></div>
+
+      <div class="log-actions" style="margin-top:6px;">
+        <button class="navbtn primary" id="downloadAllBtn">Baixar relatório de todos os alunos (.xlsx)</button>
+        <button class="navbtn" id="downloadSelectedBtn">Baixar histórico dos selecionados (.xlsx)</button>
+        <button class="navbtn" id="refreshStudentsBtn">Atualizar lista</button>
+      </div>
+
+      <div id="studentDetailWrap" style="display:none; margin-top:34px;">
+        <div class="nav-buttons" style="margin-top:0; border-top:none; padding-top:0;">
+          <h3 style="margin:0;" id="studentDetailTitle">Detalhes do aluno</h3>
+          <button class="navbtn" id="closeStudentDetailBtn">Fechar ✕</button>
+        </div>
+        <h4 style="margin:20px 0 8px; font-size:14px; color:var(--ink-soft);">Histórico de acesso (entrada e saída)</h4>
+        <div id="studentDetailLog"></div>
+        <h4 style="margin:24px 0 8px; font-size:14px; color:var(--ink-soft);">Tentativas da prova</h4>
+        <div id="studentDetailQuiz"></div>
+        <h4 style="margin:24px 0 8px; font-size:14px; color:var(--ink-soft);">Matrícula nos cursos</h4>
+        <div class="card" id="studentCoursesCard">
+          <p style="font-size:13px; color:var(--ink-soft); margin:0 0 14px;">Marque os cursos que este aluno pode acessar. Desmarcar um curso não apaga o histórico dele naquele curso.</p>
+          <div id="studentDetailCourses"></div>
+          <p class="login-error" id="studentCoursesMsg" style="margin:14px 0 0;"></p>
+          <button class="login-btn" id="saveStudentCoursesBtn" style="width:auto; padding:10px 20px; margin-top:12px;">Salvar matrícula</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIGURAÇÕES -->
+    <div class="admin-panel" id="panel-config" style="display:none;">
+      <div class="m-eyebrow"><span class="code">Master</span> Ajustes</div>
+      <h2 class="m-title">Configurações</h2>
+      <p class="lede">Ajustes que afetam como o treinamento funciona para todos os alunos.</p>
+
+      <div class="card alert">
+        <h3 style="margin-top:0;">Trocar minha senha</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:16px;">A senha inicial do acesso master fica visível no código do site. Troque assim que possível.</p>
+        <form id="changeAdminPassForm">
+          <div class="field">
+            <label for="newAdminPass">Nova senha</label>
+            <input type="text" id="newAdminPass" autocomplete="off" required>
+          </div>
+          <p class="login-error" id="changeAdminPassError"></p>
+          <button type="submit" class="login-btn" id="changeAdminPassBtn" style="width:auto; padding:11px 22px;">Salvar nova senha</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">Regras da prova</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:16px;">Vale para todos os alunos, inclusive quem já estiver com a prova em andamento.</p>
+        <form id="quizSettingsForm">
+          <div class="field">
+            <label for="settingPassPercent">Nota mínima para aprovação (%)</label>
+            <input type="number" id="settingPassPercent" min="1" max="100" required>
+          </div>
+          <div class="field">
+            <label for="settingMaxAttempts">Número máximo de tentativas</label>
+            <input type="number" id="settingMaxAttempts" min="1" max="10" required>
+          </div>
+          <p class="login-error" id="quizSettingsError"></p>
+          <button type="submit" class="login-btn" id="quizSettingsBtn" style="width:auto; padding:11px 22px;">Salvar configurações</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC5HiR5EZvHHzkM_kdbgDLDZJr7VDj1U5Q",
+  authDomain: "normas-7f1ed.firebaseapp.com",
+  projectId: "normas-7f1ed",
+  storageBucket: "normas-7f1ed.firebasestorage.app",
+  messagingSenderId: "683703418284",
+  appId: "1:683703418284:web:1b9927a1003c117d770e09",
+  measurementId: "G-B5WXY28YWD"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+
+let authReadyResolve;
+const authReady = new Promise((resolve) => { authReadyResolve = resolve; });
+onAuthStateChanged(auth, (user) => { if(user) authReadyResolve(user); });
+signInAnonymously(auth).catch(err => console.error('Falha no login anônimo do Firebase', err));
+
+// Identificador deste curso. Separa os dados deste treinamento dos demais
+// que usam o mesmo projeto Firebase (progresso, prova, feedback e configuracoes).
+const COURSE_ID = 'nr33';
+const dataKey = (username) => COURSE_ID + '__' + username;
+
+// Numero de aulas contabilizadas (modulos 0..12, incluindo a avaliacao final).
+// O modulo 13 e o historico de acesso e nao conta como aula.
+const TOTAL_LESSONS = 13;
+const LAST_LESSON_IDX = TOTAL_LESSONS - 1;
+
+// Catalogo de cursos da plataforma. Ao criar um curso novo, acrescente aqui
+// (nos dois arquivos) para que ele apareca na tela de matricula.
+const COURSE_CATALOG = [
+  {id:'nr05', nome:'NR-05 Designado (CIPA)', curto:'NR-05', path:'../nr05/index.html'},
+  {id:'nr35', nome:'NR-35 Trabalho em Altura', curto:'NR-35', path:'../nr35/index.html'},
+  {id:'nr33', nome:'NR-33 Espaço Confinado (16h)', curto:'NR-33', path:'index.html'},
+  {id:'nr33r', nome:'NR-33 Reciclagem anual (8h)', curto:'NR-33 rec.', path:'../nr33-reciclagem/index.html'}
+];
+const LESSONS_TOTAL = TOTAL_LESSONS;
+
+function courseInfo(id){ return COURSE_CATALOG.find(c => c.id === id); }
+function courseName(id){ const c = courseInfo(id); return c ? c.nome : id; }
+
+// Cursos em que o aluno esta matriculado. Cadastros antigos, feitos antes da
+// matricula por curso existir, nao tem o campo "courses" e herdam acesso a NR-05.
+function allowedCourses(u){
+  if(u && u.courses && typeof u.courses === 'object'){
+    return Object.keys(u.courses).filter(k => u.courses[k] === true);
+  }
+  return ['nr05'];
+}
+function hasCourseAccess(u){
+  return u.role === 'admin' || allowedCourses(u).includes(COURSE_ID);
+}
+function enrolledOnly(list){ return list.filter(s => s.courses.includes(COURSE_ID)); }
+
+let learnerName = '';
+let learnerUser = '';
+
+// Acesso master. Esta plataforma compartilha a colecao "users" com os demais cursos,
+// portanto o login de administrador e o mesmo ja usado na NR-05 (com a senha que voce
+// definiu no painel). As credenciais abaixo so sao usadas se nao existir nenhum admin.
+const DEFAULT_ADMIN_USER = 'admin';
+const DEFAULT_ADMIN_PASS = 'nr05master';
+
+function showLoginError(msg){
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function showAddStudentError(msg, ok){
+  const el = document.getElementById('addStudentError');
+  el.textContent = msg;
+  el.style.color = ok ? 'var(--risk-fisico)' : 'var(--red)';
+  el.style.display = 'block';
+}
+
+async function hashText(text){
+  if(typeof crypto === 'undefined' || !crypto.subtle){
+    throw new Error('Este navegador não permite login seguro nesta página (crypto.subtle indisponível). Isso costuma acontecer quando o arquivo é aberto fora de uma conexão https:// — abra pelo link original em vez do arquivo baixado.');
+  }
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function getUser(username){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'users', username));
+    return snap.exists() ? snap.data() : null;
+  }catch(e){ console.error('Falha ao consultar usuário', e); throw e; }
+}
+async function setUser(username, data){
+  await authReady;
+  await setDoc(doc(db, 'users', username), data);
+}
+async function deleteUserAccount(username){
+  await authReady;
+  await deleteDoc(doc(db, 'users', username));
+  // apaga o progresso do aluno em todos os cursos da plataforma
+  await deleteDoc(doc(db, 'userdata', username));
+  for(const c of COURSE_CATALOG){
+    await deleteDoc(doc(db, 'userdata', c.id + '__' + username));
+  }
+}
+async function getAllUsersMap(){
+  await authReady;
+  const snap = await getDocs(collection(db, 'users'));
+  const map = {};
+  snap.forEach(d => { map[d.id] = d.data(); });
+  return map;
+}
+async function loadUserData(username){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'userdata', dataKey(username)));
+    return snap.exists() ? snap.data() : {accessLog:[], quizAttempts:[]};
+  }catch(e){ console.error('Falha ao carregar progresso', e); return {accessLog:[], quizAttempts:[]}; }
+}
+async function persistUserData(){
+  if(!learnerUser) return;
+  try{
+    await authReady;
+    await setDoc(doc(db, 'userdata', dataKey(learnerUser)), {
+      accessLog: accessLog.map(a => ({
+        modulo:a.modulo, numero:a.numero,
+        entrada:a.entrada.toISOString(),
+        saida: a.saida ? a.saida.toISOString() : null
+      })),
+      quizAttempts: quizAttempts.map(q => ({...q, quando: q.quando.toISOString()}))
+    });
+  }catch(e){ console.error('Falha ao salvar progresso', e); }
+}
+
+async function ensureAdminBootstrap(){
+  try{
+    const users = await getAllUsersMap();
+    const hasAdmin = Object.values(users).some(u => u.role === 'admin');
+    if(!hasAdmin){
+      const hash = await hashText(DEFAULT_ADMIN_PASS);
+      await setUser(DEFAULT_ADMIN_USER, {name:'Administrador', hash, role:'admin'});
+    }
+  }catch(err){
+    console.error('Falha ao preparar acesso admin', err);
+  }
+}
+
+const loginForm = document.getElementById('loginForm');
+
+async function startSession(username, name){
+  learnerUser = username;
+  learnerName = name;
+  await loadQuizSettings();
+  const data = await loadUserData(username);
+  accessLog = [];
+  (data.accessLog || []).forEach(a => {
+    accessLog.push({
+      modulo:a.modulo, numero:a.numero,
+      entrada:new Date(a.entrada),
+      saida: a.saida ? new Date(a.saida) : new Date(a.entrada)
+    });
+    seen.add(a.numero - 1);
+  });
+  openEntryIndex = null;
+  quizAttempts = (data.quizAttempts || []).map(q => ({...q, quando:new Date(q.quando)}));
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'grid';
+  document.getElementById('learnerLabel').textContent = 'Colaborador(a): ' + learnerName;
+  current = 0;
+  seen.add(0);
+  maxUnlocked = Math.max(0, ...seen);
+  VIDEO_MODULES.forEach(v => { if(seen.has(v)) videosWatched.add(v); });
+  renderLog();
+  renderQuizSummary();
+  renderQuizGate();
+  render();
+  openEntry(0);
+  await persistUserData();
+}
+
+let currentAdminUser = '';
+
+function switchAdminTab(tab){
+  document.querySelectorAll('.admin-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('panel-' + tab).style.display = 'block';
+  document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchAdminTab(btn.dataset.tab));
+});
+
+async function startAdminSession(username){
+  currentAdminUser = username;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminRoot').style.display = 'grid';
+  switchAdminTab('dashboard');
+  await loadQuizSettings();
+  document.getElementById('settingPassPercent').value = PASS_PERCENT;
+  document.getElementById('settingMaxAttempts').value = MAX_ATTEMPTS;
+  await renderStudentsTable();
+  await renderFeedbackList();
+}
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submitBtn = document.getElementById('loginSubmitBtn');
+  document.getElementById('loginError').style.display = 'none';
+  try{
+    const user = document.getElementById('loginUser').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value;
+    if(!user || !pass){ showLoginError('Informe o usuário e a senha para continuar.'); return; }
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Entrando…';
+    const record = await getUser(user);
+    if(!record){ showLoginError('Usuário ou senha incorretos. Confira os dados e tente novamente.'); return; }
+    const hash = await hashText(pass);
+    if(hash !== record.hash){ showLoginError('Usuário ou senha incorretos. Confira os dados e tente novamente.'); return; }
+    if(record.role !== 'admin' && !hasCourseAccess(record)){
+      const libs = allowedCourses(record);
+      const el = document.getElementById('loginError');
+      const links = libs
+        .map(id => courseInfo(id))
+        .filter(c => c && c.id !== COURSE_ID)
+        .map(c => `<a href="${c.path}" style="color:var(--mint);">${c.nome}</a>`)
+        .join(' · ');
+      el.innerHTML = libs.length
+        ? `Seu acesso não contempla este treinamento.${links ? '<br>Treinamentos liberados para você: ' + links : ''}`
+        : 'Seu acesso ainda não contempla nenhum treinamento. Contate o responsável pelo treinamento para efetuar a matrícula.';
+      el.style.display = 'block';
+      return;
+    }
+    salvarSessao(user);
+    if(record.role === 'admin'){
+      await startAdminSession(user);
+    } else {
+      await startSession(user, record.name);
+    }
+  }catch(err){
+    console.error('Erro no login', err);
+    showLoginError('Não foi possível concluir o acesso no momento. Tente novamente em instantes. Se o problema persistir, contate o responsável pelo treinamento.');
+  }finally{
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Entrar →';
+  }
+});
+
+document.getElementById('adminLogoutBtn').addEventListener('click', () => {
+  limparSessao();
+  currentAdminUser = '';
+  document.getElementById('adminRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+});
+
+document.getElementById('studentLogoutBtn').addEventListener('click', async () => {
+  closeOpenEntry();
+  await persistUserData();
+  limparSessao();
+  learnerUser = '';
+  learnerName = '';
+  document.getElementById('appRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+});
+
+document.getElementById('changeAdminPassForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const el = document.getElementById('changeAdminPassError');
+  el.style.display = 'none';
+  try{
+    const newPass = document.getElementById('newAdminPass').value;
+    if(newPass.length < 4){
+      el.textContent = 'Use uma senha com pelo menos 4 caracteres.';
+      el.style.color = 'var(--red)';
+      el.style.display = 'block';
+      return;
+    }
+    const current = await getUser(currentAdminUser);
+    const hash = await hashText(newPass);
+    await setUser(currentAdminUser, {...current, hash});
+    document.getElementById('newAdminPass').value = '';
+    el.textContent = 'Senha atualizada. Use a nova senha no próximo login.';
+    el.style.color = 'var(--green)';
+    el.style.display = 'block';
+  }catch(err){
+    console.error('Erro ao trocar senha', err);
+    el.textContent = 'Erro ao salvar: ' + (err && err.message ? err.message : 'tente novamente.');
+    el.style.color = 'var(--red)';
+    el.style.display = 'block';
+  }
+});
+
+document.getElementById('quizSettingsForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const el = document.getElementById('quizSettingsError');
+  el.style.display = 'none';
+  try{
+    const passPercent = Number(document.getElementById('settingPassPercent').value);
+    const maxAttempts = Number(document.getElementById('settingMaxAttempts').value);
+    if(passPercent < 1 || passPercent > 100 || maxAttempts < 1 || maxAttempts > 10){
+      el.textContent = 'Valores fora do intervalo permitido.';
+      el.style.color = 'var(--red)';
+      el.style.display = 'block';
+      return;
+    }
+    await saveQuizSettings(passPercent, maxAttempts);
+    el.textContent = 'Configurações salvas com sucesso.';
+    el.style.color = 'var(--green)';
+    el.style.display = 'block';
+  }catch(err){
+    console.error('Erro ao salvar configurações', err);
+    el.textContent = 'Erro ao salvar: ' + (err && err.message ? err.message : 'tente novamente.');
+    el.style.color = 'var(--red)';
+    el.style.display = 'block';
+  }
+});
+
+document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  document.getElementById('addStudentError').style.display = 'none';
+  try{
+    const name = document.getElementById('newStudentName').value.trim();
+    const company = document.getElementById('newStudentCompany').value.trim();
+    const user = document.getElementById('newStudentUser').value.trim().toLowerCase();
+    const pass = document.getElementById('newStudentPass').value;
+    if(!name || !user || !pass){ showAddStudentError('Preencha o nome, o usuário e a senha inicial.'); return; }
+    if(pass.length < 4){ showAddStudentError('A senha inicial deve ter no mínimo 4 caracteres.'); return; }
+    const existing = await getUser(user);
+    if(existing){ showAddStudentError('Este nome de usuário já está em uso. Escolha outro.'); return; }
+    const courses = readCourseChecks('newStudentCourses');
+    if(Object.keys(courses).length === 0){ showAddStudentError('Selecione ao menos um treinamento para matricular o aluno.'); return; }
+    const hash = await hashText(pass);
+    await setUser(user, {name, company, hash, role:'aluno', courses});
+    document.getElementById('newStudentName').value = '';
+    document.getElementById('newStudentCompany').value = '';
+    document.getElementById('newStudentUser').value = '';
+    document.getElementById('newStudentPass').value = '';
+    showAddStudentError(`Aluno "${name}" cadastrado. Usuário: ${user}`, true);
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao cadastrar aluno', err);
+    showAddStudentError('Não foi possível concluir o cadastro. Tente novamente em instantes.');
+  }
+});
+
+document.getElementById('refreshStudentsBtn').addEventListener('click', () => { renderStudentsTable(); renderFeedbackList(); });
+
+// por padrao, o aluno novo ja entra matriculado no curso que esta aberto
+renderCourseChecks('newStudentCourses', [COURSE_ID]);
+
+function summarizeQuiz(quizAttempts){
+  const attempts = quizAttempts || [];
+  const aprovado = attempts.some(a => a.aprovado);
+  const best = attempts.reduce((max, a) => (!max || a.percent > max.percent) ? a : max, null);
+  return { attemptsCount: attempts.length, aprovado, best };
+}
+
+async function getAllFeedback(){
+  try{
+    await authReady;
+    const snap = await getDocs(collection(db, 'feedback'));
+    const list = [];
+    // mostra apenas os feedbacks deste curso
+    snap.forEach(d => { if(d.id.startsWith(COURSE_ID + '__')) list.push(d.data()); });
+    return list.sort((a,b) => new Date(b.quando) - new Date(a.quando));
+  }catch(e){ console.error('Falha ao carregar feedbacks', e); return []; }
+}
+
+async function renderFeedbackList(){
+  const wrap = document.getElementById('feedbackListWrap');
+  if(!wrap) return;
+  const list = await getAllFeedback();
+  if(list.length === 0){
+    wrap.innerHTML = '<p class="log-empty">Nenhum feedback recebido ainda.</p>';
+    return;
+  }
+  wrap.innerHTML = list.map(f => `
+    <div class="card" style="margin:10px 0;">
+      <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <strong>${f.name || f.username}</strong>
+        <span class="ts" style="font-size:12px; color:var(--ink-soft);">${formatTs(new Date(f.quando))}</span>
+      </div>
+      <p style="margin:8px 0 0; font-size:14px;">${f.comentario ? f.comentario : '<span style="color:var(--ink-soft);">(sem comentário escrito)</span>'}</p>
+    </div>
+  `).join('');
+}
+
+async function getAllStudents(){
+  const users = await getAllUsersMap();
+  const studentEntries = Object.entries(users).filter(([, u]) => u.role !== 'admin');
+  const students = await Promise.all(studentEntries.map(async ([username, u]) => {
+    const data = await loadUserData(username);
+    const contentSeen = new Set((data.accessLog || []).filter(a => a.numero <= TOTAL_LESSONS).map(a => a.numero)).size;
+    const quizSummary = summarizeQuiz(data.quizAttempts);
+    return {
+      username,
+      name: u.name,
+      company: u.company || '',
+      courses: allowedCourses(u),
+      aulasVistas: contentSeen,
+      tempoEstudo: somaAccessLog(data.accessLog),
+      accessLog: data.accessLog || [],
+      quizAttempts: data.quizAttempts || [],
+      ...quizSummary
+    };
+  }));
+  return students;
+}
+
+let studentsCache = [];
+let completionChartRef = null;
+let rankingChartRef = null;
+
+async function renderStudentsTable(){
+  const hint = document.getElementById('studentsSummaryHint');
+  const wrap = document.getElementById('studentsTableWrap');
+  hint.textContent = 'Carregando alunos cadastrados…';
+  const all = await getAllStudents();
+  studentsCache = all;
+  const deste = enrolledOnly(all);
+  if(all.length === 0){
+    hint.textContent = 'Nenhum aluno cadastrado ainda. Use o formulário acima para adicionar o primeiro.';
+    wrap.innerHTML = '';
+    renderCharts([]);
+    return;
+  }
+  const outros = all.length - deste.length;
+  hint.textContent = `${deste.length} aluno(s) matriculado(s) neste curso`
+    + (outros > 0 ? ` · ${outros} cadastrado(s) somente em outros cursos.` : '.');
+  renderStudentsFilter(studentsCache);
+  renderCharts(deste);
+}
+
+// Marca os cursos do aluno, destacando o curso atual.
+function courseBadges(courses){
+  if(courses.length === 0) return '<span style="color:var(--red); font-size:11px;">sem matrícula</span>';
+  return courses.map(id => {
+    const c = courseInfo(id);
+    const atual = id === COURSE_ID;
+    const cor = atual ? 'var(--green)' : 'rgba(236,237,241,0.25)';
+    const txt = atual ? 'var(--mint)' : 'var(--ink-soft)';
+    return `<span style="display:inline-block; margin:1px 3px 1px 0; padding:2px 7px; border:1px solid ${cor}; border-radius:20px; font-size:10.5px; color:${txt}; white-space:nowrap;">${c ? c.curto : id}</span>`;
+  }).join('');
+}
+
+function renderStudentsFilter(students){
+  const wrap = document.getElementById('studentsTableWrap');
+  const filterVal = (document.getElementById('companyFilter')?.value || '').toLowerCase();
+  const mostrarTodos = document.getElementById('showAllCourses')?.checked || false;
+
+  let base = mostrarTodos ? students : enrolledOnly(students);
+  const filtered = filterVal ? base.filter(s => (s.company || '').toLowerCase().includes(filterVal)) : base;
+
+  const rows = filtered.map(s => {
+    const quizCell = s.attemptsCount === 0 ? 'Não realizada' : `${s.best.percent}% (${s.attemptsCount}/${MAX_ATTEMPTS} tent.) — ${s.aprovado ? 'Aprovado' : 'Reprovado'}`;
+    const neste = s.courses.includes(COURSE_ID);
+    return `<tr${neste ? '' : ' style="opacity:.55;"'}>
+      <td><input type="checkbox" class="student-select" data-user="${s.username}"></td>
+      <td>${s.name}</td>
+      <td>${s.company || '—'}</td>
+      <td class="ts">${s.username}</td>
+      <td>${courseBadges(s.courses)}</td>
+      <td>${neste ? s.aulasVistas + ' / ' + LESSONS_TOTAL : '—'}</td>
+      <td>${neste ? hhmm(s.tempoEstudo) : '—'}</td>
+      <td>${neste ? quizCell : '—'}</td>
+      <td>
+        <button class="navbtn" data-action="ver" data-user="${s.username}" style="padding:6px 10px; font-size:11px;">Ver</button>
+        <button class="navbtn" data-action="matricula" data-user="${s.username}" style="padding:6px 10px; font-size:11px;">Matrícula</button>
+        <button class="navbtn" data-action="editar" data-user="${s.username}" style="padding:6px 10px; font-size:11px;">Editar</button>
+        <button class="navbtn" data-action="excluir" data-user="${s.username}" style="padding:6px 10px; font-size:11px; border-color:var(--red); color:var(--red);">Excluir</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div style="display:flex; gap:22px; align-items:flex-end; flex-wrap:wrap;">
+      <div class="field" style="max-width:280px; margin-bottom:0;">
+        <label for="companyFilter">Filtrar por empresa</label>
+        <input type="text" id="companyFilter" placeholder="Digite o nome da empresa…" value="${filterVal}">
+      </div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); padding-bottom:10px;">
+        <input type="checkbox" id="showAllCourses" ${mostrarTodos ? 'checked' : ''}>
+        Mostrar alunos de outros cursos
+      </label>
+    </div>
+    <table class="log-table" style="margin-top:16px;">
+      <tr><th><input type="checkbox" id="selectAllStudents"></th><th>Nome</th><th>Empresa</th><th>Usuário</th><th>Cursos</th><th>Aulas vistas</th><th>Tempo</th><th>Prova</th><th>Ações</th></tr>
+      ${rows || '<tr><td colspan="9" class="log-empty">Nenhum aluno encontrado para esse filtro.</td></tr>'}
+    </table>`;
+
+  document.getElementById('companyFilter').addEventListener('input', () => renderStudentsFilter(studentsCache));
+  document.getElementById('showAllCourses').addEventListener('change', () => renderStudentsFilter(studentsCache));
+  if(filterVal){
+    const f = document.getElementById('companyFilter');
+    f.focus(); f.selectionStart = f.value.length;
+  }
+
+  document.getElementById('selectAllStudents').addEventListener('change', (e) => {
+    wrap.querySelectorAll('.student-select').forEach(cb => { cb.checked = e.target.checked; });
+  });
+
+  wrap.querySelectorAll('button[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => handleStudentAction(btn.dataset.action, btn.dataset.user));
+  });
+}
+
+// Lista de checkboxes de curso, usada no cadastro e na edicao de matricula.
+function renderCourseChecks(containerId, marcados){
+  const box = document.getElementById(containerId);
+  if(!box) return;
+  // estilos inline porque ".field input" do CSS global forca width:100% e
+  // esticaria o checkbox pela largura inteira do cartao.
+  const cxStyle = "width:17px; height:17px; min-width:17px; padding:0; margin:0; flex:0 0 auto; accent-color:var(--green); cursor:pointer;";
+  const rowStyle = "display:flex; align-items:center; gap:11px; margin:0 0 8px; padding:11px 13px; border:1.5px solid var(--line); border-radius:8px; background:var(--paper); cursor:pointer;";
+  const txtStyle = "font-family:'Inter', sans-serif; text-transform:none; letter-spacing:normal; font-size:14px; font-weight:400; color:var(--text);";
+  box.innerHTML = COURSE_CATALOG.map(c => `
+    <label style="${rowStyle}">
+      <input type="checkbox" class="course-check" data-course="${c.id}" style="${cxStyle}" ${marcados.includes(c.id) ? 'checked' : ''}>
+      <span style="${txtStyle}">${c.nome}${c.id === COURSE_ID ? ' <span style="color:var(--mint); font-size:11.5px; font-family:\'IBM Plex Mono\', monospace;">· este curso</span>' : ''}</span>
+    </label>`).join('');
+}
+function readCourseChecks(containerId){
+  const out = {};
+  document.querySelectorAll(`#${containerId} .course-check`).forEach(cb => {
+    if(cb.checked) out[cb.dataset.course] = true;
+  });
+  return out;
+}
+
+async function saveStudentCourses(username){
+  const msg = document.getElementById('studentCoursesMsg');
+  const courses = readCourseChecks('studentDetailCourses');
+  try{
+    const atual = await getUser(username);
+    if(!atual) throw new Error('cadastro não encontrado');
+    await setUser(username, {...atual, courses});
+    const nomes = Object.keys(courses).map(courseName);
+    msg.style.color = 'var(--mint)';
+    msg.textContent = nomes.length
+      ? 'Matrícula salva: ' + nomes.join(' · ')
+      : 'Aluno sem matrícula — ele não conseguirá entrar em nenhum curso.';
+    msg.style.display = 'block';
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao salvar matrícula', err);
+    msg.style.color = 'var(--red)';
+    msg.textContent = 'Erro ao salvar: ' + (err && err.message ? err.message : 'tente novamente.');
+    msg.style.display = 'block';
+  }
+}
+
+function kpiCard(label, value, color){
+  return `<div class="card" style="flex:1; min-width:150px; text-align:center; padding:20px 14px;">
+    <div style="font-family:'Archivo Black',sans-serif; font-size:30px; color:${color || 'var(--text)'};">${value}</div>
+    <div style="font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin-top:6px;">${label}</div>
+  </div>`;
+}
+
+function renderKpis(students){
+  const wrap = document.getElementById('adminKpis');
+  if(!wrap) return;
+  const withAttempt = students.filter(s => s.attemptsCount > 0);
+  const aprovados = withAttempt.filter(s => s.aprovado).length;
+  const mediaAulas = students.length ? (students.reduce((sum,s) => sum + s.aulasVistas, 0) / students.length).toFixed(1) : '0';
+  wrap.innerHTML = [
+    kpiCard('Alunos cadastrados', students.length),
+    kpiCard('Aprovados', aprovados, 'var(--green)'),
+    kpiCard('Reprovados', withAttempt.length - aprovados, 'var(--red)'),
+    kpiCard('Aulas vistas (média)', mediaAulas + ' / ' + TOTAL_LESSONS)
+  ].join('');
+}
+
+function renderCharts(students){
+  renderKpis(students);
+  if(typeof Chart === 'undefined') return;
+  const withAttempt = students.filter(s => s.attemptsCount > 0);
+  const aprovados = withAttempt.filter(s => s.aprovado).length;
+  const reprovados = withAttempt.filter(s => !s.aprovado).length;
+  const semTentativa = students.length - withAttempt.length;
+
+  const completionCtx = document.getElementById('completionChart');
+  if(completionChartRef) completionChartRef.destroy();
+  completionChartRef = new Chart(completionCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Aprovados', 'Reprovados', 'Ainda não fez a prova'],
+      datasets: [{ data: [aprovados, reprovados, semTentativa], backgroundColor: ['#16A34A', '#F0555C', 'rgba(236,237,241,0.25)'] }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins: { legend: { position:'bottom', labels: { color: '#ECEDF1', font:{size:13} } } } }
+  });
+
+  const ranking = students
+    .filter(s => s.attemptsCount > 0)
+    .sort((a,b) => b.best.percent - a.best.percent)
+    .slice(0, 8);
+  const rankingCtx = document.getElementById('rankingChart');
+  if(rankingChartRef) rankingChartRef.destroy();
+  rankingChartRef = new Chart(rankingCtx, {
+    type: 'bar',
+    data: {
+      labels: ranking.map(s => s.name),
+      datasets: [{ label: 'Melhor nota (%)', data: ranking.map(s => s.best.percent), backgroundColor: '#16A34A' }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { beginAtZero:true, max:100, ticks:{ color:'#9CA0AC' }, grid:{ color:'rgba(236,237,241,0.1)' } },
+        y: { ticks:{ color:'#ECEDF1' }, grid:{ display:false } }
+      }
+    }
+  });
+}
+
+function handleStudentAction(action, username){
+  const student = studentsCache.find(s => s.username === username);
+  if(!student) return;
+  if(action === 'ver') showStudentDetail(student, false);
+  if(action === 'matricula') showStudentDetail(student, true);
+  if(action === 'editar') editStudent(student);
+  if(action === 'excluir') deleteStudent(student);
+}
+
+function showStudentDetail(student, focoMatricula){
+  document.getElementById('studentDetailWrap').style.display = 'block';
+  document.getElementById('studentDetailTitle').textContent = `Detalhes — ${student.name} (${student.username})`;
+
+  const logWrap = document.getElementById('studentDetailLog');
+  if(student.accessLog.length === 0){
+    logWrap.innerHTML = '<p class="log-empty">Nenhum acesso registrado.</p>';
+  } else {
+    const rows = student.accessLog.slice().reverse().map(a => `<tr><td>${a.numero}. ${a.modulo}</td><td class="ts">${formatTs(new Date(a.entrada))}</td><td class="ts">${a.saida ? formatTs(new Date(a.saida)) : '— (em andamento)'}</td></tr>`).join('');
+    logWrap.innerHTML = `<table class="log-table"><tr><th>Aula</th><th>Entrada</th><th>Saída</th></tr>${rows}</table>`;
+  }
+
+  const quizWrap = document.getElementById('studentDetailQuiz');
+  if(student.quizAttempts.length === 0){
+    quizWrap.innerHTML = '<p class="log-empty">Prova ainda não realizada.</p>';
+  } else {
+    const rows = student.quizAttempts.map((a, i) => `<tr><td>${i+1}</td><td>${a.score} de ${a.total}</td><td>${a.percent}%</td><td>${a.aprovado ? 'Aprovado' : 'Reprovado'}</td><td class="ts">${formatTs(new Date(a.quando))}</td></tr>`).join('');
+    quizWrap.innerHTML = `<table class="log-table"><tr><th>Tentativa</th><th>Pontuação</th><th>Percentual</th><th>Resultado</th><th>Realizada em</th></tr>${rows}</table>`;
+  }
+  renderCourseChecks('studentDetailCourses', student.courses);
+  const msg = document.getElementById('studentCoursesMsg');
+  msg.style.display = 'none';
+  msg.textContent = '';
+  const saveBtn = document.getElementById('saveStudentCoursesBtn');
+  saveBtn.onclick = () => saveStudentCourses(student.username);
+
+  const alvo = focoMatricula ? document.getElementById('studentCoursesCard') : document.getElementById('studentDetailWrap');
+  alvo.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('closeStudentDetailBtn').addEventListener('click', () => {
+  document.getElementById('studentDetailWrap').style.display = 'none';
+});
+
+async function editStudent(student){
+  const newName = prompt('Nome completo:', student.name);
+  if(newName === null) return;
+  const newCompany = prompt('Em nome de (empresa):', student.company || '');
+  if(newCompany === null) return;
+  const newPass = prompt('Nova senha (deixe em branco para não alterar a senha):', '');
+  try{
+    const atual = await getUser(student.username);
+    const patch = { name: newName.trim() || student.name, company: newCompany.trim(), role: 'aluno',
+                    courses: (atual && atual.courses) ? atual.courses : {[COURSE_ID]: true} };
+    if(newPass && newPass.trim()){
+      if(newPass.trim().length < 4){ alert('A senha deve ter no mínimo 4 caracteres. Nenhuma alteração foi salva.'); return; }
+      patch.hash = await hashText(newPass.trim());
+    } else {
+      patch.hash = atual.hash;
+    }
+    await setUser(student.username, patch);
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao editar aluno', err);
+    alert('Não foi possível salvar as alterações. Tente novamente em instantes.');
+  }
+}
+
+async function deleteStudent(student){
+  const ok = confirm(`Excluir o aluno "${student.name}" (${student.username})?\n\nIsso apaga o cadastro e o histórico dele em TODOS os cursos da plataforma, e não pode ser desfeito.\n\nSe você só quer tirar o acesso a este curso, cancele e use o botão "Matrícula".`);
+  if(!ok) return;
+  try{
+    await deleteUserAccount(student.username);
+    await renderStudentsTable();
+  }catch(err){
+    console.error('Erro ao excluir aluno', err);
+    alert('Não foi possível concluir a exclusão. Tente novamente em instantes.');
+  }
+}
+
+document.getElementById('downloadAllBtn').addEventListener('click', async () => {
+  const students = enrolledOnly(await getAllStudents());
+  const wb = XLSX.utils.book_new();
+  const summaryRows = [
+    ['G.A Occupational Safety — Treinamento NR-33 Espaço Confinado'],
+    ['Relatório de todos os alunos'],
+    ['Exportado em:', formatTs(new Date())],
+    [],
+    ['Nome', 'Usuário', 'Aulas vistas', 'Tempo de estudo', 'Tentativas', 'Melhor nota', 'Resultado']
+  ];
+  students.forEach(s => {
+    summaryRows.push([
+      s.name, s.username, `${s.aulasVistas}/${TOTAL_LESSONS}`, hhmm(s.tempoEstudo),
+      s.attemptsCount, s.attemptsCount ? `${s.best.percent}%` : '-',
+      s.attemptsCount ? (s.aprovado ? 'Aprovado' : 'Reprovado') : 'Não realizada'
+    ]);
+  });
+  const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
+  wsSummary['!cols'] = [{wch:26},{wch:18},{wch:14},{wch:12},{wch:12},{wch:16}];
+  XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumo');
+
+  const logRows = [['Nome', 'Usuário', 'Aula', 'Entrada', 'Saída']];
+  students.forEach(s => {
+    s.accessLog.forEach(a => logRows.push([s.name, s.username, `${a.numero}. ${a.modulo}`, formatTs(new Date(a.entrada)), a.saida ? formatTs(new Date(a.saida)) : 'Em andamento']));
+  });
+  const wsLog = XLSX.utils.aoa_to_sheet(logRows);
+  wsLog['!cols'] = [{wch:22},{wch:16},{wch:30},{wch:22},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsLog, 'Historico completo');
+
+  const quizRows = [['Nome', 'Usuário', 'Tentativa', 'Pontuação', 'Percentual', 'Resultado', 'Realizada em']];
+  students.forEach(s => {
+    s.quizAttempts.forEach((a, i) => quizRows.push([s.name, s.username, i+1, `${a.score}/${a.total}`, `${a.percent}%`, a.aprovado ? 'Aprovado' : 'Reprovado', formatTs(new Date(a.quando))]));
+  });
+  const wsQuiz = XLSX.utils.aoa_to_sheet(quizRows);
+  wsQuiz['!cols'] = [{wch:22},{wch:16},{wch:10},{wch:12},{wch:12},{wch:12},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsQuiz, 'Tentativas de prova');
+
+  XLSX.writeFile(wb, `nr33-confinado-relatorio-alunos-${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
+document.getElementById('downloadSelectedBtn').addEventListener('click', async () => {
+  const selectedUsers = [...document.querySelectorAll('.student-select:checked')].map(cb => cb.dataset.user);
+  if(selectedUsers.length === 0){ alert('Selecione ao menos um aluno na tabela, marcando a caixa à esquerda do nome.'); return; }
+  const students = studentsCache.filter(s => selectedUsers.includes(s.username));
+
+  const wb = XLSX.utils.book_new();
+  const logRows = [['Nome', 'Usuário', 'Aula', 'Entrada', 'Saída']];
+  students.forEach(s => {
+    s.accessLog.forEach(a => logRows.push([s.name, s.username, `${a.numero}. ${a.modulo}`, formatTs(new Date(a.entrada)), a.saida ? formatTs(new Date(a.saida)) : 'Em andamento']));
+  });
+  const wsLog = XLSX.utils.aoa_to_sheet(logRows);
+  wsLog['!cols'] = [{wch:22},{wch:16},{wch:30},{wch:22},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsLog, 'Historico de acesso');
+
+  const quizRows = [['Nome', 'Usuário', 'Tentativa', 'Pontuação', 'Percentual', 'Resultado', 'Realizada em']];
+  students.forEach(s => {
+    s.quizAttempts.forEach((a, i) => quizRows.push([s.name, s.username, i+1, `${a.score}/${a.total}`, `${a.percent}%`, a.aprovado ? 'Aprovado' : 'Reprovado', formatTs(new Date(a.quando))]));
+  });
+  const wsQuiz = XLSX.utils.aoa_to_sheet(quizRows);
+  wsQuiz['!cols'] = [{wch:22},{wch:16},{wch:10},{wch:12},{wch:12},{wch:12},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsQuiz, 'Tentativas de prova');
+
+  XLSX.writeFile(wb, `nr33-confinado-selecionados-${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
+ensureAdminBootstrap();
+loadQuizSettings();
+
+const modules = [
+  {title:"O que é espaço confinado", dot:"var(--mint)", min:30},
+  {title:"Por que mata", dot:"var(--risk-acidente)", min:30},
+  {title:"Funções e responsabilidades", dot:"var(--risk-fisico)", min:45},
+  {title:"Capacitação e aptidão", dot:"var(--risk-ergonomico)", min:35},
+  {title:"Gerenciamento de riscos", dot:"var(--risk-quimico)", min:45},
+  {title:"PET", dot:"var(--risk-acidente)", min:50},
+  {title:"Energias perigosas", dot:"var(--risk-fisico)", min:40},
+  {title:"Atmosfera e medição", dot:"var(--risk-quimico)", min:50},
+  {title:"Ventilação", dot:"var(--risk-biologico)", min:35},
+  {title:"Equipamentos e EPR", dot:"var(--risk-ergonomico)", min:40},
+  {title:"Emergência e resgate", dot:"var(--risk-acidente)", min:45},
+  {title:"Glossário e FAQ", dot:"var(--mint)", min:15},
+  {title:"Avaliação final", dot:"var(--mint)", min:20},
+  {title:"Histórico de acesso", dot:"rgba(236,237,241,0.4)", min:0}
+];
+
+let current = 0;
+const seen = new Set([0]);
+let accessLog = [];
+let openEntryIndex = null;
+
+function openEntry(i){
+  if(i > LAST_LESSON_IDX) return;
+  accessLog.push({
+    modulo: modules[i].title,
+    numero: i + 1,
+    entrada: new Date(),
+    saida: null
+  });
+  openEntryIndex = accessLog.length - 1;
+  renderLog();
+}
+
+function closeOpenEntry(){
+  if(openEntryIndex !== null && accessLog[openEntryIndex] && !accessLog[openEntryIndex].saida){
+    accessLog[openEntryIndex].saida = new Date();
+  }
+  openEntryIndex = null;
+}
+
+function formatTs(d){
+  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}
+
+function renderLog(){
+  const wrap = document.getElementById('logTableWrap');
+  if(!wrap) return;
+  if(accessLog.length === 0){
+    wrap.innerHTML = '<p class="log-empty">Nenhum acesso registrado ainda.</p>';
+    return;
+  }
+  const rows = accessLog.slice().reverse().map(a => `<tr><td>${a.numero}. ${a.modulo}</td><td class="ts">${formatTs(a.entrada)}</td><td class="ts">${a.saida ? formatTs(a.saida) : '— (em andamento)'}</td></tr>`).join('');
+  wrap.innerHTML = `<table class="log-table"><tr><th>Aula</th><th>Entrada</th><th>Saída</th></tr>${rows}</table>`;
+}
+
+window.addEventListener('beforeunload', () => {
+  if(openEntryIndex !== null && accessLog[openEntryIndex] && !accessLog[openEntryIndex].saida){
+    accessLog[openEntryIndex].saida = new Date();
+    persistUserData();
+  }
+});
+
+const modlist = document.getElementById('modlist');
+modules.forEach((m, i) => {
+  if(i === TOTAL_LESSONS){
+    const sep = document.createElement('div');
+    sep.style.cssText = 'height:1px;background:rgba(236,237,241,0.14);margin:14px 4px 12px;';
+    modlist.appendChild(sep);
+  }
+  const btn = document.createElement('button');
+  btn.className = 'modbtn';
+  const numHtml = i === 12 ? '<span class="num">⏱</span>' : `<span class="num">${i+1}</span>`;
+  btn.innerHTML = `${numHtml}<span class="label">${m.title}</span><span class="dot" style="background:${m.dot}"></span>`;
+  btn.addEventListener('click', () => goTo(i));
+  modlist.appendChild(btn);
+});
+
+const VIDEO_MODULES = [0, 1, 2, 4, 5, 7, 10];
+const videosWatched = new Set();
+
+// ---- TEMPO MINIMO POR MODULO ----------------------------------------------
+// A soma dos minutos declarados em "modules" fecha as 8h (480 min) exigidas
+// pelo item 35.4.2.1. O aluno so avanca depois de cumprir o tempo da aula,
+// o que e calculado a partir do proprio historico de acesso ja gravado.
+const TEMPO_LIVRE = false; // true libera o avanco imediato (uso em demonstracao)
+
+function somaAccessLog(log, numero){
+  let total = 0;
+  (log || []).forEach(a => {
+    if(numero !== undefined && a.numero !== numero) return;
+    const ini = new Date(a.entrada).getTime();
+    const fim = a.saida ? new Date(a.saida).getTime() : Date.now();
+    if(fim > ini) total += (fim - ini) / 1000;
+  });
+  return total;
+}
+function faltaNoModulo(i){
+  if(TEMPO_LIVRE) return 0;
+  const necessario = (modules[i] && modules[i].min ? modules[i].min : 0) * 60;
+  return Math.max(0, necessario - somaAccessLog(accessLog, i + 1));
+}
+function mmss(s){
+  s = Math.ceil(s);
+  return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+function hhmm(seg){
+  const hh = Math.floor(seg / 3600);
+  const mm = Math.floor((seg % 3600) / 60);
+  return hh > 0 ? hh + 'h' + String(mm).padStart(2, '0') : mm + ' min';
+}
+
+// Aplica os bloqueios de avanco sem redesenhar a pagina inteira,
+// para nao jogar o aluno de volta ao topo a cada segundo.
+function aplicarBloqueios(){
+  const videoPendente = VIDEO_MODULES.includes(current) && !videosWatched.has(current);
+  const falta = faltaNoModulo(current);
+  const travado = videoPendente || falta > 0;
+  document.querySelectorAll('#modlist .modbtn').forEach((btn, i) => {
+    btn.disabled = travado && i > current;
+  });
+  const nextBtn = document.getElementById('nextBtn');
+  if(!nextBtn) return;
+  if(current === modules.length - 1){
+    nextBtn.textContent = 'Concluído ✓';
+    nextBtn.disabled = true;
+  } else if(videoPendente){
+    nextBtn.textContent = 'Assista o vídeo até o fim para continuar';
+    nextBtn.disabled = true;
+  } else if(falta > 0){
+    nextBtn.textContent = 'Leia a aula — próximo módulo em ' + mmss(falta);
+    nextBtn.disabled = true;
+  } else {
+    nextBtn.textContent = 'Próximo módulo →';
+    nextBtn.disabled = false;
+  }
+}
+setInterval(() => {
+  if(!learnerUser) return;
+  const app = document.getElementById('appRoot');
+  if(!app || app.style.display === 'none') return;
+  aplicarBloqueios();
+  const el = document.getElementById('progressLabel');
+  if(el) el.textContent = el.textContent.replace(/· .*$/, '· ' + hhmm(somaAccessLog(accessLog)) + ' de estudo');
+}, 1000);
+let maxUnlocked = 0;
+
+window.onYouTubeIframeAPIReady = function(){
+  VIDEO_MODULES.forEach(i => {
+    const el = document.getElementById('ytf-' + i);
+    if(!el) return;
+    new YT.Player('ytf-' + i, {
+      events: {
+        onStateChange: (e) => {
+          if(e.data === YT.PlayerState.ENDED){
+            videosWatched.add(i);
+            if(maxUnlocked <= i) maxUnlocked = i + 1;
+            render();
+          }
+        }
+      }
+    });
+  });
+};
+
+function render(){
+  document.querySelectorAll('.module').forEach(el => {
+    el.classList.toggle('active', Number(el.dataset.mod) === current);
+  });
+  document.querySelectorAll('#modlist .modbtn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === current);
+    btn.classList.toggle('done', seen.has(i));
+  });
+  document.getElementById('prevBtn').disabled = current === 0;
+  aplicarBloqueios();
+  const contentSeen = [...seen].filter(i => i <= LAST_LESSON_IDX).length;
+  const fillPct = (contentSeen / TOTAL_LESSONS) * 100;
+  document.getElementById('progressFill').style.width = fillPct + '%';
+  document.getElementById('progressLabel').textContent = `${contentSeen} / ${TOTAL_LESSONS} aulas · ${hhmm(somaAccessLog(accessLog))} de estudo`;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+async function goTo(i){
+  try{
+    if(i > current && VIDEO_MODULES.includes(current) && !videosWatched.has(current)){
+      return;
+    }
+    if(i > current && faltaNoModulo(current) > 0){
+      return;
+    }
+    closeOpenEntry();
+    current = i;
+    seen.add(i);
+    if(maxUnlocked < i) maxUnlocked = i;
+    if(i <= LAST_LESSON_IDX){
+      openEntry(i);
+    }
+    render();
+    await persistUserData();
+  }catch(err){
+    console.error('Erro ao navegar entre módulos', err);
+    alert('Não foi possível abrir o próximo módulo. Atualize a página e tente novamente. Se o problema persistir, informe o responsável pelo treinamento.');
+  }
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => { if(current>0) goTo(current-1); });
+document.getElementById('nextBtn').addEventListener('click', () => { if(current<modules.length-1) goTo(current+1); });
+
+function initMatchExercises(){
+  document.querySelectorAll('.match-exercise').forEach(box => {
+    const pairs = JSON.parse(box.dataset.pairs);
+    const termsCol = box.querySelector('.match-terms');
+    const defsCol = box.querySelector('.match-defs');
+    const feedback = box.querySelector('.match-feedback');
+    const shuffledDefs = [...pairs].sort(() => Math.random() - 0.5);
+    let selectedTerm = null;
+    let solved = 0;
+
+    pairs.forEach(([term]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'match-item';
+      btn.textContent = term;
+      btn.dataset.term = term;
+      btn.addEventListener('click', () => {
+        termsCol.querySelectorAll('.match-item').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedTerm = term;
+      });
+      termsCol.appendChild(btn);
+    });
+
+    shuffledDefs.forEach(([term, def]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'match-item';
+      btn.textContent = def;
+      btn.addEventListener('click', () => {
+        if(!selectedTerm) { feedback.textContent = 'Escolha primeiro um termo à esquerda.'; return; }
+        const correctPair = pairs.find(p => p[0] === selectedTerm);
+        const termBtn = [...termsCol.querySelectorAll('.match-item')].find(b => b.dataset.term === selectedTerm);
+        if(correctPair[1] === def){
+          btn.classList.add('correct');
+          btn.disabled = true;
+          termBtn.classList.remove('selected');
+          termBtn.classList.add('correct');
+          termBtn.disabled = true;
+          solved++;
+          feedback.textContent = solved === pairs.length ? 'Muito bem! Você ligou todos os pares corretamente.' : 'Certo! Continue.';
+          feedback.style.color = 'var(--green)';
+        } else {
+          btn.classList.add('wrong');
+          feedback.textContent = 'Não é essa — tente de novo.';
+          feedback.style.color = 'var(--red)';
+          setTimeout(() => btn.classList.remove('wrong'), 700);
+        }
+        selectedTerm = null;
+      });
+      defsCol.appendChild(btn);
+    });
+  });
+}
+initMatchExercises();
+
+render();
+
+// QUIZ
+const questions = [
+  {
+    q: "Para ser considerado espaço confinado pela NR-33, o local deve atender a quantos requisitos e de que forma?",
+    opts: ["A pelo menos um dos três requisitos", "A três requisitos, simultaneamente", "A dois requisitos, à escolha do responsável técnico"],
+    correct: 1
+  },
+  {
+    q: "Quais são os três requisitos que caracterizam um espaço confinado?",
+    opts: ["Ser escuro, apertado e de difícil acesso", "Não ser projetado para ocupação humana contínua, ter meios limitados de entrada e saída e existir ou poder existir atmosfera perigosa", "Ter menos de 10 m³, não ter janelas e conter produto químico"],
+    correct: 1
+  },
+  {
+    q: "Qual é o percentual ideal de oxigênio e a faixa aceitável segundo o item 33.5.15.2?",
+    opts: ["20,9% ideal; de 19,5% a 23% aceitável, se a causa da variação for conhecida e controlada", "21% ideal; de 18% a 25% aceitável em qualquer situação", "19% ideal; de 17% a 21% aceitável mediante autorização verbal"],
+    correct: 0
+  },
+  {
+    q: "Onde e quando deve ser feita a avaliação atmosférica inicial?",
+    opts: ["Dentro do espaço, logo após a entrada do primeiro trabalhador", "De fora do espaço confinado, imediatamente antes da entrada", "Em qualquer momento do turno, desde que registrada"],
+    correct: 1
+  },
+  {
+    q: "O monitoramento da atmosfera durante a permanência dos trabalhadores deve ser:",
+    opts: ["Feito a cada duas horas", "Contínuo, de forma remota ou presencial", "Dispensado quando a medição inicial estiver dentro dos parâmetros"],
+    correct: 1
+  },
+  {
+    q: "Segundo o Anexo II, qual o parâmetro de inflamáveis no teste após a ventilação?",
+    opts: ["Abaixo de 10% do LIE", "Abaixo de 50% do LIE", "Abaixo de 100% do LIE"],
+    correct: 0
+  },
+  {
+    q: "Toda e qualquer entrada em espaço confinado deve ser precedida de:",
+    opts: ["Comunicação verbal ao supervisor", "Emissão da Permissão de Entrada e Trabalho (PET)", "Anotação no livro de ocorrências"],
+    correct: 1
+  },
+  {
+    q: "Qual a validade da PET e seu limite máximo?",
+    opts: ["Trinta dias, renovável", "Uma jornada de trabalho, sem exceder 24 horas somando as prorrogações", "Enquanto durar o contrato de manutenção"],
+    correct: 1
+  },
+  {
+    q: "Por quanto tempo as PETs devem ser arquivadas?",
+    opts: ["1 ano", "5 anos, de forma rastreável", "Não há prazo definido"],
+    correct: 1
+  },
+  {
+    q: "O vigia pode entrar no espaço confinado para socorrer um colega desacordado?",
+    opts: ["Sim, desde que seja rápido", "Sim, se estiver com máscara com filtro", "Não. Ele aciona o resgate e permanece fora, controlando o acesso"],
+    correct: 2
+  },
+  {
+    q: "Quais são as quatro situações em que a entrada é proibida, segundo o item 33.7.1?",
+    opts: ["Sem autorização, sem avaliação atmosférica ou monitoramento contínuo, sem vigia e sem capacitação", "Sem crachá, sem uniforme, sem ferramenta e sem rádio", "Sem iluminação, sem escada, sem ventilador e sem extintor"],
+    correct: 0
+  },
+  {
+    q: "Qual a carga horária inicial e a periodicidade da capacitação do vigia e do trabalhador autorizado?",
+    opts: ["8 horas inicial, reciclagem bienal", "16 horas inicial, reciclagem anual de 8 horas", "40 horas inicial, reciclagem anual de 16 horas"],
+    correct: 1
+  },
+  {
+    q: "O que o Anexo III exige quanto à parte prática da capacitação?",
+    opts: ["No mínimo 50% da carga horária", "No mínimo 20% da carga horária", "A prática é opcional se houver simulação em vídeo"],
+    correct: 0
+  },
+  {
+    q: "É permitido ventilar um espaço confinado com oxigênio puro para corrigir a deficiência de O2?",
+    opts: ["Sim, desde que por poucos minutos", "Sim, se o trabalhador estiver com EPI completo", "Não. A ventilação com oxigênio puro é proibida pela norma"],
+    correct: 2
+  },
+  {
+    q: "Em atmosfera IPVS (imediatamente perigosa à vida e à saúde), qual proteção respiratória é exigida?",
+    opts: ["Respirador com filtro químico", "Máscara autônoma de pressão positiva ou linha de ar com cilindro auxiliar de escape", "Máscara semifacial com filtro P3"],
+    correct: 1
+  },
+  {
+    q: "Sobre o bloqueio de energias perigosas, é correto afirmar que:",
+    opts: ["Basta desligar pelo circuito de controle", "Exige dispositivo de bloqueio individual e etiquetas, sendo proibido neutralizar a energia apenas pelo circuito de controle", "Pode ser feito por qualquer pessoa, desde que avise a operação"],
+    correct: 1
+  },
+  {
+    q: "Qual a ordem correta das modalidades de resgate em espaço confinado?",
+    opts: ["Resgate com entrada, autossalvamento, resgate sem entrada", "Autossalvamento, resgate sem entrada, resgate com entrada", "Resgate sem entrada, resgate com entrada, autossalvamento"],
+    correct: 1
+  },
+  {
+    q: "O certificado da capacitação de NR-33 deve registrar, além dos dados usuais:",
+    opts: ["O tipo de espaço confinado e as atividades desenvolvidas, com anuência do responsável técnico", "Apenas a carga horária e a data", "O número do CA dos equipamentos utilizados"],
+    correct: 0
+  }
+];
+
+let MAX_ATTEMPTS = 3;
+let PASS_PERCENT = 70;
+
+async function loadQuizSettings(){
+  try{
+    await authReady;
+    const snap = await getDoc(doc(db, 'config', 'settings_' + COURSE_ID));
+    if(snap.exists()){
+      const d = snap.data();
+      if(d.passPercent) PASS_PERCENT = d.passPercent;
+      if(d.maxAttempts) MAX_ATTEMPTS = d.maxAttempts;
+    }
+  }catch(e){ console.error('Falha ao carregar configurações', e); }
+}
+async function saveQuizSettings(passPercent, maxAttempts){
+  await authReady;
+  await setDoc(doc(db, 'config', 'settings_' + COURSE_ID), { passPercent, maxAttempts });
+  PASS_PERCENT = passPercent;
+  MAX_ATTEMPTS = maxAttempts;
+}
+let quizAttempts = [];
+let quizInProgress = false;
+let score = 0;
+let answered = 0;
+
+function buildQuizQuestions(){
+  score = 0;
+  answered = 0;
+  const quizArea = document.getElementById('quizArea');
+  quizArea.innerHTML = '';
+  document.getElementById('quizResult').innerHTML = '';
+
+  questions.forEach((item, qi) => {
+    const box = document.createElement('div');
+    box.className = 'quiz-q';
+    const p = document.createElement('p');
+    p.className = 'qtext';
+    p.textContent = `${qi+1}. ${item.q}`;
+    box.appendChild(p);
+
+    item.opts.forEach((opt, oi) => {
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.textContent = opt;
+      b.addEventListener('click', () => {
+        const allOpts = box.querySelectorAll('.opt');
+        allOpts.forEach(o => o.disabled = true);
+        if(oi === item.correct){
+          b.classList.add('correct');
+          score++;
+        } else {
+          b.classList.add('wrong');
+          allOpts[item.correct].classList.add('correct');
+        }
+        answered++;
+        if(answered === questions.length){
+          finishQuizAttempt();
+        }
+      });
+      box.appendChild(b);
+    });
+    quizArea.appendChild(box);
+  });
+}
+
+async function finishQuizAttempt(){
+  const percent = Math.round((score / questions.length) * 100);
+  const aprovado = percent >= PASS_PERCENT;
+  quizAttempts.push({ score, total: questions.length, percent, aprovado, quando: new Date() });
+  quizInProgress = false;
+  document.getElementById('quizArea').style.display = 'none';
+  await persistUserData();
+  renderQuizGate();
+  renderQuizSummary();
+}
+
+const MOTIVATIONAL_PHRASES = [
+  "Segurança não é sorte — é escolha repetida todos os dias.",
+  "Cada procedimento seguido é uma vida protegida, a começar pela sua.",
+  "O acidente mais fácil de evitar é aquele que a gente previne antes.",
+  "Prevenir custa um minuto. Remediar pode custar uma vida inteira.",
+  "Quem cuida da segurança no trabalho, cuida de quem volta pra casa."
+];
+
+function renderQuizGate(){
+  const gate = document.getElementById('quizGate');
+  if(!gate) return;
+  if(quizInProgress){ gate.innerHTML = ''; return; }
+
+  const passed = quizAttempts.some(a => a.aprovado);
+  const attemptsUsed = quizAttempts.length;
+
+  if(passed){
+    const phrase = MOTIVATIONAL_PHRASES[Math.floor(Math.random() * MOTIVATIONAL_PHRASES.length)];
+    const bestPassed = quizAttempts.find(a => a.aprovado);
+    gate.innerHTML = `
+      <div class="card note">
+        <strong>Parabéns, você foi aprovado! 🎉</strong>
+        <p style="margin:10px 0 0;">Você acertou ${bestPassed.score} de ${bestPassed.total} questões (${bestPassed.percent}%) — acima do mínimo exigido de ${PASS_PERCENT}%. Entre em contato com o instrutor responsável pelo treinamento para retirar seu certificado.</p>
+        <p style="margin:14px 0 0; font-style:italic; color:var(--mint);">"${phrase}"</p>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3 style="margin-top:0;">Que tal avaliar o curso?</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft); margin-bottom:14px;">Não é obrigatório, mas sua opinião ajuda a melhorar o treinamento.</p>
+        <form id="feedbackForm">
+          <div class="field">
+            <label for="feedbackText">Seu comentário (opcional)</label>
+            <textarea id="feedbackText" rows="4" style="width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper); color:var(--text); font-family:'Inter',sans-serif; font-size:14.5px; resize:vertical;"></textarea>
+          </div>
+          <p class="login-error" id="feedbackMsg"></p>
+          <button type="submit" class="login-btn" id="feedbackSubmitBtn" style="width:auto; padding:11px 22px;">Enviar avaliação</button>
+        </form>
+      </div>
+    `;
+    document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msgEl = document.getElementById('feedbackMsg');
+      const text = document.getElementById('feedbackText').value.trim();
+      try{
+        await authReady;
+        await setDoc(doc(db, 'feedback', dataKey(learnerUser)), { name: learnerName, username: learnerUser, curso: COURSE_ID, comentario: text, quando: new Date().toISOString() });
+        msgEl.textContent = 'Obrigado pelo feedback!';
+        msgEl.style.color = 'var(--green)';
+        msgEl.style.display = 'block';
+      }catch(err){
+        console.error('Erro ao salvar feedback', err);
+        msgEl.textContent = 'Não foi possível enviar agora. Tente novamente mais tarde.';
+        msgEl.style.color = 'var(--red)';
+        msgEl.style.display = 'block';
+      }
+    });
+    return;
+  }
+  if(attemptsUsed >= MAX_ATTEMPTS){
+    gate.innerHTML = `<div class="card alert"><strong>Reprovado.</strong> Você usou as ${MAX_ATTEMPTS} tentativas disponíveis sem atingir os ${PASS_PERCENT}% mínimos. Entre em contato com o instrutor responsável pelo treinamento.</div>`;
+    return;
+  }
+  const lastLine = attemptsUsed > 0
+    ? `<p class="lede" style="margin-bottom:16px;">Última tentativa: <strong>${quizAttempts[attemptsUsed-1].percent}%</strong> de acerto (mínimo para aprovação: ${PASS_PERCENT}%). Você ainda pode tentar novamente.</p>`
+    : '';
+  gate.innerHTML = `${lastLine}<button class="login-btn" id="startQuizBtn" style="width:auto; padding:12px 26px;">${attemptsUsed > 0 ? 'Realizar novamente' : 'Iniciar prova'} (tentativa ${attemptsUsed+1} de ${MAX_ATTEMPTS})</button>`;
+  document.getElementById('startQuizBtn').addEventListener('click', () => {
+    quizInProgress = true;
+    document.getElementById('quizArea').style.display = 'block';
+    document.getElementById('quizResult').innerHTML = '';
+    buildQuizQuestions();
+    renderQuizGate();
+  });
+}
+
+function renderQuizSummary(){
+  const el = document.getElementById('quizResultSummary');
+  if(!el) return;
+  if(quizAttempts.length === 0){
+    el.innerHTML = '<p class="log-empty">Prova ainda não realizada.</p>';
+    return;
+  }
+  const rows = quizAttempts.map((a, i) => `<tr><td>${i+1}</td><td>${a.score} de ${a.total}</td><td>${a.percent}%</td><td>${a.aprovado ? 'Aprovado' : 'Reprovado'}</td><td class="ts">${formatTs(a.quando)}</td></tr>`).join('');
+  el.innerHTML = `<table class="log-table">
+    <tr><th>Tentativa</th><th>Pontuação</th><th>Percentual</th><th>Resultado</th><th>Realizada em</th></tr>
+    ${rows}
+  </table>`;
+}
+
+// ---- SESSAO COMPARTILHADA COM O PORTAL -------------------------------------
+// O portal e os cursos usam a mesma colecao "users", entao o aluno entra uma
+// vez e circula entre os treinamentos sem repetir login. A sessao vale apenas
+// nesta aba e e sempre revalidada no Firestore ao abrir cada curso.
+const SESSION_KEY = 'normas_sessao';
+function salvarSessao(username){ try{ sessionStorage.setItem(SESSION_KEY, username); }catch(e){} }
+function limparSessao(){ try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){} }
+
+async function restaurarSessao(){
+  let u = '';
+  try{ u = sessionStorage.getItem(SESSION_KEY) || ''; }catch(e){ return; }
+  if(!u) return;
+  try{
+    const record = await getUser(u);
+    if(!record){ limparSessao(); return; }
+    if(record.role === 'admin'){ await startAdminSession(u); return; }
+    if(!hasCourseAccess(record)) return;   // sem matricula neste curso: fica no login
+    await startSession(u, record.name);
+  }catch(e){ console.error('Falha ao restaurar a sessão', e); }
+}
+restaurarSessao();
+</script>
+
+</body>
+</html>
