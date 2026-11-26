@@ -454,6 +454,10 @@
         <label for="loginPass">Senha</label>
         <input type="password" id="loginPass" autocomplete="current-password" required>
       </div>
+      <label style="display:flex; align-items:center; gap:10px; margin:-2px 0 18px; font-size:13.5px; color:var(--ink-soft); cursor:pointer; text-transform:none; letter-spacing:normal; font-family:'Inter', sans-serif; font-weight:400;">
+        <input type="checkbox" id="manterConectado" style="width:17px; height:17px; min-width:17px; padding:0; margin:0; flex:0 0 auto; accent-color:var(--green); cursor:pointer;">
+        Manter meu acesso salvo neste dispositivo
+      </label>
       <p class="login-error" id="loginError"></p>
       <button type="submit" class="login-btn" id="loginSubmitBtn">Entrar →</button>
     </form>
@@ -485,7 +489,8 @@
     <div class="progress-label" id="progressLabel">0 / 9 aulas vistas</div>
 
     <nav class="modlist" id="modlist"></nav>
-    <a href="../index.html" class="navbtn" style="display:block; width:100%; margin-top:20px; text-align:center; text-decoration:none; border-color:rgba(236,237,241,0.3); color:var(--text);">← Meus treinamentos</a>
+    <a href="../index.html" class="navbtn" id="portalLinkAluno" style="display:block; width:100%; margin-top:20px; text-align:center; text-decoration:none; border-color:rgba(236,237,241,0.3); color:var(--text);">← Meus treinamentos</a>
+    <button type="button" class="navbtn" id="backToAdminBtn" style="display:none; width:100%; margin-top:20px; border-color:var(--green); color:var(--mint);">← Voltar ao painel</button>
     <button type="button" class="navbtn" id="studentLogoutBtn" style="width:100%; margin-top:10px; border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
   </aside>
 
@@ -799,6 +804,7 @@
       <p class="sub">Cadastro de alunos e acompanhamento do treinamento do representante designado.</p>
     </div>
     <nav class="modlist" style="margin-top:24px;">
+      <button class="modbtn" id="adminViewCourseBtn"><span class="num">▶</span><span class="label">Conteúdo do curso</span></button>
       <button class="modbtn admin-tab-btn active" data-tab="dashboard"><span class="num">◆</span><span class="label">Dashboard</span></button>
       <button class="modbtn admin-tab-btn" data-tab="alunos"><span class="num">◆</span><span class="label">Alunos</span></button>
       <button class="modbtn admin-tab-btn" data-tab="config"><span class="num">◆</span><span class="label">Configurações</span></button>
@@ -1716,6 +1722,7 @@ let accessLog = [];
 let openEntryIndex = null;
 
 function openEntry(i){
+  if(adminPreview){ seen.add(i); return; }
   if(i > 11) return;
   accessLog.push({
     modulo: modules[i].title,
@@ -1797,7 +1804,7 @@ function render(){
   document.querySelectorAll('.module').forEach(el => {
     el.classList.toggle('active', Number(el.dataset.mod) === current);
   });
-  const videoPending = VIDEO_MODULES.includes(current) && !videosWatched.has(current);
+  const videoPending = !adminPreview && VIDEO_MODULES.includes(current) && !videosWatched.has(current);
   document.querySelectorAll('#modlist .modbtn').forEach((btn, i) => {
     btn.classList.toggle('active', i === current);
     btn.classList.toggle('done', seen.has(i));
@@ -2126,12 +2133,35 @@ function renderQuizSummary(){
 // vez e circula entre os treinamentos sem repetir login. A sessao vale apenas
 // nesta aba e e sempre revalidada no Firestore ao abrir cada curso.
 const SESSION_KEY = 'normas_sessao';
-function salvarSessao(username){ try{ sessionStorage.setItem(SESSION_KEY, username); }catch(e){} }
-function limparSessao(){ try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){} }
+// Guarda o acesso: marcado, fica salvo no aparelho ate o usuario sair;
+// desmarcado, vale so enquanto a aba estiver aberta.
+function manterConectado(){
+  const cb = document.getElementById('manterConectado');
+  return !!(cb && cb.checked);
+}
+function guardarSessao(username){
+  try{
+    if(manterConectado()){
+      localStorage.setItem(SESSION_KEY, username);
+      sessionStorage.removeItem(SESSION_KEY);
+    }else{
+      sessionStorage.setItem(SESSION_KEY, username);
+      localStorage.removeItem(SESSION_KEY);
+    }
+  }catch(e){}
+}
+function lerSessao(){
+  try{ return localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY) || ''; }
+  catch(e){ return ''; }
+}
+function apagarSessao(){
+  try{ localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); }catch(e){}
+}
+const salvarSessao = guardarSessao;
+const limparSessao = apagarSessao;
 
 async function restaurarSessao(){
-  let u = '';
-  try{ u = sessionStorage.getItem(SESSION_KEY) || ''; }catch(e){ return; }
+  const u = lerSessao();
   if(!u) return;
   try{
     const record = await getUser(u);
@@ -2142,6 +2172,51 @@ async function restaurarSessao(){
   }catch(e){ console.error('Falha ao restaurar a sessão', e); }
 }
 restaurarSessao();
+
+// ---- PRE-VISUALIZACAO DO CONTEUDO PELO RESPONSAVEL -------------------------
+// O admin abre o curso como o aluno ve, sem gravar nada: learnerUser fica
+// vazio, entao persistUserData() e o registro de acesso nao sao acionados.
+let adminPreview = false;
+
+async function abrirConteudoComoAdmin(){
+  adminPreview = true;
+  learnerUser = '';
+  learnerName = 'Pré-visualização';
+  accessLog = [];
+  seen = new Set([0]);
+  quizAttempts = [];
+  openEntryIndex = null;
+  videosWatched.clear();
+  await loadQuizSettings();
+  document.getElementById('adminRoot').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'grid';
+  document.getElementById('learnerLabel').textContent = 'Pré-visualização — nada é registrado';
+  document.getElementById('studentLogoutBtn').style.display = 'none';
+  const lp = document.getElementById('portalLinkAluno');
+  if(lp) lp.style.display = 'none';
+  document.getElementById('backToAdminBtn').style.display = 'block';
+  current = 0;
+  maxUnlocked = modules.length - 1;
+  renderLog();
+  renderQuizSummary();
+  renderQuizGate();
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function voltarAoPainel(){
+  adminPreview = false;
+  document.getElementById('appRoot').style.display = 'none';
+  document.getElementById('adminRoot').style.display = 'grid';
+  document.getElementById('studentLogoutBtn').style.display = '';
+  const lp = document.getElementById('portalLinkAluno');
+  if(lp) lp.style.display = '';
+  document.getElementById('backToAdminBtn').style.display = 'none';
+  switchAdminTab('alunos');
+}
+
+document.getElementById('adminViewCourseBtn').addEventListener('click', abrirConteudoComoAdmin);
+document.getElementById('backToAdminBtn').addEventListener('click', voltarAoPainel);
 </script>
 
 </body>

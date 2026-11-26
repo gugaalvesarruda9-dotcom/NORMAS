@@ -466,6 +466,10 @@
         <label for="loginPass">Senha</label>
         <input type="password" id="loginPass" autocomplete="current-password" required>
       </div>
+      <label style="display:flex; align-items:center; gap:10px; margin:-2px 0 18px; font-size:13.5px; color:var(--ink-soft); cursor:pointer; text-transform:none; letter-spacing:normal; font-family:'Inter', sans-serif; font-weight:400;">
+        <input type="checkbox" id="manterConectado" style="width:17px; height:17px; min-width:17px; padding:0; margin:0; flex:0 0 auto; accent-color:var(--green); cursor:pointer;">
+        Manter meu acesso salvo neste dispositivo
+      </label>
       <p class="login-error" id="loginError"></p>
       <button type="submit" class="login-btn" id="loginSubmitBtn">Entrar →</button>
     </form>
@@ -533,6 +537,31 @@ const CURSOS = [
 ];
 
 const SESSION_KEY = 'normas_sessao';
+
+// Guarda o acesso: marcado, fica salvo no aparelho ate o usuario sair;
+// desmarcado, vale so enquanto a aba estiver aberta.
+function manterConectado(){
+  const cb = document.getElementById('manterConectado');
+  return !!(cb && cb.checked);
+}
+function guardarSessao(username){
+  try{
+    if(manterConectado()){
+      localStorage.setItem(SESSION_KEY, username);
+      sessionStorage.removeItem(SESSION_KEY);
+    }else{
+      sessionStorage.setItem(SESSION_KEY, username);
+      localStorage.removeItem(SESSION_KEY);
+    }
+  }catch(e){}
+}
+function lerSessao(){
+  try{ return localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY) || ''; }
+  catch(e){ return ''; }
+}
+function apagarSessao(){
+  try{ localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); }catch(e){}
+}
 
 async function hashText(text){
   if(typeof crypto === 'undefined' || !crypto.subtle){
@@ -622,7 +651,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     if(!record){ showLoginError('Usuário ou senha incorretos. Confira os dados e tente novamente.'); return; }
     const hash = await hashText(pass);
     if(hash !== record.hash){ showLoginError('Usuário ou senha incorretos. Confira os dados e tente novamente.'); return; }
-    try{ sessionStorage.setItem(SESSION_KEY, user); }catch(err){}
+    guardarSessao(user);
     await abrirPortal(user, record);
   }catch(err){
     console.error('Erro no login', err);
@@ -633,7 +662,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 });
 
 document.getElementById('portalLogoutBtn').addEventListener('click', () => {
-  try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){}
+  apagarSessao();
   document.getElementById('portalRoot').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginUser').value = '';
@@ -642,13 +671,12 @@ document.getElementById('portalLogoutBtn').addEventListener('click', () => {
 
 // Se o aluno ja entrou nesta aba, o portal volta sozinho.
 (async () => {
-  let u = '';
-  try{ u = sessionStorage.getItem(SESSION_KEY) || ''; }catch(e){ return; }
+  const u = lerSessao();
   if(!u) return;
   try{
     const record = await getUser(u);
     if(record) await abrirPortal(u, record);
-    else sessionStorage.removeItem(SESSION_KEY);
+    else apagarSessao();
   }catch(e){ console.error('Falha ao restaurar a sessão', e); }
 })();
 
