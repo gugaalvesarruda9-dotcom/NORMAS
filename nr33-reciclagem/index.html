@@ -1756,13 +1756,13 @@ ensureAdminBootstrap();
 loadQuizSettings();
 
 const modules = [
-  {title:"Por que reciclar", dot:"var(--mint)", min:30},
-  {title:"Revisão: espaço e atmosfera", dot:"var(--risk-quimico)", min:30},
-  {title:"Funções na prática", dot:"var(--risk-fisico)", min:30},
-  {title:"PET: o que invalida", dot:"var(--risk-acidente)", min:40},
-  {title:"Medição e monitoramento", dot:"var(--risk-quimico)", min:45},
-  {title:"Resgate e bloqueio", dot:"var(--risk-acidente)", min:40},
-  {title:"Avaliação final", dot:"var(--mint)", min:25},
+  {title:"Por que reciclar", dot:"var(--mint)", min:15},
+  {title:"Revisão: espaço e atmosfera", dot:"var(--risk-quimico)", min:15},
+  {title:"Funções na prática", dot:"var(--risk-fisico)", min:15},
+  {title:"PET: o que invalida", dot:"var(--risk-acidente)", min:15},
+  {title:"Medição e monitoramento", dot:"var(--risk-quimico)", min:15},
+  {title:"Resgate e bloqueio", dot:"var(--risk-acidente)", min:15},
+  {title:"Avaliação final", dot:"var(--mint)", min:15},
   {title:"Histórico de acesso", dot:"rgba(236,237,241,0.4)", min:0}
 ];
 
@@ -1829,6 +1829,9 @@ modules.forEach((m, i) => {
 });
 
 const VIDEO_MODULES = [1, 4, 5];
+const VIDEO_MIN_SEG = 480; // 8 min de reproducao liberam o avanco
+const vidTimers = {};
+const vidSecs = {};
 const videosWatched = new Set();
 
 // ---- TEMPO MINIMO POR MODULO ----------------------------------------------
@@ -1877,7 +1880,7 @@ function aplicarBloqueios(){
     nextBtn.textContent = 'Concluído ✓';
     nextBtn.disabled = true;
   } else if(videoPendente){
-    nextBtn.textContent = 'Assista o vídeo até o fim para continuar';
+    nextBtn.textContent = 'Assista ao menos 8 min do vídeo para continuar';
     nextBtn.disabled = true;
   } else if(falta > 0){
     nextBtn.textContent = 'Leia a aula — próximo módulo em ' + mmss(falta);
@@ -1904,11 +1907,24 @@ window.onYouTubeIframeAPIReady = function(){
     new YT.Player('ytf-' + i, {
       events: {
         onStateChange: (e) => {
-          if(e.data === YT.PlayerState.ENDED){
+          const marcarVisto = () => {
+            if(videosWatched.has(i)) return;
             videosWatched.add(i);
             if(maxUnlocked <= i) maxUnlocked = i + 1;
             render();
+          };
+          if(e.data === YT.PlayerState.PLAYING){
+            if(!vidTimers[i]){
+              vidTimers[i] = setInterval(() => {
+                vidSecs[i] = (vidSecs[i] || 0) + 1;
+                if(vidSecs[i] >= VIDEO_MIN_SEG) marcarVisto();
+              }, 1000);
+            }
+          } else {
+            clearInterval(vidTimers[i]);
+            vidTimers[i] = null;
           }
+          if(e.data === YT.PlayerState.ENDED) marcarVisto();
         }
       }
     });
