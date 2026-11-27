@@ -1795,6 +1795,9 @@ modules.forEach((m, i) => {
 });
 
 const VIDEO_MODULES = [];
+const VIDEO_MIN_SEG = 480; // 8 min de reproducao liberam o avanco
+const vidTimers = {};
+const vidSecs = {};
 const videosWatched = new Set();
 let maxUnlocked = 0;
 
@@ -1805,11 +1808,24 @@ window.onYouTubeIframeAPIReady = function(){
     new YT.Player('ytf-' + i, {
       events: {
         onStateChange: (e) => {
-          if(e.data === YT.PlayerState.ENDED){
+          const marcarVisto = () => {
+            if(videosWatched.has(i)) return;
             videosWatched.add(i);
             if(maxUnlocked <= i) maxUnlocked = i + 1;
             render();
+          };
+          if(e.data === YT.PlayerState.PLAYING){
+            if(!vidTimers[i]){
+              vidTimers[i] = setInterval(() => {
+                vidSecs[i] = (vidSecs[i] || 0) + 1;
+                if(vidSecs[i] >= VIDEO_MIN_SEG) marcarVisto();
+              }, 1000);
+            }
+          } else {
+            clearInterval(vidTimers[i]);
+            vidTimers[i] = null;
           }
+          if(e.data === YT.PlayerState.ENDED) marcarVisto();
         }
       }
     });
@@ -1832,7 +1848,7 @@ function render(){
     nextBtn.textContent = 'Concluído ✓';
     nextBtn.disabled = true;
   } else if(videoPending){
-    nextBtn.textContent = 'Assista o vídeo até o fim para continuar';
+    nextBtn.textContent = 'Assista ao menos 8 min do vídeo para continuar';
     nextBtn.disabled = true;
   } else {
     nextBtn.textContent = 'Próximo módulo →';
