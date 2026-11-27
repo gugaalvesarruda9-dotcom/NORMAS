@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G.A Occupational Safety · Portal de Treinamentos</title>
+<style>
+  :root{
+    --green: #16A34A;
+    --green-deep: #0F7F3B;
+    --mint: #8FDCB0;
+    --ink: #0D0F16;
+    --ink-soft: #9CA0AC;
+    --paper: #1B1E2C;
+    --paper-raised: #242736;
+    --text: #ECEDF1;
+    --red: #F0555C;
+    --risk-fisico: #2DBFD1;
+    --risk-quimico: #F2545B;
+    --risk-biologico: #C9A15A;
+    --risk-ergonomico: #E3B341;
+    --risk-acidente: #5B8DEF;
+    --line: rgba(236,237,241,0.12);
+    --shadow: 0 10px 30px rgba(0,0,0,0.45);
+    --grid: rgba(236,237,241,0.045);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  .hazard-bar{
+    height:3px;
+    width:100%;
+    background:linear-gradient(90deg, var(--green) 0%, var(--mint) 100%);
+    position:fixed; top:0; left:0; z-index:50;
+  }
+
+  .app{
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    min-height:100vh;
+    padding-top:8px;
+  }
+
+  /* SIDEBAR */
+  .sidebar{
+    background:var(--ink);
+    color:var(--text);
+    padding:32px 22px 24px;
+    position:sticky;
+    top:8px;
+    height:calc(100vh - 8px);
+    overflow-y:auto;
+    border-right:1px solid rgba(0,0,0,0.3);
+  }
+  .brand{
+    display:flex; flex-direction:column; gap:2px; margin-bottom:6px;
+  }
+  .brand-mark{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  }
+  .brand-mark svg{ flex:0 0 auto; width:34px; height:34px; }
+  .brand .eyebrow{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--mint);
+    font-size:12.5px;
+  }
+  .brand h1{
+    font-family:'Archivo Black', sans-serif;
+    font-size:24px;
+    line-height:1.05;
+    margin:4px 0 0;
+    letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .brand .sub{
+    font-size:12.5px;
+    color:rgba(236,237,241,0.55);
+    margin-top:8px;
+    line-height:1.5;
+  }
+
+  .progress-track{
+    height:4px;
+    width:100%;
+    background:rgba(236,237,241,0.15);
+    border-radius:4px;
+    margin:20px 0 10px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:var(--green);
+    transition:width .4s ease;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:rgba(236,237,241,0.5);
+    margin-bottom:14px;
+  }
+
+  .curriculum-total{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:rgba(236,237,241,0.65);
+    display:flex; align-items:center; gap:6px; margin:2px 0 0;
+  }
+  .curriculum-total b{ color:var(--mint); }
+
+  nav.modlist{
+    display:flex; flex-direction:column; gap:2px;
+    margin-top:16px;
+  }
+  .modbtn{
+    display:flex; align-items:center; gap:12px;
+    background:transparent; border:none; color:inherit;
+    text-align:left; cursor:pointer;
+    padding:11px 10px; border-radius:8px;
+    font-family:'Inter', sans-serif; font-size:13.5px; font-weight:500;
+    color:rgba(236,237,241,0.75);
+    transition:background .15s ease, color .15s ease;
+  }
+  .modbtn:hover{ background:rgba(236,237,241,0.06); color:var(--text); }
+  .modbtn.active{ background:rgba(22,163,74,0.14); color:var(--text); }
+  .modbtn.active .num{ background:var(--green); color:#fff; }
+  .modbtn:focus-visible{ outline:2px solid var(--green); outline-offset:2px; }
+
+  .num{
+    flex:0 0 auto;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:rgba(236,237,241,0.12);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; font-weight:600;
+    color:rgba(236,237,241,0.6);
+  }
+  .modbtn.done .num{ background:var(--green); color:#fff; }
+  .modbtn.done .num::after{ content:"✓"; }
+  .modbtn .label{ flex:1; }
+  .modbtn .dot{
+    width:8px; height:8px; border-radius:50%; flex:0 0 auto;
+  }
+
+  /* MAIN */
+  main{
+    padding:52px 64px 90px;
+    max-width:880px;
+  }
+  .module{ display:none; animation:fade .35s ease; }
+  .module.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .m-eyebrow{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:0.14em;
+    font-weight:600; font-size:13px; color:var(--mint);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:10px;
+  }
+  .m-eyebrow .code{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--ink); color:var(--green);
+    padding:2px 8px; border-radius:4px; letter-spacing:0;
+    font-size:11.5px;
+  }
+  .m-eyebrow .duration{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0; text-transform:none;
+    color:var(--ink-soft); font-size:12px;
+    display:flex; align-items:center; gap:5px;
+  }
+  .m-eyebrow .duration::before{ content:"⏱"; font-size:11px; }
+
+  h2.m-title{
+    font-family:'Archivo Black', sans-serif;
+    font-size:38px; line-height:1.08; margin:0 0 22px;
+    letter-spacing:-0.01em; max-width:640px;
+    color:var(--text);
+  }
+  .lede{
+    font-size:17px; line-height:1.65; color:var(--ink-soft);
+    max-width:640px; margin-bottom:34px;
+  }
+  h3{
+    font-family:'Archivo Black', sans-serif;
+    font-size:18px; margin:36px 0 14px; letter-spacing:-0.005em;
+    color:var(--text);
+  }
+  p, li{ font-size:15px; line-height:1.7; color:var(--text); }
+  ul, ol{ padding-left:20px; margin:0 0 16px; }
+  li{ margin-bottom:8px; }
+  strong{ font-weight:700; }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 24px;
+    margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .card.alert{ border-left:5px solid var(--red); }
+  .card.note{ border-left:5px solid var(--green); }
+
+  table{ width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+  th, td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); }
+  th{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em; font-size:12px; color:var(--ink-soft); }
+  tr:last-child td{ border-bottom:none; }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 24px; }
+  .chip{
+    display:flex; align-items:center; gap:8px;
+    padding:7px 13px; border-radius:100px;
+    font-size:13px; font-weight:600; color:#fff;
+  }
+  .chip .sw{ width:11px; height:11px; border-radius:50%; background:#fff; opacity:.9; }
+
+  .video-wrap{
+    margin:22px 0 28px;
+    border-radius:12px; overflow:hidden;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .video-wrap .vid-label{
+    background:var(--ink); color:var(--green);
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+    font-size:12px; padding:9px 16px;
+  }
+  .video-frame{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-frame iframe{ position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
+  .video-wrap.video-link{ display:block; text-decoration:none; color:inherit; cursor:pointer; }
+  .video-thumb{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.8; }
+  .play-badge{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    background:var(--green); color:#fff; padding:11px 20px; border-radius:100px;
+    font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.06em;
+    font-weight:700; font-size:13px; white-space:nowrap;
+    display:flex; align-items:center; gap:8px;
+  }
+  .video-wrap.video-link:hover .play-badge{ background:var(--green-deep); }
+
+  /* MAPA DE RISCO */
+  .riskmap-wrap{
+    display:flex; gap:36px; align-items:flex-start; flex-wrap:wrap;
+    margin:26px 0 10px;
+  }
+  .riskmap-plan{ flex:0 0 340px; position:relative; }
+  .riskmap-legend{ flex:1; min-width:220px; }
+  .riskmap-legend .item{
+    display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:13.5px;
+  }
+  .riskmap-legend .sz{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-left:auto; }
+
+  .nav-buttons{
+    display:flex; justify-content:space-between; margin-top:50px;
+    padding-top:24px; border-top:1px solid var(--line);
+  }
+  .navbtn{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; font-weight:600;
+    font-size:13px; padding:11px 20px; border-radius:8px; cursor:pointer;
+    border:1.5px solid var(--text); background:transparent; color:var(--text);
+    transition:background .15s ease, color .15s ease;
+  }
+  .navbtn:hover{ background:var(--green); color:var(--ink); border-color:var(--green); }
+  .navbtn.primary{ background:var(--ink); color:var(--green); border-color:var(--ink); }
+  .navbtn.primary:hover{ background:var(--green-deep); color:#fff; }
+  .navbtn:disabled{ opacity:.3; cursor:not-allowed; }
+  .navbtn:disabled:hover{ background:transparent; color:var(--text); border-color:var(--text); }
+
+  /* QUIZ */
+  .quiz-q{ background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-bottom:18px; }
+  .quiz-q p.qtext{ font-weight:600; margin:0 0 14px; font-size:15px; color:var(--text); }
+  .opt{
+    display:block; width:100%; text-align:left;
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:8px; padding:11px 14px; margin-bottom:9px;
+    font-size:14px; cursor:pointer; color:var(--text);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt:hover{ border-color:var(--green); }
+  .opt.correct{ background:rgba(22,163,74,0.16); border-color:var(--green); }
+  .opt.wrong{ background:rgba(240,85,92,0.14); border-color:var(--red); }
+  .opt:disabled{ cursor:default; }
+  .match-exercise{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; margin:22px 0;
+  }
+  .match-exercise h4{ margin:0 0 4px; font-size:15px; }
+  .match-hint{ font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
+  .match-cols{ display:flex; gap:22px; flex-wrap:wrap; }
+  .match-col{ flex:1; min-width:220px; display:flex; flex-direction:column; gap:8px; }
+  .match-item{
+    text-align:left; padding:10px 14px; border-radius:8px;
+    border:1.5px solid var(--line); background:var(--paper);
+    color:var(--text); font-size:13.5px; cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .match-item:hover{ border-color:var(--green); }
+  .match-item.selected{ border-color:var(--green); background:rgba(22,163,74,0.12); }
+  .match-item.correct{ border-color:var(--green); background:rgba(22,163,74,0.2); cursor:default; }
+  .match-item.wrong{ border-color:var(--red); background:rgba(240,85,92,0.14); }
+  .match-item:disabled{ cursor:default; opacity:.85; }
+  .match-feedback{ margin:14px 0 0; font-size:13px; color:var(--ink-soft); }
+
+  .quiz-score{
+    font-family:'Archivo Black', sans-serif; font-size:22px; text-align:center;
+    padding:26px; background:var(--ink); color:var(--green); border-radius:12px; margin-top:8px;
+  }
+
+  /* HISTÓRICO */
+  .log-table{ width:100%; border-collapse:collapse; margin:10px 0 20px; font-size:13.5px; }
+  .log-table th, .log-table td{ padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; color:var(--text); }
+  .log-table th{ font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; font-size:11.5px; letter-spacing:.05em; color:var(--ink-soft); }
+  .log-table td.ts{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap; }
+  .log-empty{ color:var(--ink-soft); font-size:14px; padding:18px 0; }
+  .log-actions{ display:flex; gap:12px; margin-top:6px; flex-wrap:wrap; }
+
+  footer.appfoot{
+    max-width:640px; font-size:12px; color:var(--ink-soft); margin-top:60px;
+    padding-top:18px; border-top:1px solid var(--line);
+  }
+
+  @media (max-width: 880px){
+    .app{ grid-template-columns:1fr; }
+    .sidebar{ position:static; height:auto; order:2; max-height:70vh; }
+    main{ padding:28px 20px 60px; order:1; }
+    h2.m-title{ font-size:28px; }
+  }
+
+  /* LOGIN / HOME */
+  .login-screen{
+    position:fixed; inset:0; z-index:100;
+    background:var(--ink);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .login-hazard{
+    position:absolute; top:0; left:0; width:100%; height:3px;
+    background:linear-gradient(90deg, var(--green) 0%, var(--mint) 100%);
+  }
+  .login-card{
+    position:relative;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:44px 40px 36px;
+    width:100%; max-width:400px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.55);
+  }
+  .login-card::before, .login-card::after,
+  .login-corner-tl, .login-corner-br{
+    content:""; position:absolute; width:18px; height:18px;
+    border-color:var(--green); border-style:solid; border-width:0;
+    opacity:.85;
+  }
+  .login-card::before{ top:-9px; left:-9px; border-top-width:2px; border-left-width:2px; border-radius:4px 0 0 0; }
+  .login-card::after{ bottom:-9px; right:-9px; border-bottom-width:2px; border-right-width:2px; border-radius:0 0 4px 0; }
+  .login-company{
+    display:flex; align-items:center; gap:8px; margin-bottom:18px;
+  }
+  .login-company svg{ width:26px; height:26px; flex:0 0 auto; }
+  .login-company span{
+    font-family:'Barlow Condensed', sans-serif;
+    text-transform:uppercase; letter-spacing:.1em; font-weight:700;
+    font-size:13px; color:var(--mint);
+  }
+  .login-card h1{
+    font-family:'Archivo Black', sans-serif; font-size:26px; margin:0 0 6px; letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .login-card .login-sub{
+    font-size:13.5px; color:var(--ink-soft); margin-bottom:28px; line-height:1.55;
+  }
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; font-family:'Barlow Condensed', sans-serif; text-transform:uppercase;
+    letter-spacing:.06em; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;
+  }
+  .field input{
+    width:100%; padding:11px 13px; border-radius:8px;
+    border:1.5px solid var(--line); background:var(--paper);
+    font-family:'Inter', sans-serif; font-size:14.5px; color:var(--text);
+  }
+  .field input:focus{ outline:none; border-color:var(--green); }
+  .login-btn{
+    width:100%; margin-top:10px; padding:13px;
+    background:var(--green); color:#fff; border:none; border-radius:8px;
+    font-family:'Barlow Condensed', sans-serif; text-transform:uppercase; letter-spacing:.08em;
+    font-weight:700; font-size:14px; cursor:pointer;
+    transition:background .15s ease;
+  }
+  .login-btn:hover{ background:var(--green-deep); color:#fff; }
+  .login-error{
+    color:var(--red); font-size:12.5px; margin-top:-8px; margin-bottom:14px; display:none;
+  }
+  .login-note{
+    font-size:11.5px; color:var(--ink-soft); margin-top:22px; line-height:1.5; opacity:.9;
+  }
+</style>
+
+<style>
+  .portal{ max-width:1140px; margin:0 auto; padding:44px 30px 90px; }
+  .portal-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:26px; flex-wrap:wrap; margin-bottom:38px; }
+  .portal-hello h1{ font-family:'Barlow Condensed',sans-serif; font-size:clamp(30px,5vw,44px); line-height:1.05; margin:6px 0 10px; }
+  .portal-hello p{ color:var(--ink-soft); font-size:15px; max-width:620px; line-height:1.6; margin:0; }
+  .course-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:20px; }
+  .course-card{ border:1px solid var(--line); border-radius:14px; background:var(--paper); padding:24px 24px 22px; display:flex; flex-direction:column; }
+  .course-card .cc-tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; color:var(--mint); text-transform:uppercase; }
+  .course-card h3{ font-family:'Barlow Condensed',sans-serif; font-size:24px; margin:9px 0 10px; line-height:1.15; }
+  .course-card p{ font-size:13.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 16px; flex:1; }
+  .cc-meta{ display:flex; gap:16px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); margin-bottom:18px; }
+  .cc-meta b{ color:var(--text); font-weight:600; }
+  .cc-open{ display:block; text-align:center; text-decoration:none; padding:12px 16px; border-radius:9px; background:var(--green); color:#fff; font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:.07em; font-size:14px; font-weight:600; }
+  .cc-open:hover{ filter:brightness(1.08); }
+  .portal-empty{ border:1px dashed var(--line); border-radius:14px; padding:40px 28px; text-align:center; color:var(--ink-soft); font-size:14.5px; line-height:1.7; }
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-hazard"></div>
+  <div class="login-card">
+    <div class="login-company">
+      <svg viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M24 2 L44 10 V26 C44 38 36 47 24 52 C12 47 4 38 4 26 V10 Z" stroke="#16A34A" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M15 27 L21 33 L33 19" stroke="#E7F7EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>G.A Occupational Safety</span>
+    </div>
+    <h1 id="loginTitle">Meus treinamentos</h1>
+    <p class="login-sub" id="loginSubtext">Portal de treinamentos da G.A Occupational Safety. Acesse com o usuário e a senha fornecidos pelo responsável pelo treinamento.</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginUser">Usuário</label>
+        <input type="text" id="loginUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+      </div>
+      <div class="field">
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required>
+      </div>
+      <label style="display:flex; align-items:center; gap:10px; margin:-2px 0 18px; font-size:13.5px; color:var(--ink-soft); cursor:pointer; text-transform:none; letter-spacing:normal; font-family:'Inter', sans-serif; font-weight:400;">
+        <input type="checkbox" id="manterConectado" style="width:17px; height:17px; min-width:17px; padding:0; margin:0; flex:0 0 auto; accent-color:var(--green); cursor:pointer;">
+        Manter meu acesso salvo neste dispositivo
+      </label>
+      <p class="login-error" id="loginError"></p>
+      <button type="submit" class="login-btn" id="loginSubmitBtn">Entrar →</button>
+    </form>
+
+    <p class="login-note">G.A Occupational Safety · Os acessos são cadastrados pelo responsável pelo treinamento. O histórico de acesso e o resultado da avaliação ficam registrados nesta plataforma. Ainda não possui credenciais? Solicite ao responsável pelo treinamento.</p>
+  </div>
+</div>
+
+<div class="hazard-bar"></div>
+
+
+<div class="portal" id="portalRoot" style="display:none;">
+  <div class="portal-top">
+    <div class="portal-hello">
+      <span class="eyebrow" style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; color:var(--mint); text-transform:uppercase;" id="portalRole">Treinamentos</span>
+      <h1 id="portalGreet">Meus treinamentos</h1>
+      <p id="portalHint">Escolha um treinamento para continuar de onde parou.</p>
+    </div>
+    <button type="button" class="navbtn" id="portalLogoutBtn" style="border-color:rgba(236,237,241,0.3); color:var(--text);">Sair</button>
+  </div>
+  <div class="course-grid" id="courseGrid"></div>
+</div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC5HiR5EZvHHzkM_kdbgDLDZJr7VDj1U5Q",
+  authDomain: "normas-7f1ed.firebaseapp.com",
+  projectId: "normas-7f1ed",
+  storageBucket: "normas-7f1ed.firebasestorage.app",
+  messagingSenderId: "683703418284",
+  appId: "1:683703418284:web:1b9927a1003c117d770e09",
+  measurementId: "G-B5WXY28YWD"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+
+let authReadyResolve;
+const authReady = new Promise((resolve) => { authReadyResolve = resolve; });
+onAuthStateChanged(auth, (user) => { if(user) authReadyResolve(user); });
+signInAnonymously(auth).catch(err => console.error('Falha no login anônimo do Firebase', err));
+
+// ---------------------------------------------------------------
+// PORTAL DE TREINAMENTOS — lista os cursos de quem entrou.
+// Usa a mesma colecao "users" dos cursos, entao o login e unico.
+// ---------------------------------------------------------------
+const CURSOS = [
+  {id:'nr05',  nome:'NR-05 — Designado (CIPA)',        path:'nr05/index.html',
+   carga:'8h', orgao:'NR-05, item 5.7.4-a',
+   desc:'Formação do representante designado para a prevenção de acidentes e de assédio, em estabelecimentos de grau de risco 1.'},
+  {id:'nr35',  nome:'NR-35 — Trabalho em Altura',      path:'nr35/index.html',
+   carga:'8h', orgao:'NR-35, item 35.4.2.1',
+   desc:'Requisitos e medidas de prevenção para atividades acima de 2,00 m com risco de queda. Apoio teórico do treinamento presencial.'},
+  {id:'nr33',  nome:'NR-33 — Espaço Confinado',        path:'nr33/index.html',
+   carga:'16h', orgao:'NR-33, Anexo III',
+   desc:'Formação de trabalhador autorizado e vigia. Esta plataforma cobre as 8h teóricas; as 8h práticas são presenciais.'},
+  {id:'nr33r', nome:'NR-33 — Reciclagem anual',        path:'nr33-reciclagem/index.html',
+   carga:'8h', orgao:'NR-33, Anexo III',
+   desc:'Capacitação periódica anual de trabalhador autorizado e vigia. Cobre as 4h teóricas das 8h exigidas.'}
+];
+
+const SESSION_KEY = 'normas_sessao';
+
+// ---- PORTA DE ENTRADA UNICA ------------------------------------------------
+// As paginas de curso nao tem mais login proprio: elas mandam a pessoa para ca
+// com ?next=<curso>. Assim que o acesso e confirmado, devolvemos ela ao curso.
+const paramsEntrada = new URLSearchParams(location.search);
+const NEXT_COURSE = paramsEntrada.get('next') || '';
+const MOTIVO_ENTRADA = paramsEntrada.get('motivo') || '';
+
+function caminhoCurso(id){
+  const c = CURSOS.find(x => x.id === id);
+  return c ? c.path : '';
+}
+function podeAbrirCurso(record, id){
+  if(!id || !record) return false;
+  if(record.role === 'admin') return true;
+  return allowedCourses(record).includes(id);
+}
+function talvezSeguirParaCurso(record){
+  if(!NEXT_COURSE || !podeAbrirCurso(record, NEXT_COURSE)) return false;
+  const path = caminhoCurso(NEXT_COURSE);
+  if(!path) return false;
+  location.replace(path);
+  return true;
+}
+function avisoEntrada(){
+  if(!MOTIVO_ENTRADA) return;
+  const el = document.getElementById('loginError');
+  if(!el) return;
+  el.textContent = MOTIVO_ENTRADA === 'semacesso'
+    ? 'Seu acesso ainda não contempla esse treinamento. Entre para ver os treinamentos liberados para você.'
+    : 'Sua sessão expirou. Entre novamente para continuar.';
+  el.style.display = 'block';
+}
+avisoEntrada();
+
+
+// Guarda o acesso: marcado, fica salvo no aparelho ate o usuario sair;
+// desmarcado, vale so enquanto a aba estiver aberta.
+function manterConectado(){
+  const cb = document.getElementById('manterConectado');
+  return !!(cb && cb.checked);
+}
+function guardarSessao(username){
+  try{
+    if(manterConectado()){
+      localStorage.setItem(SESSION_KEY, username);
+      sessionStorage.removeItem(SESSION_KEY);
+    }else{
+      sessionStorage.setItem(SESSION_KEY, username);
+      localStorage.removeItem(SESSION_KEY);
+    }
+  }catch(e){}
+}
+function lerSessao(){
+  try{ return localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY) || ''; }
+  catch(e){ return ''; }
+}
+function apagarSessao(){
+  try{ localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); }catch(e){}
+}
+
+async function hashText(text){
+  if(typeof crypto === 'undefined' || !crypto.subtle){
+    throw new Error('Este navegador não permite login seguro nesta página.');
+  }
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+async function getUser(username){
+  await authReady;
+  const snap = await getDoc(doc(db, 'users', username));
+  return snap.exists() ? snap.data() : null;
+}
+function allowedCourses(u){
+  if(u && u.courses && typeof u.courses === 'object'){
+    return Object.keys(u.courses).filter(k => u.courses[k] === true);
+  }
+  return ['nr05'];   // cadastros antigos, feitos antes da matricula por curso
+}
+function showLoginError(msg){
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// Conta quantos alunos estao matriculados em cada curso (visao do responsavel).
+async function contarMatriculas(){
+  const contagem = {};
+  CURSOS.forEach(c => contagem[c.id] = 0);
+  try{
+    await authReady;
+    const snap = await getDocs(collection(db, 'users'));
+    snap.forEach(d => {
+      const u = d.data();
+      if(u.role === 'admin') return;
+      allowedCourses(u).forEach(id => { if(contagem[id] !== undefined) contagem[id]++; });
+    });
+  }catch(e){ console.error('Falha ao contar matrículas', e); }
+  return contagem;
+}
+
+async function abrirPortal(username, record){
+  const admin = record.role === 'admin';
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('portalRoot').style.display = 'block';
+
+  const primeiro = (record.name || username).split(' ')[0];
+  document.getElementById('portalRole').textContent = admin ? 'Área administrativa' : 'Área do aluno';
+  document.getElementById('portalGreet').textContent = admin ? 'Treinamentos publicados' : `Olá, ${primeiro}`;
+  document.getElementById('portalHint').textContent = admin
+    ? 'Estes são os treinamentos publicados na plataforma. Abra um deles para cadastrar alunos, acompanhar o progresso e baixar os relatórios.'
+    : 'Estes são os treinamentos liberados para você. Escolha um para continuar de onde parou.';
+
+  const lista = admin ? CURSOS : CURSOS.filter(c => allowedCourses(record).includes(c.id));
+  const grid = document.getElementById('courseGrid');
+
+  if(lista.length === 0){
+    grid.innerHTML = '<div class="portal-empty">Você ainda não está matriculado em nenhum treinamento.<br>Contate o responsável pelo treinamento para efetuar a matrícula.</div>';
+    return;
+  }
+
+  const contagem = admin ? await contarMatriculas() : null;
+  grid.innerHTML = lista.map(c => `
+    <div class="course-card">
+      <span class="cc-tag">${c.carga} · ${c.orgao}</span>
+      <h3>${c.nome}</h3>
+      <p>${c.desc}</p>
+      <div class="cc-meta">
+        <span>Carga: <b>${c.carga}</b></span>
+        ${admin ? `<span>Matriculados: <b>${contagem[c.id]}</b></span>` : ''}
+      </div>
+      <a class="cc-open" href="${c.path}">${admin ? 'Abrir painel' : 'Abrir treinamento'}</a>
+    </div>`).join('');
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('loginSubmitBtn');
+  const user = document.getElementById('loginUser').value.trim().toLowerCase();
+  const pass = document.getElementById('loginPass').value;
+  document.getElementById('loginError').style.display = 'none';
+  if(!user || !pass){ showLoginError('Informe o usuário e a senha para continuar.'); return; }
+  btn.disabled = true; btn.textContent = 'Entrando…';
+  try{
+    const record = await getUser(user);
+    if(!record){ showLoginError('Usuário ou senha incorretos. Confira os dados e tente novamente.'); return; }
+    const hash = await hashText(pass);
+    if(hash !== record.hash){ showLoginError('Usuário ou senha incorretos. Confira os dados e tente novamente.'); return; }
+    guardarSessao(user);
+    if(talvezSeguirParaCurso(record)) return;
+    await abrirPortal(user, record);
+  }catch(err){
+    console.error('Erro no login', err);
+    showLoginError('Não foi possível concluir o acesso no momento. Tente novamente em instantes.');
+  }finally{
+    btn.disabled = false; btn.textContent = 'Entrar →';
+  }
+});
+
+document.getElementById('portalLogoutBtn').addEventListener('click', () => {
+  apagarSessao();
+  document.getElementById('portalRoot').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+});
+
+// Se o aluno ja entrou nesta aba, o portal volta sozinho.
+(async () => {
+  const u = lerSessao();
+  if(!u) return;
+  try{
+    const record = await getUser(u);
+    if(record){
+      if(talvezSeguirParaCurso(record)) return;
+      await abrirPortal(u, record);
+    }
+    else apagarSessao();
+  }catch(e){ console.error('Falha ao restaurar a sessão', e); }
+})();
+
+</script>
+</body>
+</html>
